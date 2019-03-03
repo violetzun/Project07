@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @project.name %>
+</p>
+<h2>Solutions</h2>
+<% @project.solutions.each do |solution| %>
+<p>
+<b>Solution Name:</b>
+<%= solution.name %>
+</p>
+<p>
+<b>Explanation:</b>
+<%= solution.explanation %>
+</p>
+<% end %>
+<br/>
+<h2>Add a solution:</h2>
+<%= form_for([@project, @project.solutions.build]) do |f| %>
+	<div class="field">
+	<%= f.label :name %><br />
+	<%= f.text_field :name %>
+
+		</div>
+	<div class="field">
+	<%= f.label :explanation %><br />
+	<%= f.text_field :explanation %>
+	</div>
+<div class="actions">
+<%= f.submit %>
+</div>
+<% end %>
+<br />
+
+<%= link_to 'Edit', edit_project_path(@project) %> |
+<%= link_to 'Back', projects_path %>

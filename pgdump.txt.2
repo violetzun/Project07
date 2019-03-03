@@ -1,0 +1,758 @@
+--
+-- PostgreSQL database cluster dump
+--
+
+\connect postgres
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE postgres;
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION;
+CREATE ROLE web07;
+ALTER ROLE web07 WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION;
+
+
+
+
+
+
+--
+-- Database creation
+--
+
+CREATE DATABASE "Project07_development" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_production" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_test" WITH TEMPLATE = template0 OWNER = web07;
+REVOKE ALL ON DATABASE template1 FROM PUBLIC;
+REVOKE ALL ON DATABASE template1 FROM postgres;
+GRANT ALL ON DATABASE template1 TO postgres;
+GRANT CONNECT ON DATABASE template1 TO PUBLIC;
+
+
+\connect "Project07_development"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.projects OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.projects_id_seq OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
+-- Name: quotations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE quotations (
+    id integer NOT NULL,
+    author_name character varying(255),
+    category character varying(255),
+    quote text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.quotations OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE quotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quotations_id_seq OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE quotations_id_seq OWNED BY quotations.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO web07;
+
+--
+-- Name: solutions; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE solutions (
+    id integer NOT NULL,
+    name character varying(255),
+    explanation text,
+    project_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.solutions OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE solutions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.solutions_id_seq OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE solutions_id_seq OWNED BY solutions.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY quotations ALTER COLUMN id SET DEFAULT nextval('quotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY solutions ALTER COLUMN id SET DEFAULT nextval('solutions_id_seq'::regclass);
+
+
+--
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY projects (id, name, created_at, updated_at) FROM stdin;
+1	Problem set 2	2013-09-16 18:06:55.515322	2013-09-16 18:06:55.515322
+2	Problem set 1	2013-09-16 18:07:23.296542	2013-09-16 18:07:23.296542
+3	Problem set 3	2013-09-23 12:51:00.912273	2013-09-23 12:51:00.912273
+\.
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 3, true);
+
+
+--
+-- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY quotations (id, author_name, category, quote, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('quotations_id_seq', 1, false);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY schema_migrations (version) FROM stdin;
+20130902152224
+20130902152354
+20130910132737
+\.
+
+
+--
+-- Data for Name: solutions; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY solutions (id, name, explanation, project_id, created_at, updated_at) FROM stdin;
+2	Solution 1	 We created rails application called Projects07. We have two tables inside the database, projects and solutions. (Projects name:string) (Solutions name:string explanation:string project:references) We generate Projects using Rails Scaffold command & Solutions model using Rails generate model command. We configure this relation of Projects has many solutions and solutions belong to project, inside the model folder of the rails application. 	2	2013-09-16 18:16:12.045872	2013-09-16 18:16:12.045872
+3	Solution 2	We create the method viewSource inside the project model to fetch the links from Yahoo home page and output the treanding now links to our trendingNow.html page. We will add the line "projects/trendingNow" inside the routes.rb to link our page.	2	2013-09-16 18:16:30.697267	2013-09-16 18:16:30.697267
+4	Solution 3	In the file project.rb we create the method divide. We check whether y is zero and then we open the production.long and write "About to divide by zero". Inside the divide method, we try Project.divide(1,0) and like we test in rails console, it gives out the ZeroDivisionError in ProjectsController. 	2	2013-09-16 18:16:50.934536	2013-09-16 18:16:50.934536
+\.
+
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('solutions_id_seq', 4, true);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY quotations
+    ADD CONSTRAINT quotations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solutions_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY solutions
+    ADD CONSTRAINT solutions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_solutions_on_project_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_solutions_on_project_id ON solutions USING btree (project_id);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_production"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.projects OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.projects_id_seq OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
+-- Name: quotations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE quotations (
+    id integer NOT NULL,
+    author_name character varying(255),
+    category character varying(255),
+    quote text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.quotations OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE quotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quotations_id_seq OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE quotations_id_seq OWNED BY quotations.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO web07;
+
+--
+-- Name: solutions; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE solutions (
+    id integer NOT NULL,
+    name character varying(255),
+    explanation text,
+    project_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.solutions OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE solutions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.solutions_id_seq OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE solutions_id_seq OWNED BY solutions.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY quotations ALTER COLUMN id SET DEFAULT nextval('quotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY solutions ALTER COLUMN id SET DEFAULT nextval('solutions_id_seq'::regclass);
+
+
+--
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY projects (id, name, created_at, updated_at) FROM stdin;
+1	Problem set 1	2013-09-09 11:38:13.809971	2013-09-09 11:38:13.809971
+3	Problem set 2	2013-09-16 18:18:57.040213	2013-09-16 18:18:57.040213
+5	Problem set 3	2013-09-23 12:57:52.484687	2013-09-23 12:57:52.484687
+6	 	2013-09-23 15:17:47.574354	2013-09-23 15:17:47.574354
+\.
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 6, true);
+
+
+--
+-- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY quotations (id, author_name, category, quote, created_at, updated_at) FROM stdin;
+1	Ted Turner	Politics	I feel like those Jewish people in Germany in 1942.	2013-09-16 18:24:07.777723	2013-09-16 18:24:07.777723
+2	Unknown	Philosophy	If a man speaks in the forest and there is no woman there to hear him, is he still wrong?	2013-09-16 18:24:47.2321	2013-09-16 18:24:47.2321
+3	\N	new category 123	TestingFROMFILE	2013-09-16 18:29:43.429866	2013-09-16 18:29:43.429866
+4	Unknown		Men are like a \fne wine. They all start out like grapes, and it's our job to stomp on them and\r\nkeep them in the dark where they will mature into something you'd want to have dinner with.	2013-09-16 20:08:44.026489	2013-09-16 20:08:44.026489
+5	Anne Slater	Logical	\\A woman needs four animals in her life. A mink in the closet. A jaguar in the garage. A tiger\r\nin bed. And an ass to pay for it all.	2013-09-16 20:09:38.397896	2013-09-16 20:09:38.397896
+6	Gene Fowler	Editors	An editor should have a pimp for a brother, so he'd have someone to look up to.	2013-09-16 20:10:45.572694	2013-09-16 20:10:45.572694
+7	Edward R. Murrow	Technology	The newest computer can merely compound, at speed, the oldest problem in the relations between\r\nhuman beings, and in the end the communicator will be confronted with the old problem, of what\r\nto say and how to say it.	2013-09-16 20:11:32.473971	2013-09-16 20:11:32.473971
+8	Frank Leahy		Egotism is the anesthetic that dulls the pain of stupidity.	2013-09-16 20:12:17.017611	2013-09-16 20:12:17.017611
+9	Edward Young		Some for renown, on scraps of learning dote, And think they grow immortal as they quote.	2013-09-16 20:13:05.758064	2013-09-16 20:13:05.758064
+\.
+
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('quotations_id_seq', 9, true);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY schema_migrations (version) FROM stdin;
+20130902152354
+20130902152224
+20130910132737
+\.
+
+
+--
+-- Data for Name: solutions; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY solutions (id, name, explanation, project_id, created_at, updated_at) FROM stdin;
+1	Solution 1	We created rails application called Projects07. We have two tables inside the database, projects and solutions. (Projects name:string) (Solutions name:string explanation:string project:references) We generate Projects using Rails Scaffold command & Solutions model using Rails generate model command. We configure this relation of Projects has many solutions and solutions belong to project, inside the model folder of the rails application. 	1	2013-09-09 11:38:59.273595	2013-09-09 11:38:59.273595
+2	Solution 2	We create the method viewSource inside the project model to fetch the links from Yahoo home page and output the treanding now links to our trendingNow.html page. We will add the line "projects/trendingNow" inside the routes.rb to link our page. 	1	2013-09-09 11:39:26.04628	2013-09-09 11:39:26.04628
+3	Solution 3	 In the file project.rb we create the method divide. We check whether y is zero and then we open the production.long and write "About to divide by zero". Inside the divide method, we try Project.divide(1,0) and like we test in rails console, it gives out the ZeroDivisionError in ProjectsController.	1	2013-09-09 11:39:53.408178	2013-09-09 11:39:53.408178
+\.
+
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('solutions_id_seq', 3, true);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY quotations
+    ADD CONSTRAINT quotations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solutions_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY solutions
+    ADD CONSTRAINT solutions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_solutions_on_project_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_solutions_on_project_id ON solutions USING btree (project_id);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_test"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect postgres
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: postgres; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE postgres IS 'default administrative connection database';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect template1
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: template1; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE template1 IS 'default template for new databases';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- PostgreSQL database cluster dump complete
+--
+

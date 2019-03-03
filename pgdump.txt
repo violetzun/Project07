@@ -1,0 +1,2566 @@
+--
+-- PostgreSQL database cluster dump
+--
+
+\connect postgres
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE postgres;
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION;
+CREATE ROLE web07;
+ALTER ROLE web07 WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION;
+
+
+
+
+
+
+--
+-- Database creation
+--
+
+CREATE DATABASE "Project07_2_development" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_2_production" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_2_test" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_development" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_production" WITH TEMPLATE = template0 OWNER = web07;
+CREATE DATABASE "Project07_test" WITH TEMPLATE = template0 OWNER = web07;
+REVOKE ALL ON DATABASE template1 FROM PUBLIC;
+REVOKE ALL ON DATABASE template1 FROM postgres;
+GRANT ALL ON DATABASE template1 TO postgres;
+GRANT CONNECT ON DATABASE template1 TO PUBLIC;
+
+
+\connect "Project07_2_development"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: authorizations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE authorizations (
+    id integer NOT NULL,
+    provider character varying(255),
+    uid character varying(255),
+    user_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.authorizations OWNER TO web07;
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE authorizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.authorizations_id_seq OWNER TO web07;
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE authorizations_id_seq OWNED BY authorizations.id;
+
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.projects OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.projects_id_seq OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
+-- Name: quotations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE quotations (
+    id integer NOT NULL,
+    author_name character varying(255),
+    category character varying(255),
+    quote text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.quotations OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE quotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quotations_id_seq OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE quotations_id_seq OWNED BY quotations.id;
+
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE roles (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
+    description text NOT NULL,
+    the_role text NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.roles OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.roles_id_seq OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO web07;
+
+--
+-- Name: solutions; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE solutions (
+    id integer NOT NULL,
+    name character varying(255),
+    explanation character varying(255),
+    project_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.solutions OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE solutions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.solutions_id_seq OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE solutions_id_seq OWNED BY solutions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying(255),
+    password_hash character varying(255),
+    password_salt character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    role_id integer
+);
+
+
+ALTER TABLE public.users OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY authorizations ALTER COLUMN id SET DEFAULT nextval('authorizations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY quotations ALTER COLUMN id SET DEFAULT nextval('quotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY solutions ALTER COLUMN id SET DEFAULT nextval('solutions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: authorizations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY authorizations (id, provider, uid, user_id, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('authorizations_id_seq', 1, false);
+
+
+--
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY projects (id, name, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 1, false);
+
+
+--
+-- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY quotations (id, author_name, category, quote, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('quotations_id_seq', 1, false);
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY roles (id, name, title, description, the_role, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('roles_id_seq', 1, false);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY schema_migrations (version) FROM stdin;
+20130902152224
+20130902152354
+20130910132737
+20130928131742
+20130928144516
+20130930090154
+20130930090231
+\.
+
+
+--
+-- Data for Name: solutions; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY solutions (id, name, explanation, project_id, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('solutions_id_seq', 1, false);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY users (id, email, password_hash, password_salt, created_at, updated_at, role_id) FROM stdin;
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, false);
+
+
+--
+-- Name: authorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY authorizations
+    ADD CONSTRAINT authorizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY quotations
+    ADD CONSTRAINT quotations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solutions_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY solutions
+    ADD CONSTRAINT solutions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_solutions_on_project_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_solutions_on_project_id ON solutions USING btree (project_id);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_2_production"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_2_test"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_development"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: authentications; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE authentications (
+    id integer NOT NULL,
+    user_id integer,
+    provider character varying(255),
+    uid character varying(255),
+    token character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.authentications OWNER TO web07;
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE authentications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.authentications_id_seq OWNER TO web07;
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE comments (
+    id integer NOT NULL,
+    comment character varying(255),
+    user_id integer,
+    entry_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.comments OWNER TO web07;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.comments_id_seq OWNER TO web07;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
+
+
+--
+-- Name: entries; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE entries (
+    id integer NOT NULL,
+    topic character varying(255),
+    content text,
+    user_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    report_abuse integer,
+    movie_id integer
+);
+
+
+ALTER TABLE public.entries OWNER TO web07;
+
+--
+-- Name: entries_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.entries_id_seq OWNER TO web07;
+
+--
+-- Name: entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE entries_id_seq OWNED BY entries.id;
+
+
+--
+-- Name: like_entries; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE like_entries (
+    id integer NOT NULL,
+    user_id integer,
+    entry_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    owner_id integer
+);
+
+
+ALTER TABLE public.like_entries OWNER TO web07;
+
+--
+-- Name: like_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE like_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.like_entries_id_seq OWNER TO web07;
+
+--
+-- Name: like_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE like_entries_id_seq OWNED BY like_entries.id;
+
+
+--
+-- Name: like_movies; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE like_movies (
+    id integer NOT NULL,
+    user_id integer,
+    movie_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.like_movies OWNER TO web07;
+
+--
+-- Name: like_movies_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE like_movies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.like_movies_id_seq OWNER TO web07;
+
+--
+-- Name: like_movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE like_movies_id_seq OWNED BY like_movies.id;
+
+
+--
+-- Name: movies; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE movies (
+    id integer NOT NULL,
+    my_id character varying(255),
+    title character varying(255),
+    backdrop_path character varying(255),
+    release_date character varying(255),
+    poster_path character varying(255),
+    vote_average character varying(255),
+    adult character varying(255),
+    overview text,
+    trailer character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.movies OWNER TO web07;
+
+--
+-- Name: movies_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE movies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.movies_id_seq OWNER TO web07;
+
+--
+-- Name: movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE movies_id_seq OWNED BY movies.id;
+
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.projects OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.projects_id_seq OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
+-- Name: quotations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE quotations (
+    id integer NOT NULL,
+    author_name character varying(255),
+    category character varying(255),
+    quote text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.quotations OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE quotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quotations_id_seq OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE quotations_id_seq OWNED BY quotations.id;
+
+
+--
+-- Name: redactor_assets; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE redactor_assets (
+    id integer NOT NULL,
+    user_id integer,
+    data_file_name character varying(255) NOT NULL,
+    data_content_type character varying(255),
+    data_file_size integer,
+    assetable_id integer,
+    assetable_type character varying(30),
+    type character varying(30),
+    width integer,
+    height integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.redactor_assets OWNER TO web07;
+
+--
+-- Name: redactor_assets_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE redactor_assets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.redactor_assets_id_seq OWNER TO web07;
+
+--
+-- Name: redactor_assets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE redactor_assets_id_seq OWNED BY redactor_assets.id;
+
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE roles (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
+    description text NOT NULL,
+    the_role text NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.roles OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.roles_id_seq OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO web07;
+
+--
+-- Name: solutions; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE solutions (
+    id integer NOT NULL,
+    name character varying(255),
+    explanation character varying(255),
+    project_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.solutions OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE solutions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.solutions_id_seq OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE solutions_id_seq OWNED BY solutions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying(255) DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying(255),
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip character varying(255),
+    last_sign_in_ip character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    username character varying(255),
+    role_id integer DEFAULT 2,
+    image character varying(255)
+);
+
+
+ALTER TABLE public.users OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY entries ALTER COLUMN id SET DEFAULT nextval('entries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY like_entries ALTER COLUMN id SET DEFAULT nextval('like_entries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY like_movies ALTER COLUMN id SET DEFAULT nextval('like_movies_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY movies ALTER COLUMN id SET DEFAULT nextval('movies_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY quotations ALTER COLUMN id SET DEFAULT nextval('quotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY redactor_assets ALTER COLUMN id SET DEFAULT nextval('redactor_assets_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY solutions ALTER COLUMN id SET DEFAULT nextval('solutions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: authentications; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY authentications (id, user_id, provider, uid, token, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('authentications_id_seq', 1, false);
+
+
+--
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY comments (id, comment, user_id, entry_id, created_at, updated_at) FROM stdin;
+12	Test Comment	7	20	2013-12-08 17:58:18.536487	2013-12-08 17:58:18.536487
+13	5 Star recommend!!!!	7	20	2013-12-08 18:12:31.917201	2013-12-08 18:12:31.917201
+14	I will watch this!! :O	1	20	2013-12-08 18:52:26.770091	2013-12-08 18:52:26.770091
+\.
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('comments_id_seq', 14, true);
+
+
+--
+-- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY entries (id, topic, content, user_id, created_at, updated_at, report_abuse, movie_id) FROM stdin;
+22	Meet Joe Black	<p>\r\n\tThis movie always make me cry TT\r\n</p>\r\n<p>\r\n\t<img style="width: 377px;" src="/system/redactor_assets/pictures/10/Joe_and_Susan.jpg">\r\n</p>	1	2013-12-08 19:08:50.168945	2013-12-08 19:08:50.168945	0	239
+9	Battlestar Galactica: Razor	<p>\r\n\tVery good anime movie.\r\n</p>	2	2013-12-08 15:51:25.366611	2013-12-08 15:51:25.366611	0	76
+11	The Fast and the Furious	<p>\r\n\tR.I.P Paul Walker. :(\r\n</p>	2	2013-12-08 16:13:04.087421	2013-12-08 16:13:04.087421	0	15
+13	The Smurfs	<p>\r\n\tI'd like to see full movie for The Smurfs(2011).\r\n</p>	3	2013-12-08 16:21:22.41169	2013-12-08 16:21:22.41169	0	87
+12	Noah	<p>\r\n\tThe Biblical Noah suffers visions of an apocalyptic deluge and takes measures to protect his family from the coming flood.\r\n</p>	4	2013-12-08 16:21:06.934769	2013-12-08 16:21:52.541693	0	116
+15	The Road to El Dorado	<iframe src="//www.youtube.com/embed/_7v5-HGsYGE" allowfullscreen="" width="420" frameborder="0" height="315">\r\n</iframe>\r\n<p>\r\n\tI love this song. very much . Sound track from the movie.\r\n</p>	2	2013-12-08 17:03:37.652691	2013-12-08 17:03:37.652691	0	129
+16	Jobs	<p>\r\n\tA movie about Steve Job. He had made everyone on earth know what this logo means.\r\n</p>\r\n<p>\r\n\t<img style="width: 86px;" src="http://b-i.forbesimg.com/spleverage/files/2013/04/silver-apple-logo-apple-picture.jpg">\r\n</p>	2	2013-12-08 17:08:26.377781	2013-12-08 17:08:26.377781	0	144
+17	The Hunger Games: Catching Fire	<p>\r\n\t I actually was not going to write a review but after reading all those "best movie ever" comments, I felt the responsibility to write something. I watched the movie at an IMax (where even the worst movie looks OK) but there was nothing visually spectacular. Character development phase is not that bad but there was no character that I could like (including Katniss. Actually especially Katniss). There was nothing special about the performance of Jennifer Lawrence to say the least. She really needs to work on acting and expressions. She was really boring. The other characters don't even have an impact. When it comes to the story, it is somewhat not so believable. I am a huge fan of sci-fi and fantastic movies but the story of Hunger Games has never been appealing to me. Anyway, do not trust that super positive reviews. This is an average movie with an average story and average acting.\r\n</p>\r\n<p>\r\n\t<img style="width: 408px;" src="/system/redactor_assets/pictures/5/the-hunger-games-catching-fire-comic-con-trailer.jpg">\r\n</p>	1	2013-12-08 17:22:39.830794	2013-12-08 17:26:08.008605	0	1
+19	The Hunger Games	<p>\r\n\t Content :D\r\n</p>	6	2013-12-08 17:34:21.425083	2013-12-08 17:41:49.658227	0	21
+21	Elysium	<p>\r\n\tI like the new world system in the movies...!!\r\n</p>	8	2013-12-08 18:03:09.772908	2013-12-08 18:03:09.772908	0	12
+20	The Hunger Games: Catching Fire	<h2>The Hunger Games: Catching Fire</h2>\r\n<hr>\r\n<p>\r\n\t<img src="http://static.rogerebert.com/uploads/review/primary_image/reviews/the-hunger-games-catching-fire-2013/hero_HungerGamesCatchingFire-2013-1.jpg">\r\n</p>\r\n<p>\r\n\tWhen a movie like "The Hunger Games: Catching Fire" comes along, it  makes my inner feminist-leaning 13-year-old stand up and cheer. Of  course, the mere existence of a successful girl-powered franchise that  does not revolve around potential suitors with supernatural powers is  enough to keep her smiling.\r\n</p>\r\n<p>\r\n\tThe scene in "Catching Fire" that especially fired up my lingering adolescent alter-ego? When <a href="http://www.rogerebert.com/cast-and-crew/jennifer-lawrence">Jennifer Lawrence</a>—essential as warrior heroine Katniss Everdeen in Round 2 of this young-adult lit-based enterprise, much in the same way that <a href="http://www.rogerebert.com/cast-and-crew/vivien-leigh">Vivien Leigh</a> was indispensable in "<a href="http://www.rogerebert.com/reviews/great-movie-gone-with-the-wind-1939">Gone With the Wind</a>"—suddenly  twirls about in her would-be wedding dress during a TV interview meant  to distract the downtrodden populace of Panem. What initially looks like  a multi-tiered, white-frosted cage is engulfed in flames and transforms  into a supple midnight-bluish winged symbol of subversion that emulates  the Mockingjay, the mascot of a growing rebellion in the land. One gown  represents female entrapment and expectations, the other human freedom  and opportunity. Call it a Barbie-meets-Joan of Arc moment. And not  every man can rock a lavender ponytail and a pompadour at the same time,  but darn if <a href="http://www.rogerebert.com/cast-and-crew/stanley-tucci">Stanley Tucci</a>’s  fawning oil-slick of a TV host Caesar Flickerman—part Ryan Seacrest,  part Siegfried and Roy—manages to pull it off. "Girl on Fire is so  cheeky," he declares of Katniss with a half-smile, half-sneer when she  performs her dress trick.\r\n</p>\r\n<p>\r\n\tYes, fashion can be a weapon for good  and a vehicle for revolution—at least in this dystopia, with its Fascist  regime led by the serenely insidious President Snow (<a href="http://www.rogerebert.com/cast-and-crew/donald-sutherland">Donald Sutherland</a>). Here, gawd-awful gaudy too often passes for style. We are talking about you, <a href="http://www.rogerebert.com/cast-and-crew/elizabeth-banks">Elizabeth Banks</a>,  in the guise of giddy government-instated cheerleader Effie Trinket,  with bedazzled Oompa Loompa wigs and eyelashes that appear to be leaden  lace cookies. (At least she is allowed to be a warmer presence this time  around.)\r\n</p>\r\n<p>\r\n\tKatniss’s quick-change act is almost topped by the sight  of Lawrence going full-on Liz Taylor in "Cleopatra" with Roman-circus  hair and makeup, riding in a chariot before a thunderous throng and  later wearing another stunning bird-inspired outfit to a pre-Hunger  Games soiree. Good thing that the flinty-eyed Oscar winner is as adept  at silently conveying the haunted psyche of her ace archer as she is at  showcasing these fantasy frocks. Otherwise, it would be even more  obvious that—just like any other No. 2 in an ongoing franchise—"Catching  Fire" is merely a placeholder. And it is particularly dour experience  given Katniss’s post-traumatic state of mind, as the plot simply picks  up where the first movie left off and closes nowhere near to a  satisfying climax.\r\n</p>\r\n<p>\r\n\tThe 2 ½-hour running time is split in two:  First, we learn that Katniss’s ploy last time to upend the rules of the  games so that she and faux boyfriend Peeta Mellark (<a href="http://www.rogerebert.com/cast-and-crew/josh-hutcherson">Josh Hutcherson</a>,  still unduly cuddly) would both survive as co-champions has made  Penam’s less fortunate think they, too, can rise against their  overlords. As the supposed engaged couple go on tour to greet their  fans, it becomes clear they see Katniss as an inspirational leader, a  role she inch-by-inch grows to accept.\r\n</p>\r\n<p>\r\n\tWith an assist from <a href="http://www.rogerebert.com/cast-and-crew/philip-seymour-hoffman">Philip Seymour Hoffman</a>  as the too-smooth-to-be-true new gamesmaker Plutarch Heavensbee, Snow  announces a special all-stars edition of the 75th-anniversary Hunger  Games Quarter Quell. Former victors of previous games recruited from  Panem’s 12 districts will be pitted against one another, and Katniss and  Peeta must put their lives on the line again.\r\n</p>\r\n<p>\r\n\tThe last hour is  devoted to an Olympian death match in a mock tropical jungle. The fun,  such as it is, begins with such visually intriguing challenges as toxic  mist, rabid baboons and a downpour of blood. Several welcome new battle  participants come aboard. Much like Hoffman, such terrific talents as <a href="http://www.rogerebert.com/cast-and-crew/jeffrey-wright">Jeffrey Wright</a>, <a href="http://www.rogerebert.com/cast-and-crew/amanda-plummer">Amanda Plummer</a> and <a href="http://www.rogerebert.com/cast-and-crew/jena-malone">Jena Malone</a>  are overqualified for their parts, but each delivers a distinctly  defined character that brightens the proceedings considerably. At least  Malone as the punk-cool Johanna provides Lawrence with a fierce foil to  play against. The biggest and maybe only true laugh arrives when Johanna  strips off her clothes in an elevator to the appreciation of Peeta and  the disdain of Katniss.\r\n</p>\r\n<p>\r\n\tDirector <a href="http://www.rogerebert.com/cast-and-crew/francis-lawrence">Francis Lawrence</a> ("<a href="http://www.rogerebert.com/reviews/i-am-legend-2007">I Am Legend</a>," "<a href="http://www.rogerebert.com/reviews/water-for-elephants-2011">Water for Elephants</a>") is confident enough to not go too heavy on the much-disdained hand-held camerawork used by his predecessor, <a href="http://www.rogerebert.com/cast-and-crew/gary-ross">Gary Ross</a>. With a script by two Oscar-winning writers, "<a href="http://www.rogerebert.com/reviews/slumdog-millionaire-2008">Slumdog Millionaire</a>"’s <a href="http://www.rogerebert.com/cast-and-crew/simon-beaufoy">Simon Beaufoy</a> and "<a href="http://www.rogerebert.com/reviews/little-miss-sunshine-2006">Little Miss Sunshine</a>"’s <a href="http://www.rogerebert.com/cast-and-crew/michael-arndt">Michael Arndt</a> (although credited as Michael deBruyn), the action and even the speechifying move along swiftly enough.\r\n</p>\r\n<p>\r\n\t  Yet "The Hunger Games: Catching Fire" suffers from the same “something  old, something borrowed “ disease that is the enemy of originality in  too many Hollywood efforts of late. It is difficult to enjoy a film when  you are checking off all the sources it references—"Lost" and  "Survivor" from television, Star Wars (what is with the Stormtrooper  ripoffs?) and "<a href="http://www.rogerebert.com/reviews/the-running-man-1987">The Running Man</a>" from movies, and Roman and Greek myths.\r\n</p>\r\n<p>\r\n\tWhat  makes the books and the films compelling is the way they define  anxieties and pop-culture obsessions in our everyday lives: anger over  politicians, fascination with celebrities, a growing disgruntled  underclass, addiction to reality shows and video games, the regularity  of large-scale violent acts that monopolize TV coverage, and hateful  outbreaks of bullying.\r\n</p>\r\n<p>\r\n\tOf course, the one truly fresh  invention—and the one that matters most—is Katniss herself. With each  on-screen chapter, the poor girl from District 12 continues to fulfill  her destiny as an inspiration and a rebel fighter. She is but one  female, but she's the perfect antidote to the surplus of male  superheroes out there.\r\n</p>\r\n<p>\r\n\tAnd talk about a brewing rebellion: this  is the rare action blockbuster that dares to make do without 3D. We who  wear glasses already and would rather spend the ticket premium on  popcorn salute you, Katniss and company .\r\n</p>\r\n<p>\r\n\tTT___TT\r\n</p>\r\n<p>\r\n\t<img src="/system/redactor_assets/pictures/9/hunger-games-444173.jpg">\r\n</p>\r\n<p>\r\n\t<img src="http://www.google.co.th/url?sa=i&amp;rct=j&amp;q=&amp;esrc=s&amp;source=images&amp;cd=&amp;cad=rja&amp;docid=Ibq26jJd8utW5M&amp;tbnid=8L-bZFIeARI51M:&amp;ved=0CAUQjRw&amp;url=http%3A%2F%2Fwww.express.co.uk%2Fentertainment%2Ffilms%2F444173%2FThe-Hunger-Games-Catching-Fire-review-and-trailer&amp;ei=7rWkUsK_Fc-WiQfdooGYDw&amp;bvm=bv.57752919,d.dGI&amp;psig=AFQjCNEr_VA12LQyn0pqyaTAHR59J5iB9Q&amp;ust=1386612567861557">\r\n</p>\r\n<p>\r\n\tThe Oscar winning actress talks red carpet looks and maintaining a private life in Hollywood.\r\n</p>\r\n<iframe src="//www.youtube.com/embed/wNydJOSbhm4" allowfullscreen="" frameborder="0" height="315" width="560">\r\n</iframe>	7	2013-12-08 17:58:00.47809	2013-12-08 18:11:54.928894	0	1
+\.
+
+
+--
+-- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('entries_id_seq', 22, true);
+
+
+--
+-- Data for Name: like_entries; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY like_entries (id, user_id, entry_id, created_at, updated_at, owner_id) FROM stdin;
+77	2	21	2013-12-08 18:31:27.456269	2013-12-08 18:31:27.456269	8
+78	2	20	2013-12-08 18:31:31.38727	2013-12-08 18:31:31.38727	7
+79	2	19	2013-12-08 18:31:32.679236	2013-12-08 18:31:32.679236	6
+80	2	17	2013-12-08 18:31:38.334329	2013-12-08 18:31:38.334329	1
+81	2	16	2013-12-08 18:31:40.532119	2013-12-08 18:31:40.532119	2
+82	2	15	2013-12-08 18:31:43.70331	2013-12-08 18:31:43.70331	2
+83	1	16	2013-12-08 18:33:33.492863	2013-12-08 18:33:33.492863	2
+84	1	20	2013-12-08 18:33:41.613962	2013-12-08 18:33:41.613962	7
+85	1	17	2013-12-08 18:52:49.613156	2013-12-08 18:52:49.613156	1
+86	1	11	2013-12-08 19:42:10.724656	2013-12-08 19:42:10.724656	2
+\.
+
+
+--
+-- Name: like_entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('like_entries_id_seq', 86, true);
+
+
+--
+-- Data for Name: like_movies; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY like_movies (id, user_id, movie_id, created_at, updated_at) FROM stdin;
+1	2	29	2013-12-08 15:22:55.529599	2013-12-08 15:22:55.529599
+2	6	1	2013-12-08 17:25:14.783295	2013-12-08 17:25:14.783295
+4	6	144	2013-12-08 17:30:10.87597	2013-12-08 17:30:10.87597
+6	1	1	2013-12-08 17:34:09.371527	2013-12-08 17:34:09.371527
+9	7	1	2013-12-08 17:58:46.904321	2013-12-08 17:58:46.904321
+10	7	2	2013-12-08 17:59:08.593702	2013-12-08 17:59:08.593702
+11	8	12	2013-12-08 18:02:11.904373	2013-12-08 18:02:11.904373
+12	7	21	2013-12-08 18:03:59.125751	2013-12-08 18:03:59.125751
+13	1	15	2013-12-08 19:48:48.319075	2013-12-08 19:48:48.319075
+\.
+
+
+--
+-- Name: like_movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('like_movies_id_seq', 13, true);
+
+
+--
+-- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY movies (id, my_id, title, backdrop_path, release_date, poster_path, vote_average, adult, overview, trailer, created_at, updated_at) FROM stdin;
+1	101299	The Hunger Games: Catching Fire	/wRCPG1lsgfTFkWJ7G3eWgxCgv0C.jpg	2013-11-22	/zkrTbOKUt7w7x8TkLvR2qXZAKd3.jpg	7.7	f	Katniss Everdeen has returned home safe after winning the 74th Annual Hunger Games along with fellow tribute Peeta Mellark. Winning means that they must turn around and leave their family and close friends, embarking on a "Victor's Tour" of the districts. Along the way Katniss senses that a rebellion is simmering, but the Capitol is still very much in control as President Snow prepares the 75th Annual Hunger Games (The Quarter Quell) - a competition that could change Panem forever.	jyPnQw_Lqds	2013-12-08 11:47:24.077569	2013-12-08 11:47:24.077569
+2	214030	Fading Gigolo	/8Z0wWrB6UYSjj5yFcq1HqrHmnrn.jpg	2013-11-21	/10uSozzxX4qfGyC9ahlWj09goxX.jpg	7.7	f	Fioravante decides to become a professional Don Juan as a way of making money to help his cash-strapped friend, Murray. With Murray acting as his "manager", the duo quickly finds themselves caught up in the crosscurrents of love and money.	T9qXRB9-6bg	2013-12-08 11:47:24.457594	2013-12-08 11:47:24.457594
+3	109445	Frozen	/mdlZZZtSPTeeFiWW8D1WV73zyBt.jpg	2013-11-27	/xYVunS2yloXIwq3ngQRhPFX2s7.jpg	8.1	f	A mountain climber and a young girl named Anna journey through snowy peaks and dangerous cliffs to find the legendary Snow Queen and end the perpetual winter prophecy that has fallen over their kingdom.	DIaVQkhZGLI	2013-12-08 11:47:24.791909	2013-12-08 11:47:24.791909
+4	237413	The Snow Queen	/smjdPipzQWwaEdBTWdcAMG4hj5q.jpg	2013-11-30	/hFQCeqOdZrzMaJl4mFgTSqpaNMI.jpg	6.8	f	A mysterious presence has threatened humanity for hundreds of years as it lurks in the frozen wastes people avoid. Nearly unnoticed as its power grows, she's been slowly draining the planet of one of its most precious resources. It takes two groups of adventurers, separated in time, to defeat her and the army of demons and monsters she can summon- one with swords and shields of iron, the other with assault rifles and body armor. Written by Barry Massoni	-	2013-12-08 11:47:25.135326	2013-12-08 11:47:25.135326
+5	204082	Homefront	/ellbPDHO2L9adle6pkJmCFtZDd6.jpg	2013-11-27	/6ymSuhG28tF2lnDxVTNibzlYzn0.jpg	6.6	f	A former DEA agent moves his family to a quiet town, where he soon tangles with a local meth druglord.	7qqFiibq5wo	2013-12-08 11:47:25.470104	2013-12-08 11:47:25.470104
+6	230896	Iron Man & Hulk: Heroes United	/eDa6tmysT8wL25RrwrGrpNVwZxu.jpg	2013-12-04	/rNz3nX461JjrMwYW6uTTHCw40ty.jpg	6.0	f	The Invincible Iron Man and the Incredible Hulk must join forces to save the Earth from its greatest threat yet! When two Hydra scientists try to supercharge a Stark Arc Reactor with Hulk's Gamma Energy, they unleash a being of pure electricity called Zzzax - and he's hungry for destruction. Together, Iron Man and Hulk are the only force that stands in the way of the Zzzax's planetary blackout. But first, the super heroic duo will have to get through snarling Wendigos, deadly robots and the scaly powerhouse, Abomination.  Can two of Marvel's mightiest heroes find a way to work together without smashing each other before time runs out?	u_Z2r_9XSK8	2013-12-08 11:47:25.837036	2013-12-08 11:47:25.837036
+7	240700	Rise of the Fellowship	/on5YjN1qdjCzg0SbKBaqDHjViXw.jpg	2013-12-02	/oCNdSSic7COEnAEx3tX7FySQmKF.jpg	0.0	f	Randall Dooley is a geek. His three best friends are geeks too. He works in a game shop, he spends all his free time playing online games, his older brother bullies him unmercifully, his ...	0Y4kZdTbasg	2013-12-08 11:47:26.176009	2013-12-08 11:47:26.176009
+8	240665	Tiang Seri	-	2013-11-24	/94rguDEhkXxYBe8nsyxBhnTKxSy.jpg	0.0	f	Nadrah’s father buys an ancient pillar and builds a gazebo. While doing her school work at the gazebo, Nadrah notices a nail lodged in the pillar and pulls it out. This lets out a spirit embedded in the pillar which seeps into Nadrah’s body. Nadrah starts to have nightmares, and becomes increasingly aggressive resulting in several deaths	-	2013-12-08 11:47:26.510279	2013-12-08 11:47:26.510279
+9	138976	Treachery	/bmiC4fMJsZ9375XtOUclhDLHQK8.jpg	2013-12-04	/eolVat0ViAFkKxvUrOXzwdLks5T.jpg	0.0	f	Treachery centers on a man (Biehn) who is reunited with his estranged son at a remote wedding party. When a storm strands the party, ugly truths are revealed.	-	2013-12-08 11:47:26.860385	2013-12-08 11:47:26.860385
+10	236330	Broken Hill Blues	-	2013-12-06	/uv6x9CNCB026gMAJtmpFKPe4eQ.jpg	0.0	f	In a small mining community in Northern Sweden, a group of youngsters about to take the leap in the adult age fight with themselves and the world around, while the ground literally trembles under their feet.	dYY-lQTsD4E	2013-12-08 11:47:26.884785	2013-12-08 11:47:26.884785
+11	82992	Fast & Furious 6	/qjfE7SkPXpqFs8FX8rIaG6eO2aK.jpg	2013-05-21	/bsH746t5bLZ8U1wIW9FmWXyyhrW.jpg	6.4	f	Since Dom (Diesel) and Brian's (Walker) Rio heist toppled a kingpin's empire and left their crew with $100 million, our heroes have scattered across the globe. But their inability to return home and living forever on the lam have left their lives incomplete. Meanwhile, Hobbs (Johnson) has been tracking an organization of lethally skilled mercenary drivers across 12 countries, whose mastermind (Evans) is aided by a ruthless second-in-command revealed to be the love Dom thought was dead, Letty (Rodriguez). The only way to stop the criminal outfit is to outmatch them at street level, so Hobbs asks Dom to assemble his elite team in London. Payment? Full pardons for all of them so they can return home and make their families whole again.	z7zl_t48CMc	2013-12-08 11:47:27.22059	2013-12-08 11:47:27.22059
+12	68724	Elysium	/bB0t0DFdF87MlhflGOqfifyfHSj.jpg	2013-08-09	/tHkjoAxmhp3Eau1h0Ir7maKMwUz.jpg	6.8	f	In the year 2159, two classes of people exist: the very wealthy who live on a pristine man-made space station called Elysium, and the rest, who live on an overpopulated, ruined Earth. Secretary Rhodes (Jodie Foster), a hard line government ofﬁcial, will stop at nothing to enforce anti-immigration laws and preserve the luxurious lifestyle of the citizens of Elysium. That doesn’t stop the people of Earth from trying to get in, by any means they can. When unlucky Max (Matt Damon) is backed into a corner, he agrees to take on a daunting mission that, if successful, will not only save his life, but could bring equality to these polarized worlds.	oIBtePb-dGY	2013-12-08 11:47:27.573139	2013-12-08 11:47:27.573139
+13	112205	The Family	/E37cXf4NMdg5reB4anYh4OefWS.jpg	2013-09-13	/ggg4BV0kySydPgBZlJi7UIyacdX.jpg	6.9	f	"The Family" is the story of the Manzonis, a notorious mafia family who gets relocated to Normandy, France under the witness protection program. While they do their best to fit in, old habits die hard and they soon find themselves handling things the "family" way.	pDoZK9BfUMc	2013-12-08 11:47:27.600016	2013-12-08 11:47:27.600016
+14	146233	Prisoners	/xJXjSQbQxyYkX2YA1wlllYYpoaP.jpg	2013-09-21	/2uNUxvjW6aTeKjVn3WnRvyQY67n.jpg	7.6	f	A Pennsylvania man kidnaps the person he suspects is behind the disappearance of his young daughter and her best friend.	bpXfcTF6iVk	2013-12-08 11:47:27.942742	2013-12-08 11:47:27.942742
+15	9799	The Fast and the Furious	/lmIqH8Qsv3IvDg0PTFUuVr89eBT.jpg	2001-06-17	/3cucyEuLOOjjJ8nem5facsTEy68.jpg	6.2	f	Domenic Toretto is a Los Angeles street racer suspected of masterminding a series of big-rig hijackings. When undercover cop Brian O'Conner infiltrates Toretto's iconoclastic crew, he falls for Toretto's sister and must choose a side: the gang or the LAPD.	ar00z32bXNQ	2013-12-08 11:47:28.298669	2013-12-08 11:47:28.298669
+16	165	Back to the Future Part II	/snLFUFzWUZCdYkAbhZlaGJxiY3I.jpg	1989-11-20	/k5dzvCQkXU2CAhLtlj9BHE7xmyK.jpg	6.6	f	Marty and Doc are at it again in this wacky sequel to the 1985 blockbuster as the time-traveling duo head to 2015 to nip some McFly family woes in the bud. But things go awry thanks to bully Biff Tannen and a pesky sports almanac. In a last-ditch attempt to set things straight, Marty finds himself bound for 1955 and face to face with his teenage parents -- again.	0oCi436G8Xk	2013-12-08 11:47:28.325928	2013-12-08 11:47:28.325928
+17	80876	Okay, America!	-	1932-09-08	/9KaThCewBIuTc5ZeUqJ43PBY7wy.jpg	0.0	f	A gossip columnist's rise to fame. Based closely on the real life of Walter Winchell.	-	2013-12-08 11:47:40.161547	2013-12-08 11:47:40.161547
+18	80881	The City Without Jews	-	1924-07-25	/dkoj6xz2lphFhMyKdcM16YL6k3O.jpg	6.0	f	In the Republic of Utopia, because of the bad economic crisis ailing the nation, the Jews are made the scapegoats for the economic and social ills affecting the population; therefore, the government decides to expel them. Leo Strakosch is among the exiled. He is engaged to Counsellor's Linder's daughter. He gets into the Republic, in a clandestine way, to show to the society the wrongness of their anti-semitic prejudice.	-	2013-12-08 11:47:40.517308	2013-12-08 11:47:40.517308
+19	80888	Ssanin	-	1924-11-07	-	4.0	f	Not available	-	2013-12-08 11:47:40.851479	2013-12-08 11:47:40.851479
+20	80890	The Great Gatsby	/21FBlZsvsHqj5J7CPrPnA5HiTg8.jpg	1949-07-13	/sgqcFXenWxmN0xcULRQcNJSx5kW.jpg	5.8	f	Nick Carraway, a young Midwesterner now living on Long Island, finds himself fascinated by the mysterious past and lavish lifetyle of his landlord, the nouveau riche Jay Gatsby. He is drawn into Gatsby's circle, becoming a witness to obsession and tragedy.	-	2013-12-08 11:47:41.310652	2013-12-08 11:47:41.310652
+21	70160	The Hunger Games	/1LTLrl06uII4w2BTpnQnmWwrKi.jpg	2012-03-23	/rwUrxznyaRa06sPhdwnpOyZudWR.jpg	6.2	f	Every year in the ruins of what was once North America, the nation of Panem forces each of its twelve districts to send a teenage boy and girl to compete in the Hunger Games.  Part twisted entertainment, part government intimidation tactic, the Hunger Games are a nationally televised event in which “Tributes” must fight with one another until one survivor remains.  Pitted against highly-trained Tributes who have prepared for these Games their entire lives, Katniss is forced to rely upon her sharp instincts as well as the mentorship of drunken former victor Haymitch Abernathy.  If she’s ever to return home to District 12, Katniss must make impossible choices in the arena that weigh survival against humanity and life against love. The world will be watching.	fkxcftwKwfI	2013-12-08 11:56:29.001201	2013-12-08 11:56:29.001201
+22	143923	Acquasanta Joe	/bPFINQc4nXB47qV0zvw0XTf0AFS.jpg	1971-12-11	/tP6gyq85XlwTFRhNV6mCSSw7NLm.jpg	0.0	f	A gang of robbers armed with a union army cannon rob the bank holding bounty Killer Acquasanta Joe's earnings to date. He pursues, crossing and double crossing along the way.	-	2013-12-08 11:56:29.359629	2013-12-08 11:56:29.359629
+23	20662	Robin Hood	/avhEibZxIr8NzHQFBjw3FjLjN7u.jpg	2010-05-13	/4gH0vhyOcl7QV3t81653CpWjEB6.jpg	5.9	f	When soldier Robin happens upon the dying Robert of Loxley, he promises to return the man's sword to his family in Nottingham. There, he assumes Robert's identity; romances his widow, Marion; and draws the ire of the town's sheriff and King John's henchman, Godfrey.	aMcDeNo6KUs	2013-12-08 11:56:29.698269	2013-12-08 11:56:29.698269
+24	77663	Killing Season	/f9LlozyhLSy88JJzXBs2lkXBUCR.jpg	2013-07-12	/ftZVLKyr3RDGtVelU06GAbtOFQa.jpg	5.2	f	Two veterans of the Bosnian War, one American, one Serbian, who clash in the remote Smoky Mountain wilderness.	_yseYEtQoJQ	2013-12-08 11:56:30.021828	2013-12-08 11:56:30.021828
+25	80872	Fishing with Gandhi	/7xvk8CyMmN5DwqD9bITMgxLKOPG.jpg	1998-11-10	/bKnp0q8kbBfUVEoJefmv5yNqXVX.jpg	0.0	f	Danno is hitching his way down the California coast, trying to forget his mother's recent marriage to his uncle. He meets Roy and Gil, two truck-driving brothers who are dealing with some pretty severe family inbreeding issues of their own.	-	2013-12-08 11:57:08.151458	2013-12-08 11:57:08.151458
+26	80906	Lotte, das Warenhausmädchen	-	1928-09-07	-	3.5	f	Coming soon	-	2013-12-08 11:57:08.541993	2013-12-08 11:57:08.541993
+27	80914	Man braucht kein Geld	-	1932-02-05	/csnF3H55asFg5z27fYd9WWsllK8.jpg	5.0	f	In this German comedy, an enterprising American uncle comes from Chicago goes to the tiny town of Groditzkirchen to make a fortune on credit even though he only has $10 to his name. To do so, he enlists the aide of a bank clerk and begins posing as a millionaire.	-	2013-12-08 11:57:08.860154	2013-12-08 11:57:08.860154
+28	80955	Die Töchter ihrer Exzellenz	-	1934-05-17	-	4.0	f	Coming soon	-	2013-12-08 11:57:09.177343	2013-12-08 11:57:09.177343
+29	71750	Sleeping Beauty	/kk7zo0uFa5Vep3IAQ10QKDEVW1T.jpg	1987-06-12	/53At2I6lxPvloR1PW8yLwKaOsFT.jpg	10.0	f	-	-	2013-12-08 11:57:57.434323	2013-12-08 11:57:57.434323
+30	35614	A Troll in Central Park	/pvECEJIcsQnpGJudxaVEwMtbujm.jpg	1994-10-07	/4bx2egBIgvpocZj7Wq2z7CAMcs4.jpg	7.0	f	A friendly troll with a magic green thumb grows one flower too many for the queen, whose laws require all trolls to be mean ugly and scare humans whenever possible. As a punishment, he is exiled to a world of concrete, where he should live a life of proper trolldom: Manhattan.	-	2013-12-08 11:57:57.766895	2013-12-08 11:57:57.766895
+31	29614	Gnomes and Trolls: The Secret Chamber	/nQDcaR7f1r9uYAPZ9p4bWhkHyBg.jpg	2010-04-06	/cW40xQ8rUtpHe4Xov2ZcuMiSNbb.jpg	0.0	f	Junior, a teenage gnome, wants nothing more than to invent gizmos and gadgets in his tree-house laboratory. But Junior's old school father, Jalle, the head gnome of the forest, would prefer his son follow in his footsteps and one day be in charge of his own forest. In spite of their differences, on the eve of the first winter storm Junior helps Jalle distribute food rations. Then disaster strikes.	d2bvKnmxldE	2013-12-08 11:57:58.103833	2013-12-08 11:57:58.103833
+32	92775	The White Tower	/5GM6Nfk6mGmETwaJu6CF7PNUqI3.jpg	1950-06-24	/8zR86kUPgwfhvCC3eYEXEF9UlVJ.jpg	0.0	f	Mountain climbers in the Swiss Alps mull over past problems while trying to conquer a perilous peak.	mdyUJtru5uA	2013-12-08 11:57:58.421586	2013-12-08 11:57:58.421586
+33	2610	Shopgirl	/s0rQpWCxRChuiHuQKeDWCM1ipAw.jpg	2005-10-21	/o8cHf3J34IMJtg6XdX9wSkjvw39.jpg	5.0	f	Mirabelle is a disenchanted salesgirl and aspiring artist who sells gloves and accessories at a department store. She has two men in her life: wealthy divorcée Ray Porter and struggling musician Jeremy. Mirabelle falls in love with the glamorous Ray, and her life takes a magical turn, but eventually she realizes that she must empower herself and make a choice between them.	YODMeNOSofo	2013-12-08 12:03:13.842801	2013-12-08 12:03:13.842801
+34	7294	The Man Without a Past	/kwB1MFtx7LtRA86ZqQ3Bj9k0vS7.jpg	2002-03-01	/3jSC10AxxsBlRMtUDaIL0JmHNre.jpg	8.5	f	The second part of Aki Kaurismäki's "Finland" trilogy, the film follows a man who arrives in Helsinki and gets beaten up so severely he develops amnesia. Unable to remember his name or anything from his past life, he cannot get a job or an apartment, so he starts living on the outskirts of the city and slowly starts putting his life back on track.	3srBsylmHW4	2013-12-08 12:03:14.284155	2013-12-08 12:03:14.284155
+35	2	Ariel	/z2QUexmccqrvw1kDMw3R8TxAh5E.jpg	1988-10-21	/fELdVq2KuqW8vWEeb1vi6IfDRSO.jpg	0.0	f	Taisto Kasurinen is a Finnish coal miner whose father has just committed suicide and who is framed for a crime he did not commit. In jail, he starts to dream about leaving the country and starting a new life. He escapes from prison but things don't go as planned...	-	2013-12-08 12:03:14.614323	2013-12-08 12:03:14.614323
+36	7974	The Match Factory Girl	/8YuzMoIZfFheNGeic7bxSYpN1MJ.jpg	1990-01-12	/jcahPS9VAXLz5ltjy54DEfC063N.jpg	8.0	f	The film is about a match factory worker who lives a dull and uneventful life. She is picked up by a man at a nightclub and she sleeps with him. He gets her pregnant then wants nothing to do with her. She decides to take revenge against him and anyone who crosses her.	dfFMfT0TYCU	2013-12-08 12:03:14.9578	2013-12-08 12:03:14.9578
+37	71747	The Frog Prince	/4hQpk109AK3JAof3rNmkztsZq1p.jpg	1986-10-05	/2ixjEn3mvDl3fuYYOuTydyPVDBz.jpg	10.0	f	-	-	2013-12-08 12:10:40.293803	2013-12-08 12:10:40.293803
+38	59832	Dragons: Fire & Ice	/ux9FylDAgmbtQFqir7qmiVUAUJo.jpg	2004-09-11	/ufV1iPBufPg7xk5oR9d7EvRMQfE.jpg	6.0	f	Two young rival dragon riding warriors fight to end a 1000 year old war despite the hidden manipulator opposing them.	-	2013-12-08 12:10:40.617698	2013-12-08 12:10:40.617698
+39	10882	Sleeping Beauty	/nTKdq1NhTIVpZsRSK5wzo5fucn3.jpg	1959-01-29	/biXVl7xLv1sD9ucBEYzheuMYX8b.jpg	6.2	f	A beautiful princess born in a faraway kingdom is destined by a terrible curse to prick her finger on the spindle of a spinning wheel and fall into a deep sleep that can only be awakened by true love's first kiss. Determined to protect her, her parents ask three fairies to raise her in hiding. But the evil Maleficent is just as determined to seal the princess's fate.	3xpKSGWiG6k	2013-12-08 12:10:40.958334	2013-12-08 12:10:40.958334
+40	10195	Thor	/siiHsWPaP2r8hqPiQsry61gCjGY.jpg	2011-05-06	/bIuOWTtyFPjsFDevqvF3QrD1aun.jpg	6.2	f	Against his father Odin's will, The Mighty Thor -a powerful but arrogant warrior god -recklessly reignites an ancient war. Thor is cast down to Earth and forced to live among humans as punishment. Once here, Thor learns what it takes to be a true hero when the most dangerous villain of his world sends the darkest forces of Asgard to invade Earth.	uHBnrJowBZE	2013-12-08 12:11:08.764003	2013-12-08 12:11:08.764003
+41	101907	Hulk vs. Thor	/iHcvBqmrE0VK67IDpki8vWgtOxH.jpg	2009-01-27	/5kDZS7ChCCXloWsNUctpS4sMal9.jpg	6.6	f	For ages, Odin has protected his kingdom of Asgard. But every winter, the All-Father must rest and regain his strength for one week. During this time, all of Asgard's foes (including trolls, giants, dark elves, and demons) try to claim the realm for their own, but they are always stopped by Odin's son, the mighty Thor, albeit with the loss of many brave Asgardian warriors. Loki, god of mischief, has kidnapped Dr. Bruce Banner and brought him to Asgard with the help of Amora, once Thor's lover, now the supervillain known as the Enchantress. Loki makes Banner angry and he changes into the Hulk. The Enchantress then casts a spell over the Hulk which separates Banner from his monstrous alter-ego and grants Loki control over the Hulk's body.	iUFeRt-_TpM	2013-12-08 12:11:09.139702	2013-12-08 12:11:09.139702
+42	106631	Legends of Valhalla: Thor	/sicMyPBADJFGfoyOta04UG2Yfo2.jpg	2011-10-14	/9aWnlKIb6ODpkNJ6GJIjwx1u3rS.jpg	7.0	f	An over confident teen with a magical weapon and a handful of imperfect gods join forces against an evil queen and her army of giants	-	2013-12-08 12:11:09.463706	2013-12-08 12:11:09.463706
+43	76338	Thor: The Dark World	/wYdFAUyCApeUbfWWP0YMsu6b4hs.jpg	2013-11-08	/aROh4ZwLfv9tmtOAsrnkYTbpujA.jpg	7.2	f	Thor fights to restore order across the cosmos… but an ancient race led by the vengeful Malekith returns to plunge the universe back into darkness. Faced with an enemy that even Odin and Asgard cannot withstand, Thor must embark on his most perilous and personal journey yet, one that will reunite him with Jane Foster and force him to sacrifice everything to save us all.	7p7rocHEecE	2013-12-08 12:11:09.893037	2013-12-08 12:11:09.893037
+44	76535	Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer	/wdMq7F5Cr1DGg8ioNPZvWxqQer4.jpg	2011-10-25	/kcumaYz4WcbPcxSbYKjEuwVlYHW.jpg	6.8	f	Phil Coulson is on his way to Albuquerque, New Mexico, when he stops at a convenience store for some donuts...	qwrb2RDQcYg&hd=1	2013-12-08 12:11:10.221088	2013-12-08 12:11:10.221088
+45	47369	Avenger	/d3qo3GJxvhZPRR8N22wDPKPxTGF.jpg	2006-04-09	/gub3U5fxRDFyiw8mxpErfcq03li.jpg	7.0	f	After his own daughter was killed in Panama in 1994, former CIA agent Calvin Dexter became a private 'specialist' in cases which wouldn't reach justice trough the regular legal channels. Two years later he accepts to find Richard 'Ricky' Edmunds for his pa, influential rich businessman Stephen Edmonds. Ricky for a private Canadian war victims charity in Bosnia and went missing. Dexter discovers Ricky was beaten to pulp and drowned for no other crime then helping street boys from the other side by Zoran Zilic and his Serbian paramilitary 'order'. He offers Steven to 'finish the job' as such war criminals don't go to trial. But deputy CIA director Paul Devereaux cares only for a nuclear arms project he wants to use Zilic for. So CIA troubleshooter Frank McBride is ordered to protect him and handle Dexter.	-	2013-12-08 12:11:21.747054	2013-12-08 12:11:21.747054
+46	58935	Zorrita: Passion's Avenger	-		/jzVJnpakF7FS6Pg9t2dAGBgK8Dz.jpg	5.0	f	The virginal Bella has taken on a job as a maid for Lord Joffrey, who runs the small village where Bella and her mother live. Things quickly turn bad for Bella, however, as both Joffrey and his head maid treat her cruelly. Hope comes for the young woman when she discovers a book about the legend of Zorrita, a masked woman who would avenge injustices and seduce any man she wanted. Drawing inspiration from her fictional hero, Bella grabs a sword and a costume and sets out to start avenging and seducing.	-	2013-12-08 12:11:22.109792	2013-12-08 12:11:22.109792
+47	94740	The Double-D Avenger	-	2001-01-01	/sKn0x1HJ2Jr7up3UIAtwGocqYtE.jpg	0.0	f	Three of the biggest and bustiest Russ Meyer stars - Kitten Natividad, Haji, and Raven De La Croix - make a comeback in 'The Double-D Avenger,' the first in a series of sexy action/comedy feature films by William Winckler Productions. Big, busty Chastity Knott must use her new amazing abilities as the super-stacked costumed crime fighter, the Double-D Avenger, to stop villainous bikini bar owner Al Purplewood and his sexy, murderous strippers.	-	2013-12-08 12:11:22.432031	2013-12-08 12:11:22.432031
+48	27601	Citizen Toxie - The Toxic Avenger IV	/1U17qANWGImoWjGqgLVB6uVLVZC.jpg	2000-10-08	/cgteAVm62mfterFRHkhhoSIe05H.jpg	5.3	f	When the notorious Diaper Mafia take hostage the Tromaville School for the Very Special, only the Toxic Avenger and his morbidly obese sidekick Lardass can save Tromaville.	3OgYntUsD-I	2013-12-08 12:11:22.795574	2013-12-08 12:11:22.795574
+49	163441	Masked Avenger Versus Ultra-Villain in the Lair of the Naked Bikini	-	2000-01-01	/aNFDUnCPoS80lFLudOhNlRpr779.jpg	0.0	f	Masked Avenger is a hero to the modern world. He destroys his enemies with kung fu fighting, handsaws and guns, but with one small hang-up. At the sight of a woman, The Masked Avenger immediately begins to gratify himself, no matter what situation he is in. The evil Helmut Gunta plans to impregnante a virgin in order to have an heir, and the woman he has in mind is a nun, Sister Mary who happens to be the Masked Avenger's sister. Gunta has a plan to stop The Masked Avenger from getting in the way... organise a gang of strippers to keep him pre-occupied until Sister Mary is pregnant.	-	2013-12-08 12:11:23.126224	2013-12-08 12:11:23.126224
+50	111425	The Avenger	/oaK09qDxHi2FS3ncnWjdEWWtTyj.jpg	1960-08-04	/tTPm5pJQEbJYtVmxJ92AclrOWU8.jpg	5.5	f	-	-	2013-12-08 12:11:53.82114	2013-12-08 12:11:53.82114
+51	104279	Blood and Guts	-	1971-06-12	/gYNUHcMTZ3TofeZv3ZrqI8zo18l.jpg	0.0	f	The deadly 'Wooden Hag' decides to get rid of the devil knight. Tiger Lim attracts an array of top samurai by offering 'book of nine Yin' as a reward for the head of the devil's knight.	-	2013-12-08 12:11:54.20368	2013-12-08 12:11:54.20368
+52	194798	La leggenda di Enea	-	1962-11-28	/uAIvOZwT77BtiYcPz2HVpq1VIEL.jpg	0.0	f	Aeneas leads escapees from the Trojan war to new land in Italy, and must deal with new threats to his people.	-	2013-12-08 12:11:54.540262	2013-12-08 12:11:54.540262
+53	74523	Born To Race	/y1NhWkWoqaTldwr9ubleQ3YF0MO.jpg	2011-03-19	/qOZ349Z83Sl3HnWEYoIygsSeviY.jpg	5.3	f	Born To Race is the story of Danny Krueger, a rebellious young street racer on a collision course with trouble. After an accident at an illegal street race, he is sent to a small town to live with his estranged father, a washed up NASCAR racer. When Danny decides to enter the NHRA High School Drags, he's forced to seek his father's help in taking down the local hot shot	6ZwxqAZV1QI	2013-12-08 12:13:49.065809	2013-12-08 12:13:49.065809
+54	22166	Fast Lane	/7iJJpEPdLX9TdAarSOZJ6oirwVW.jpg	2009-01-01	/ut1P5jOiBxHGbxDuKUSSAmaC6MF.jpg	4.0	f	A streetwise cop infiltrates a Los Angeles car-theft ring after a high-speed accident on the freeway reveals a violent turf war between two all-girl gangs. When Lieutenant Baynes (Stephen Bauer) assigns Brandy Martinez (Melina Lizette) the task of going undercover to gather evidence against notorious chop-shop owner Mama (Olivia Brown), Brandy befriends a former car thief named Eva Strong (Kenyett	cnHkKIBMQAQ‎	2013-12-08 12:13:49.410694	2013-12-08 12:13:49.410694
+55	16411	Initial D	/5oEMUk0zRftoOFNBcwbVjxQVjZ0.jpg	2005-05-12	/6l2FwQ9YJTKgPOmijlnm8jgdXvW.jpg	5.9	f	After winning his first competition, Takumi focuses his attention on drift racing, a sport he has unknowingly perfected while delivering tofu in his father's Toyota AE86.	-	2013-12-08 12:13:49.736666	2013-12-08 12:13:49.736666
+56	34652	Drive a Crooked Road	/50RKmIOggEMKv2gxJitF2lYedz2.jpg	1954-03-10	/9VNAm8Ta6wnIA99dIMqckk9G5LW.jpg	6.0	f	A mechanic gets caught up with the mob when he falls for a gangster's girlfriend.	rnvL4spXp1g	2013-12-08 12:13:50.076271	2013-12-08 12:13:50.076271
+57	74330	Lives of the Saints	-	2007-01-26	/6wTP6vqbJhfm9Ud2RDUS1mXyT2Q.jpg	0.0	f	Mr Karva runs a shady little empire in North London. We don't know exactly how he makes his money but we know it's probably not very nice. Mr Karva's stepson, Othello, has ambitions to take the old man's place; and Othello's fainthearted friend, Emilio, has ambitions of his own. This delicate balance of power is upset when Roadrunner finds a strange, sickly-looking 10 year old boy in the park. All his life, Roadrunner has been on the move - but when he looks into the child's eyes, he finds he can finally stop running. It becomes clear that the child can grant each character their own taste of heaven - the 'perfect, rosy future of your dreams'. The child never talks but transforms the world around him, working on the desire in each character's heart, whatever it may be.	-	2013-12-08 12:50:26.903539	2013-12-08 12:50:26.903539
+58	74332	Incident in A Small Town	-	1994-01-23	/m5Z5VQ8oTuxKUjSVc8hvXcNEfDo.jpg	0.0	f	Lily and her son John live alone in a small town as her husband has been killed fighting the war in France. Or at least that is what she told John, but the arrival of Frank back in the town leads him to find out that she not only has been lying about that but also about the fact that she never married him. When Frank tussles with Lily in her yard she applies for a restraining order, calling on the help of her father (the esteemed judge Stoddard Bell) and his partner (lawyer Harmon Cobb). The case fails and when Frank is found murdered later that night Stoddard is arrested and Cobb has a defence case on his hands.	-	2013-12-08 12:50:27.274069	2013-12-08 12:50:27.274069
+59	74342	The Consul of Sodom	/6W5gDM56ecivgIy2qlDN4JetCUc.jpg	2010-06-20	/QQFWQLcDl0R2GdiS8OY2plZY29.jpg	6.5	f	Fascinating journey through the life and work of the prestigious Catalan poet Jaime Gil de Biedma, both marked by sexuality and eroticism. Charismatic and somewhat eccentric, brilliant intellectual with extraordinary sensitivity and member of Barcelona's 'gauche divine' in the 60s, Gil de Biedma liked to describe himself as a 'poet of experience' while he suffered dreadfully from the dichotomy strangling him: bourgeois and executive for a multinational by day, communist and homosexual poet by night.	http://www.youtube.com/watch?v=zXlknsa-6KE	2013-12-08 12:50:27.924763	2013-12-08 12:50:27.924763
+60	74346	Al fin, el mar	-	2005-01-27	/kL63fJIyUqpVV4bGMg8UUtrFhtZ.jpg	0.0	f	-	-	2013-12-08 12:50:28.291211	2013-12-08 12:50:28.291211
+61	29332	Raw Iron: The Making of 'Pumping Iron'	/1v748X0SN6KY9XpXjtAqIFVDzEH.jpg	2002-01-01	/w4v3fKJdi7fUFQCE6mUZdX5Ecnk.jpg	10.0	f	A documentary on the making of "Pumping Iron" to celebrate its 25th anniversary. Aired on Cinemax.	-	2013-12-08 12:56:14.49524	2013-12-08 12:56:14.49524
+62	139350	Iron Dae-oh: The Nation's Iron Bag!	-		/7C6tqKbYr1NR26mKIePgsCsZZYF.jpg	0.0	f	This hateful world only allows handsome guys to date! 'Below average guy' and Chinese restaurant delivery guy Kang Dae-oh was born single and solo until now. He has a crush on college girl Ye-rin whom he fell in love with at first sight but is blocked by her spec and hasn't been able to tell her his feelings yet.	-	2013-12-08 12:56:14.82658	2013-12-08 12:56:14.82658
+63	181541	Iron Maiden: Maiden England '88	/ojAd3Pqhm9qRq0i8xzZNqx2UAPZ.jpg	2013-03-24	/9IA6RaHJ4jUXPgLMLMsFPoE3sk8.jpg	9.0	f	Maiden England (re-released in 2013 as Maiden England '88) is a live video by the band Iron Maiden during their Seventh Son of a Seventh Son world tour, which was dubbed 7th Tour of a 7th Tour. It was recorded at the NEC in Birmingham, England on 27 and 28 November 1988, released on VHS in November 1989, followed by a limited VHS/CD edition in 1994.  In 2013, the full concert footage, including encores which were not included on the original VHS, was reissued on DVD, CD and LP under the new title Maiden England '88.	91EAEKF2plE#!	2013-12-08 12:56:15.158379	2013-12-08 12:56:15.158379
+64	151159	Iron Butterfly - The Lost Broadcasts	-		/vFH5cEraNBtgEhIU0LWkU3mTWM3.jpg	0.0	f	Iron Butterfly - The Lost Broadcasts	-	2013-12-08 12:56:15.491687	2013-12-08 12:56:15.491687
+65	1726	Iron Man	/ZQixhAZx6fH1VNafFXsqa1B8QI.jpg	2008-05-01	/s2IG9qXfhJYxIttKyroYFBsHwzQ.jpg	6.9	f	After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.	KAE5ymVLmZg	2013-12-08 12:56:29.610049	2013-12-08 12:56:29.610049
+66	194310	Iron Man	-	1931-04-29	/zyvl5y4iphmmAAQdZ37maFyvaE0.jpg	0.0	f	Prizefighter Mason loses his opening fight so wife Rose leaves him for Hollywood. Without her around Mason trains and starts winning. Rose comes back and wants Mason to dump his manager Regan and replace him with her secret lover Lewis.	-	2013-12-08 12:56:30.591706	2013-12-08 12:56:30.591706
+67	69592	Iron Man	/u36if7fq60FXOnCgBEQpafyEJwT.jpg	1951-08-18	/hcpm8d6cqo3rVqpfVPUk2IRHGRD.jpg	0.0	f	In Coaltown, Pennsylvania, miner Coke Mason hopes to better himself, buy a radio store, and marry Rose Warren. His gambler brother George thinks Coke can be more successful as a boxer, knowing that when he fights he's consumed with a murderous rage that makes him an "iron man." Seeing dollar signs in Rose's eyes, Coke reluctantly agrees, though he's fearful of the "killer instinct" that makes him a knockout success in the ring...and brings him the booing hatred of the fans. Will Coke throw off his personal demon before he kills someone?	-	2013-12-08 12:56:30.94019	2013-12-08 12:56:30.94019
+68	224127	The Coolangatta Gold	-	1984-11-21	/pSFyQrIQYzkgtr5MYf7NCdoqaeY.jpg	0.0	f	Steve Lucas is a nineteen year old who is filled with the burning resentment of being forced to live in his brother's shadow. His brother Adam, is burdened by his father's desire for glory, and must win The Coolangatta Gold Tri-Aquathon, It is the greatest endurance test of them all: a marathon involving a 20 kilometer beach run, 6 kilometer swim and a 17 kilometer surf ski from Surfers Paradise along the golden arc of beach to Coolangatta and back to the start. The Coolangatta Gold is a story of human endeavor and endurance against overwhelming odds.	-	2013-12-08 12:56:31.271608	2013-12-08 12:56:31.271608
+69	49047	Gravity	/hz3JfAikYXtaNWIJhWM4p5sy5OZ.jpg	2013-10-04	/2gPjLWIyrWlAn2DgKMOKTBnZYyO.jpg	8.3	f	Dr. Ryan Stone (Sandra Bullock), a brilliant medical engineer on her first Shuttle mission, with veteran astronaut Matt Kowalsky (George Clooney) in command of his last flight before retiring. But on a seemingly routine spacewalk, disaster strikes. The Shuttle is destroyed, leaving Stone and Kowalsky completely alone-tethered to nothing but each other and spiraling out into the blackness of space. The deafening silence tells them they have lost any link to Earth and any chance for rescue. As fear turns to panic, every gulp of air eats away at what little oxygen is left. But the only way home may be to go further out into the terrifying expance of space…	YUswKg7zQIo	2013-12-08 12:58:26.86604	2013-12-08 12:58:26.86604
+70	111201	Gravity	-	1976-01-01	-	0.0	f	In this spoof of public-school educational films, young Mary Jane asks the question, "What is gravity?" After asking various (dysfunctional) family members without success, she then asks Dr. Waxman of the Karl LaFong Foundation for Gravitational Research (motto: "heads in the clouds and feet on the ground"), who explains that gravity is caused by a substance named GR12. Unfortunately, the world is running out of GR12. The cartoon character Jiminy Gravity then explains (in song) how we can conserve gravity with such practices as sitting on the floor and carrying helium balloons.	-	2013-12-08 12:58:27.256601	2013-12-08 12:58:27.256601
+71	47610	Gravity	/lN0soulM8nEgksRZkGWOtQJWDOj.jpg	2010-03-24	/ky0CtSMpvCrcLKaXzKlFDuRsqhC.jpg	7.5	f	The story of a seemingly settled bank employee who breaks the shackles of his everyday life and becomes a wanderer between worlds. Frederik is an up-and-coming young bank employee who lives an ordinary life. When a bank customer, whom Frederik has denied a loan in the face of the bank crisis, shoots himself in front of Frederik, he snaps. Together with ex-con Vince,he begins to live out a new, dark side of himself. He robs his rich bank customers' homes and gives the money to the needy. The initial rush of crossing social boundaries soon develops into an addiction to ever greater thrills.	NQPtadbKP-4	2013-12-08 12:58:27.578709	2013-12-08 12:58:27.578709
+72	61745	Nazi Ufos: How They Fly - Exposing the German Tesla Anti-Gravity & Free Energy Program	/zq1ZxbwsqlykEsVREbKrGt3npvK.jpg	2004-08-04	/4eyIBPjPoTu9r93OM5ReWEWViY2.jpg	0.0	f	Paul Scarzo interviews author and researcher William R. Lyne. The topic covered in this documentary is alternative forms of propulsion and energy creation methods. The focus is some work done by Nikola Tesla, and that of German scientists under the Third Reich.	-	2013-12-08 12:58:27.926219	2013-12-08 12:58:27.926219
+73	31978	Defying Gravity	/d0MleouL8QpvqLtjevLweHTVfBr.jpg	1997-07-09	/jyyhSMOhyq3SphiwWy2av3W2nfC.png	0.0	f	John Keitel wrote the film based on his personal undergraduate experience and filmed campus footage in the neighborhood and environs surrounding his graduate film school alma mater USC.	-	2013-12-08 12:58:28.333691	2013-12-08 12:58:28.333691
+74	6436	Star Command	-	1996-03-11	/r1P9KwtwVu8aAXA7kvuVdkrOYNB.jpg	0.0	f	A bunch of young and impulsive space cadets make their first real flight in space and realize that the attack they suffered wasn't a training mission. They face the Enemy alone and have the chance to save the world, and maybe to prevent the war? Can the cadets conquer the more experienced, stronger and much more evil enemy? (Written by Peter 'grin' Gervai  )	-	2013-12-08 12:59:44.296694	2013-12-08 12:59:44.296694
+75	239021	Vera	-	2013-04-14	/m4S4wPHp15AlmiQesQ3cLbinOLp.jpg	0.0	f	VERA is a sci-fi drama short film that focuses on an astronaut who is stranded alone in space and is now headed on a collision course with the Sun. Adam struggles with isolation and his sanity on the ship while dealing with emotions from his past and future.	-	2013-12-08 12:59:44.724855	2013-12-08 12:59:44.724855
+190	77587	The Who - The Vegas Job	/2VRLscsAZHf0wuabyn6FVvos1X0.jpg	2006-11-07	/24XpNZFY2Cuc0OTAwAa9TSYAno4.jpg	0.0	f	The who live	-	2013-12-08 18:56:36.76865	2013-12-08 18:56:36.76865
+76	69315	Battlestar Galactica: Razor	/3ySDlNR4ZMqElnjKBinxVNOMR5a.jpg	2007-11-24	/L7fCaAuhKToQJSUCTYIjPEm0og.jpg	7.1	f	A two-hour Battlestar Galactica special that tells the story of the Battlestar Pegasus several months prior to it finding the Galactica.	854qzbDtxTY	2013-12-08 12:59:45.057476	2013-12-08 12:59:45.057476
+77	2900	The Astronaut's Wife	/3z9eCqGkOgpyq55XnEgmuytAU3f.jpg	1999-08-26	/2zm3a3453aWN078Qd6nIQngbEkM.jpg	6.0	f	A NASA astronaut and his wife's lives are propelled into utter dismay upon his return home from a space mission that lost contact with Earth for two minutes. What happened during those frightening 120 seconds in space will effect their marriage, sanity, and ultimately threaten their lives.	ZBo6W2s7W2A	2013-12-08 12:59:45.40129	2013-12-08 12:59:45.40129
+78	24	Kill Bill: Vol. 1	/5J4OU9qXf15v2wkpnaFNCWzexdO.jpg	2003-10-09	/y2K3ywCntbRjZU6xN5xTc3ee9D6.jpg	6.8	f	An assassin is shot at the altar by her ruthless employer, Bill, and other members of their assassination circle. But "The Bride" lives to plot her vengeance. Setting out for some payback, she makes a death list and hunts down those who wronged her, saving Bill for last.	3sbKt3ptUJo	2013-12-08 13:12:16.741588	2013-12-08 13:12:16.741588
+79	393	Kill Bill: Vol. 2	/lJVzCV3cTraTVReyEMLgsoSxb2t.jpg	2004-04-15	/dB7JBQ82EsLEM3RopaN9gUPTQp7.jpg	6.9	f	The Bride unwaveringly continues on her "roaring rampage of revenge" against the band of assassins who had tried to kill her and her unborn child. The woman visits each of her former associates one by one, checking off the victims on her Death List Five until there's nothing left to do … but kill Bill.	TnSTPTs_RiA	2013-12-08 13:12:17.111032	2013-12-08 13:12:17.111032
+80	11	Star Wars: Episode IV - A New Hope	/4iJfYYoQzZcONB9hNzg0J0wWyPH.jpg	1977-05-25	/tvSlBzAdRE29bZe5yYWrJ2ds137.jpg	7.5	f	Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire. Venturesome Luke Skywalker and dashing captain Han Solo team together with the loveable robot duo R2-D2 and C-3PO to rescue the beautiful princess and restore peace and justice in the Empire.	C7GrizpZmjc	2013-12-08 15:20:08.138412	2013-12-08 15:20:08.138412
+81	72694	The Making of 'Star Wars'	/zO26rEjusUhd2fAKh6pFqoMZHqH.jpg	1977-09-16	/WgsInarGqxj5a33H1oO1IJACDU.jpg	8.9	f	Ever wonder how they ever managed to make a movie like Star Wars? Well, bickering droid duo C-3PO and R2-D2 host this tour of the mind of creator George Lucas and what inspired him to make the movie. Even interviewed are the cast and crew, even features scenes of when C-3PO, R2-D2, and Darth Vader planted their footprints (or in R2's case, tread-prints) into cement. Also discussed is Star Wars mania, how fans loved the movie, collected the merchandise and danced the disco music. Also shown are behind-the-scenes looks at the movie, as well as how difficult each effect was in doing since they didn't have the convenience of computer animation back then.	-	2013-12-08 15:20:08.546868	2013-12-08 15:20:08.546868
+82	102817	Quentin Tarantino's Star Wars	/a61gR0hrF1dcBJqw7m45q1TTh87.jpg	2002-06-09	/5jbEXq7SmyahaYWHQoyO6HVUPjj.jpg	10.0	f	We're all familiar with the story: a long time ago in a galaxy far, far away, on a planet called Tattooine, a boy named Luke Skywalker is adopted by the only remaining Jedi knight and helps the Rebellion destroy the Death Star after learning the ways of the force. However, what if "Pulp Fiction" director Quentin Tarantino had directed George Lucas' script, using Kenner action figures and stop computer animation?	-	2013-12-08 15:20:08.87639	2013-12-08 15:20:08.87639
+83	1894	Star Wars: Episode II - Attack of the Clones	/560F7BPaxRy8BsOfVU6cW4ivM46.jpg	2002-05-16	/2vcNFtrZXNwIcBgH5e2xXCmVR8t.jpg	6.1	f	(22 Years Before Episode IV) Ten years after the events of the Battle of Naboo, the galaxy has undergone significant changes. Anakin Skywalker and Obi-Wan Kenobi are assigned to protect Padmé from political separatists. As relationships form and powerful forces collide, these heroes face choices that will impact the destiny of the Republic.	CO2OLQ2kiq8	2013-12-08 15:20:09.21053	2013-12-08 15:20:09.21053
+84	810	Shrek the Third	/kF8Q8cFd3Q0IHHLhqpAIb85mcB8.jpg	2007-05-17	/eDAnxTxVbrTFDz8KTMGgBXYLgYn.jpg	5.8	f	Shrek and Co, return for more adventures. The King of Far Far Away has died and Shrek and Fiona are to become King &amp; Queen. Shrek however wants to return to his cosy swamp and live in peace and quiet. So when he finds out their is another heir to the throne, they set of to bring him back to rule the kingdom. Meanwhile, Prince Charming enlists the fairy tale baddies to steal the throne away.	InR865IDDjU	2013-12-08 15:22:26.261786	2013-12-08 15:22:26.261786
+85	62211	Monsters University	/5mDCKKS7M8aUZKdShnCa7lLbzmH.jpg	2013-06-21	/flXrt9Dh0Tki6zOgX0TOq63KpG8.jpg	6.9	f	A look at the relationship between Mike and Sulley during their days at Monsters University — when they weren't necessarily the best of friends.	JbeFIfS8uno	2013-12-08 15:22:26.617462	2013-12-08 15:22:26.617462
+86	11688	The Emperor's New Groove	/8uobnSIkPtrdAI2bV1J9GXkZYIh.jpg	2000-12-09	/klhsrqyhvFaoM6Rwjo9dFPYJQSK.jpg	6.7	f	Kuzco is a self-centered emperor who summons Pacha from a village and to tell him that his home will be destroyed to make room for Kuzco's new summer home. Kuzco's advisor, Yzma, tries to poison Kuzco and accidentally turns him into a llama, who accidentally ends up in Pacha's village. Pacha offers to help Kuzco if he doesn't destroy his house, and so they form an unlikely partnership.	t_YjSbp5KHM	2013-12-08 15:22:26.947866	2013-12-08 15:22:26.947866
+87	41513	The Smurfs	/83lCHxDeIrovVxPw2ztvwcoH6rA.jpg	2011-07-29	/ntP7anZWyi7TxFARKp78bHTLEVr.jpg	5.5	f	When the evil wizard Gargamel chases the tiny blue Smurfs out of their village, they tumble from their magical world and into ours -- in fact, smack dab in the middle of Central Park. Just three apples high and stuck in the Big Apple, the Smurfs must find a way to get back to their village before Gargamel tracks them down.	yhBpgqXwrt8	2013-12-08 15:22:27.279647	2013-12-08 15:22:27.279647
+88	30675	Planet Hulk	/c8WSqCVxyi9uvk3sZHMWHpKJ1j7.jpg	2010-02-02	/ixwVZNr3uXlLDB3go2q3ShaZCOl.jpg	6.3	f	When the Hulk becomes too dangerous for the Earth, the Illuminati trick Hulk into a shuttle and launch him into space to a planet where the Hulk can live in peace. Unfortunately, the Hulk's struggle to escape makes a malfunction in the shuttle causing Hulk to land on the planet Sakaar where he is sold into slavery and trained as a gladiator.	cf13JRZKspM	2013-12-08 15:22:28.10577	2013-12-08 15:22:28.10577
+89	15257	Hulk vs. Wolverine	/kxjsUeDWKN4eHmXSdYi7RPpw2sf.jpg	2009-01-27	/dXjbsjVkpykJECOO0kgThsipSYP.jpg	6.9	f	Department H sends in Wolverine to track down a mysterious beast known by the US Military as the Hulk, who is rampaging across the Canadian wilderness. Surveying the extent of the damage to a destroyed town, Wolverine notices a toxic scent as well as the smell of gunpowder. He is then deployed to the wilderness to resume tracking the creature.	oSM7MSYiDAk	2013-12-08 15:22:28.468674	2013-12-08 15:22:28.468674
+90	26881	The Incredible Hulk Returns	/yu6G40r3UyC86Yw7JxnS8ah9yCz.jpg	1988-05-21	/uuMcUoWzvbYvevkz1ToCGOkv5T4.jpg	6.0	f	Dr. David Banner meets a former student, who has a magical hammer that summons Thor, a Norse god who is prevented from entering Valhalla. When the two superheroes stop feuding long enough to breathe, they are a team unmatched by any of their enemies.	-	2013-12-08 15:22:28.837087	2013-12-08 15:22:28.837087
+91	19593	The Death of the Incredible Hulk	/7sSLG4qatiiSAHatgIIOiEut2uR.jpg	1990-02-18	/tiRTZf3VUpnfeLc023CN8W59BmD.jpg	2.0	f	During the critical experiment that would rid David Banner of the Hulk,a spy sabotages the laboratory. Banner falls in love with the spy, Jasmin, who performs missions only because her sister is being held hostage by Jasmin's superiors. Banner and Jasmin try to escape from the enemy agents to rebuild their lives together, but the Hulk is never far from them.	-	2013-12-08 15:22:29.203124	2013-12-08 15:22:29.203124
+92	238710	Mary's Land (Tierra de María)	-	2013-12-05	/kyVFRrC3cGHutCn5xMfOTsGmc5Z.jpg	0.0	f	-	-	2013-12-08 15:51:47.553126	2013-12-08 15:51:47.553126
+93	46686	Third World Cop	-	2000-02-12	/dGQIL1ECPyys79NHMpKnj6Oe7dS.jpg	0.0	f	Loose cannon cop Capone returns to his home town of Kingston to join a group of officers fighting organised crime in the area. On his first day he uncovers gun smuggling operation that may be connected with lead criminal Oney. However his old crew, led by Ratty, also are involved leading Capone to a choice between his job and his old crew.	-	2013-12-08 15:52:12.00546	2013-12-08 15:52:12.00546
+94	2034	Training Day	/faGcxbIPSSUZLjYAGiguQznex1Z.jpg	2001-10-05	/sDT2biSB7wzBJdXq9o3ldr7VfvY.jpg	6.7	f	On his first day on the job as a narcotics officer, a rookie cop works with a rogue detective who isn't what he appears.	gKTVQPOH8ZA	2013-12-08 15:52:12.437993	2013-12-08 15:52:12.437993
+95	327	Brother	/bf9KmHS257gWrlqwlGvIVxKMvDY.jpg	2000-10-01	/wiFR7mpL9Y4NBLwW2poQlcUSdNu.jpg	6.5	f	A Japanese Yakuza gangster’s deadly existence in his homeland gets him exiled to Los Angeles, California where he is taken in by his little brother and his brother’s gang. This is the first English film by Takeshi Kitano.	pa7JMGWOnp8	2013-12-08 15:52:12.833489	2013-12-08 15:52:12.833489
+96	21968	Super Fly	/fsC62B7KlimajbemLOpfkhkqlgL.jpg	1972-08-04	/4u4yCqhJnBVRghYWfY1v5wqohvx.jpg	6.5	f	Priest is a drug dealer, who wants to quit. But before he does, he tries to make one last big score. To do that he needs 30 kilos. Now he goes around trying to find someone who can provide him with it and someone offers but the only problem is the person who is providing him, expects him to go on dealing for him. So he makes plans to escape.	4SqdLsCsjYw	2013-12-08 15:52:13.229562	2013-12-08 15:52:13.229562
+97	59822	The Big Wheel	-	1949-11-04	/6eAOq2aKZntiAmhkuTLsGWc6vX6.jpg	0.0	f	The ambitious son of an accomplished race driver struggles to outrun his father's legacy and achieve his own successes.	-	2013-12-08 15:52:54.196549	2013-12-08 15:52:54.196549
+98	4990	Hustle	/AnXWx5tcgDQsbhsIwUHSFZX52jH.jpg	1975-12-25	/rJQ9WDTKsGR3xcolMiQKHBF93dw.jpg	6.8	f	Phil Gaines is a bitter, cynical cop who investigates the case of a dead stripper/porno actress found on the beach. Gaines is experiencing a troubled relationship with a hooker, and things don't get any better when the dead girl's father launches his own investigation.	-	2013-12-08 15:52:54.61671	2013-12-08 15:52:54.61671
+99	219198	Ten Laps to Go	-	1936-12-05	/4HVYuns6I9KmiuHWJHuWlblELY5.jpg	0.0	f	Larry Evans (Rex Lease), champion race car driver, is envied by his chief rival, Eddie DeSylva (Duncan Renaldo), who has more ambitions than merely winning the races; he has designs on the motor patent held by Corbett (Tom Moore), Larry's employer. Eddie also has a yen for Corbett's daughter, Norma (Muriel Evans), who prefers Larry. Eddie intentionally causes a race wreck that injures Larry and sends him to the hospital.	-	2013-12-08 15:53:16.402523	2013-12-08 15:53:16.402523
+100	25305	The Gumball Rally	/5crDaY2qzPkGRfET2FayeEqHrgq.jpg	1976-07-28	/cpTPLnuxxk449NmEFv7Ttuyx6Rw.jpg	7.5	f	A group of people from different backgrounds have one thing in common: when they hear the world "gumball" whispered by one of the others, they know that it's time for the Gumball Rally: a no-holds barred, secret, winner-take-all rally across the USA.	a-GCvPh3nQQ	2013-12-08 15:53:16.759002	2013-12-08 15:53:16.759002
+101	81446	The Baytown Outlaws	/30gRP0J6ag0XUZeSFQhmtjhTw3i.jpg	2012-08-27	/laG8cjfOvSgjmR0wXXwPZVhhQDk.jpg	6.2	f	When three redneck brothers agree to help a woman save her son from an abusive father, they become targets on the run from an odd cast of characters.	awqRXMorkp8	2013-12-08 16:01:35.046765	2013-12-08 16:01:35.046765
+102	82028	Black Out	/KwW4VqWQW1Wat3Cz1tqbFEdOWS.jpg	2012-01-26	/ld3jUZM8vhy6CfvCXa35TvnsJ9V.jpg	4.5	f	Ex-crimineel Jos Vreewijk (Raymond Thiry) wordt de dag voor zijn huwelijk wakker met een lijk, een pistool in zijn hand en een black-out. Daar bovenop wordt hij beschuldigd van het stelen van twintig kilo cocaïne. Hij heeft 24 uur de tijd om uit te zoeken wat er is gebeurd.	BXJJ0ZjD6-k	2013-12-08 16:01:35.510375	2013-12-08 16:01:35.510375
+103	82805	Piano 17	-	2006-03-16	/xTrGu6V486bDG7Gz6hKxHm74bPV.jpg	0.0	f	-	-	2013-12-08 16:01:35.840095	2013-12-08 16:01:35.840095
+104	87235	Crackers	-	1984-02-17	/na5vKuOPwsP81mLcfmegO33jmCI.jpg	6.0	f	Garvey is a San Francisco pawnshop operator. His unemployed and criminal friends Dillard, Turtle, and Weslake, team up with Boardwalk, a local pimp, to burgle Garvey's shop while the owner is out of town. During the elaborate planning process, Dillard falls for a Hispanic woman, the sister of a friend. Also, Boardwalk is assigned to case a local apartment, where he meets and falls for the maid. Amidst all these romantic hijinks, Weslake puts together a burglary plan, which is executed by the makeshift gang.	-	2013-12-08 16:01:36.164181	2013-12-08 16:01:36.164181
+105	15801	What Doesn't Kill You	/lmkHAzjZEo759nkV0BvOiNAtZZQ.jpg	2008-12-12	/9MAYzGYktFZvwxySsRLFMdKZ8dg.jpg	6.5	f	What Doesn’t Kill You stars Mark Ruffalo (Brian) and Ethan Hawke (Paulie) as friends who grew up like brothers on the gritty streets of south Boston. As petty crimes and misdemeanors grow into more serious offenses, they eventually fall prey to organized crime boss Pat Kelly, played by Brian Goodman.	Fgg_ri-PuiU	2013-12-08 16:01:42.380633	2013-12-08 16:01:42.380633
+106	14565	Love Lies Bleeding	/oI2jrOgPBerJ4VAfcktUCYsCf6K.jpg	2008-01-15	/gFyPFXEJBb8LKN2dPLfbH9dL5TS.jpg	5.5	f	A struggling young couple stumbles upon a cache of dirty money after a shootout in their apartment building.	http://www.youtube.com/watch?v=YEsGuz6q-6M&fmt=37	2013-12-08 16:01:42.941745	2013-12-08 16:01:42.941745
+108	754	Face/Off	/nJ5Nz0zoD4XGWXJurdB54H4GIyf.jpg	1997-06-26	/xq9Gif3CN4oyGkMnqreWuGl4Gt.jpg	6.2	f	An antiterrorism agent goes under the knife to acquire the likeness of a terrorist and gather details about a bombing plot. When the terrorist escapes custody, he undergoes surgery to look like the agent so he can get close to the agent's family.	3zebJ_NoduE	2013-12-08 16:01:43.341459	2013-12-08 16:01:43.341459
+110	9696	Ichi the Killer	/d2YA8VGE0SwV8IhPCmmzSY3ze6q.jpg	2001-12-22	/mkmwESVpq7KrcxdPMreTFqlNF0S.jpg	7.4	f	As sadomasochistic yakuza enforcer Kakihara searches for his missing boss he comes across Ichi, a repressed and psychotic killer who may be able to inflict levels of pain that Kakihara has only dreamed of.	evxG4Hip5MI	2013-12-08 16:01:43.826003	2013-12-08 16:01:43.826003
+107	14565	Love Lies Bleeding	/oI2jrOgPBerJ4VAfcktUCYsCf6K.jpg	2008-01-15	/gFyPFXEJBb8LKN2dPLfbH9dL5TS.jpg	5.5	f	A struggling young couple stumbles upon a cache of dirty money after a shootout in their apartment building.	http://www.youtube.com/watch?v=YEsGuz6q-6M&fmt=37	2013-12-08 16:01:43.096401	2013-12-08 16:01:43.096401
+109	754	Face/Off	/nJ5Nz0zoD4XGWXJurdB54H4GIyf.jpg	1997-06-26	/xq9Gif3CN4oyGkMnqreWuGl4Gt.jpg	6.2	f	An antiterrorism agent goes under the knife to acquire the likeness of a terrorist and gather details about a bombing plot. When the terrorist escapes custody, he undergoes surgery to look like the agent so he can get close to the agent's family.	3zebJ_NoduE	2013-12-08 16:01:43.574949	2013-12-08 16:01:43.574949
+111	9696	Ichi the Killer	/d2YA8VGE0SwV8IhPCmmzSY3ze6q.jpg	2001-12-22	/mkmwESVpq7KrcxdPMreTFqlNF0S.jpg	7.4	f	As sadomasochistic yakuza enforcer Kakihara searches for his missing boss he comes across Ichi, a repressed and psychotic killer who may be able to inflict levels of pain that Kakihara has only dreamed of.	evxG4Hip5MI	2013-12-08 16:01:44.07172	2013-12-08 16:01:44.07172
+112	9615	The Fast and the Furious: Tokyo Drift	/kOZbGxeGMJ4Y6bxv8eOadFt8QLF.jpg	2006-06-03	/7zcstia8qDvxLhAQD80uLAlCsL9.jpg	6.0	f	In order to avoid a jail sentence, Sean Boswell heads to Tokyo to live with his military father. In a low-rent section of the city, Shaun gets caught up in the underground world of drift racing	xZ96tl5MrfU	2013-12-08 16:16:38.648351	2013-12-08 16:16:38.648351
+113	584	2 Fast 2 Furious	/8RkLHFm2PK4PO5W0WZA5LMXLZBz.jpg	2003-06-02	/3CrNPUulPGbsJIH2ZnLYomGIVrk.jpg	5.9	f	It's a major double-cross when former police officer Brian O'Conner teams up with his ex-con buddy Roman Pearce to transport a shipment of "dirty" money for shady Miami-based import-export dealer Carter Verone. But the guys are actually working with undercover agent Monica Fuentes to bring Verone down.	F_VIM03DXWI	2013-12-08 16:16:38.983942	2013-12-08 16:16:38.983942
+114	10017	The Wraith	/114kfWiQiVyNeSBUQTJORd1cFs3.jpg	1986-11-21	/3QQGqFxa3dhj52qyn451Ek1bP7N.jpg	6.3	f	Packard Walsh and his motorized gang control and terrorize an Arizona desert town where they force drivers to drag-race so they can 'win' their vehicles. After Walsh beats the decent teenager Jamie Hankins to death after finding him with his girlfriend, a mysterious power creates Jake Kesey, an extremely cool motor-biker who has a car which is invincible. Jake befriends Jamie's girlfriend Keri Johnson, takes Jamie's sweet brother Bill under his wing and manages what Sheriff Loomis couldn't; eliminate Packard's criminal gang the hard way...	9QNDycDirxA	2013-12-08 16:16:39.310433	2013-12-08 16:16:39.310433
+115	920	Cars	/a1MlbLBk5Sy6YvMbSuKfwGlDVlb.jpg	2006-06-08	/wjn9AKZy98qCiixi9iWpuxiUTfh.jpg	6.1	f	Lightning McQueen, a hotshot rookie race car driven to succeed, discovers that life is about the journey, not the finish line, when he finds himself unexpectedly detoured in the sleepy Route 66 town of Radiator Springs. On route across the country to the big Piston Cup Championship in California to compete against two seasoned pros, McQueen gets to know the town's offbeat characters.	_z-gerHEq6c	2013-12-08 16:16:39.655247	2013-12-08 16:16:39.655247
+116	86834	Noah	/8m0qxUhdwFw6tAmEdLpsm1hTjpx.jpg	2014-03-28	/5wioUjzwr91fvq7ydunxK2CPSxi.jpg	4.0	f	The biblical story of a man who suffers visions of an apocalyptic deluge, and takes measures to protect his family from the coming flood.	8shoKO1Y3p0	2013-12-08 16:18:00.344687	2013-12-08 16:18:00.344687
+117	215908	Noah	/xNFpyauZ6Mnc98VaTH5YLGLhQNu.jpg	2013-09-09	/xzPaUDqAMIi5vdNVQajsnjXYDI0.jpg	4.0	f	In a story that plays out entirely on a teenager's computer screen, Noah follows its eponymous protagonist as his relationship takes a rapid turn for the worse in this fascinating study of behavior (and romance) in the digital age.	-	2013-12-08 16:18:00.755363	2013-12-08 16:18:00.755363
+118	210664	Noah	-	1998-10-11	-	0.0	f	Norman is a very busy builder who spends very little time with her three children. His life changes when a mysterious man convinces him to build an ark like Noah. Although the project you find something crazy, Norman accepts and learns that there are things in life that are not just for money, but simply because it's worth trying them.	-	2013-12-08 16:18:01.104643	2013-12-08 16:18:01.104643
+119	190243	Noah's Lark	-	1929-10-24	-	0.0	f	Here, we see an ark full of many different sorts of animal; spotting Coney Island, the captain announces shore leave and they all head out for some fun. There are a lot of gags, very advanced for the era, as was typical for Fleischer in this period, and some of them are very adult.	-	2013-12-08 16:18:01.4466	2013-12-08 16:18:01.4466
+120	20766	The Road	/pUNlJ6jzDsgUvPjJeFfsyyOSZJx.jpg	2009-11-25	/o34ARieL8kqGzcMnSksJ6OGPRK2.jpg	6.7	f	A father and his son walk alone through burned America. Nothing moves in the ravaged landscape save the ash on the wind and water. It is cold enough to crack stones, and, when the snow falls it is gray. The sky is dark. Their destination is the warmer south, although they don't know what, if anything, awaits them there.	8CwJHxEQ0WA	2013-12-08 16:59:58.873148	2013-12-08 16:59:58.873148
+121	97794	The Road	/9cRz3F2oFJHbF1xGXPNcQIuKZ4M.jpg	2011-11-30	/AtrT22mUvAeBZWYoCbJ7GqGHX3Z.jpg	4.8	f	A 12 year old cold case is reopened when three teens are missing in an old abandoned road where a gruesome murder is left undiscovered for three decades.	U4IVywGmjd8	2013-12-08 16:59:59.247329	2013-12-08 16:59:59.247329
+122	69810	The Road	-	2006-02-14	/peIXduxiDQDEkazDHf6FEaj356j.jpg	0.0	f	A young girl comes of age -- while also coming to terms with her destiny, pre-determined by the Communist Party -- in this beautiful, sweeping Chinese drama.	-	2013-12-08 16:59:59.660971	2013-12-08 16:59:59.660971
+123	129185	The Road	-	2001-05-18	/h5w7R6I3P8avjde4CD2THDkNet3.jpg	0.0	f	A filmmaker, Kobessov, awakens from an anxiety nightmare: during the preview of his newest film, the projectionist mixes up the reels and begins to show a bad karate film by accident. Although Kobessov objects to the mix-up, the public is ecstatic and refuses to allow the projectionist to interrupt the screening to show Kobessov's film.	-	2013-12-08 17:00:00.019591	2013-12-08 17:00:00.019591
+124	6644	El Dorado	/1PODaFULjnsbkgirmFfm9i0cJB1.jpg	1966-12-17	/alTT9fhYkWVeQxUTwnTMBByakVv.jpg	7.4	f	Cole Thornton, a gunfighter for hire, joins forces with an old friend, Sheriff J.P. Hara. Together with an old indian fighter and a gambler, they help a rancher and his family fight a rival rancher that is trying to steal their water.	pS6NbxZYU9o	2013-12-08 17:00:13.582916	2013-12-08 17:00:13.582916
+125	225508	Sueño Dorado	/aRlQsQIUF4dor7K634Hq140CN3Z.jpg	2012-07-10	/9cA5GoavycyLChB1NbwycU57O3u.jpg	3.8	f	-	-	2013-12-08 17:00:14.04539	2013-12-08 17:00:14.04539
+126	52998	El Dorado	-	1988-04-20	/kHRzNhnzbRb8IJas8TF4BN22Gng.jpg	7.0	f	The story of an expedition down the Orinoco and Amazon rivers in 1560 by Spanish soldiers searching for the fabled city of gold, El Dorado.	oM46twknMgI	2013-12-08 17:00:14.42138	2013-12-08 17:00:14.42138
+127	94474	El Dorado	-	1921-10-28	/aj48t2Ho3YhXLDpaNGPxlBQXtIi.jpg	6.0	f	Sibilla works as a dancer in El Dorado, a cabaret in Granada (Andalusia, Spain) trying to earn enough money to take care for her sick child.	-	2013-12-08 17:00:14.773418	2013-12-08 17:00:14.773418
+128	61386	Il mistero di Lovecraft - Road to L.	-	2005-10-28	/b3a9q7qdt3kwABUDiijh5Fw0gJB.jpg	5.0	f	-	-	2013-12-08 17:00:30.065855	2013-12-08 17:00:30.065855
+129	10501	The Road to El Dorado	/j8XMblbxKceZqTWkvfR04QK3EHA.jpg	2000-03-31	/vHUQfuBZaG4DHiR1TnEQ8XvBgM0.jpg	6.0	f	After a failed swindle, two con-men end up with a map to El Dorado, the fabled "city of gold," and an unintended trip to the New World.  Much to their surprise, the map does lead the pair to the mythical city, where the startled inhabitants promptly begin to worship them as gods.  The only question is, do they take the worshipful natives for all they're worth, or is there a bit more to El Dorado than riches?	mrQpX1zHhnM&hd=1	2013-12-08 17:00:30.422106	2013-12-08 17:00:30.422106
+130	10467	The Road to Wellville	/d6ukcb29gG0gz2LXlf2wNSYFyEl.jpg	1994-10-28	/3i5zFVewQMGlcPhsHoHmf0VHV02.jpg	5.7	f	An unhappy young couple visit the infamous Kellogg spa in Battle Creek, Michigan while a young hustler tries get into the breakfast-cereal business and compete against John Kellogg's corn flakes.	cQ4yvfzBt-c	2013-12-08 17:00:30.747675	2013-12-08 17:00:30.747675
+131	107039	The Road To Love	-		/mcKXR6oTypIaxIYBxV2I7VaEcX2.jpg	0.0	f	Slow-burning and smart, French director Rémi Lange's The Road to Love is a romantic tale of self-discovery that also offers a fascinating historical take on homosexuality in northern Africa.  French-Algerian sociology student Karim is having trouble finding interviewees for his term project, a video documentary on homosexual relationships in Islamic cultures. As his research progresses, he meets Farid, a handsome flight attendant. In Farid, Karim believes he has found an ideal subject for his film...but he soon begins to admire more than just Farid's insight. When Karim learns that some cultures have accepted and encouraged same-sex unions, he finally begins to face his own sexuality.  Set in scenic locales from Paris to Marseilles to Amsterdam (with a brief detour to Jean Genet's grave in Larache, Morocco), The Road to Love is a shrewd and sensual tale of enchantment and desire	-	2013-12-08 17:00:31.132507	2013-12-08 17:00:31.132507
+140	222225	Job	-	1954-10-12	-	0.0	f	Comic, tragic, and heartrending saga of Ratan Kumar Chaudhary (Kishore Kumar), who leaves his village, aging mom, and seriously ill sister, to obtain employment in Calcutta, only to end up in a tiny tenement apartment full of other unemployed youths. He falls in love with Seema (Sheila Ramani) who lives in the building opposite his, and she too falls in love with him. Her father will not permit her to marry an unemployed youth, and wants her to marry someone known to him. Ratan receives an employment offer from a firm in Bombay, and travels there, only to have his wallet stolen by a pickpocket (Mehmood), and ends up in jail for being a suspect himself. He reports for employment and is hired. He sends for Seema, and she leaves her family for Ratan. By the time Seema reaches Bombay, Ratan has lost his job, and is forced to lie to Seema. Why did Ratan lose his job?	-	2013-12-08 17:06:23.997143	2013-12-08 17:06:23.997143
+141	24429	The Brink's Job	/fBY3Q76MNXRRLkZNT4xn8KbPjO2.jpg	1978-12-08	/yFr6hmDHipK1p9cDGnqUFhVCj1s.jpg	5.5	f	After a long time of bad luck, the little criminal Tony and his gang successfully rob one of Brink's security transport, taking $30,000. Surprisingly their coup doesn't make the press. Curious Tony checks out their headquarters and finds out that their security standard is low beyond belief. Now a really big coup is prepared... Written by Tom Zoerner	1wZJZey5Qxw	2013-12-08 17:06:24.354223	2013-12-08 17:06:24.354223
+142	78024	Who is J.O.B	-	2010-10-07	/n0cp5ofd59wlwsqGvOZrDpgiyK1.jpg	0.0	f	The story of how a towheaded, semi-deaf haole born on the North Shore of Oahu to a wild Australian father became one of the most controversial surfers renown for his presence in the barrel. A peak into how Jamie O’Brien was weaned to throw himself over Pipeline ledges translating into a life-long adventure. Draining bombs, tweaked airs, broken legs, Tavarua, Nias, Tea- hupoo, P Pass, Chungu, and Hawaii; this will be the movie of the year.	-	2013-12-08 17:06:24.713006	2013-12-08 17:06:24.713006
+143	240281	Patrick Groulx - Job: Humoriste	/qGBirgW0TB2BL4T4hKBu92MtTsU.jpg	2013-11-30	-	0.0	f	-	-	2013-12-08 17:06:25.061988	2013-12-08 17:06:25.061988
+132	33065	Alyosha Popovich i Tugarin Zmey	/fgIfIXonUKvaa7kC3ZYuO2kIGVB.jpg	2004-12-23	/o78IaNEreSPfo4JkOzGVEkdt3NB.jpg	6.0	f	Alesha Popovich has to catch Tugarin Zmey and bring back the stolen money with the help of a talking Horse (which talks all the time and has an opinion on everything), a wise granny, a donkey and a beauty Lyubava.	-	2013-12-08 17:03:49.982274	2013-12-08 17:03:49.982274
+133	42601	Zatoichi Meets Yojimbo	/gHKj3keUbDq72gfwkmd8qoCCgn3.jpg	1970-01-15	/tIbSmoxv9TvNgYXZpe4wa1lBNPR.jpg	6.8	f	With a price on his head, Ichi seeks tranquillity in a favorite village. Since his last visit, it has fallen prey to Boss Masagoro, the son of a merchant rumored to have stolen gold from the shogunate. The boss has hired Yojimbo as his hard-drinking enforcer, but Yojimbo is both a spy for the shogunate, trying to find the gold, and in love with the merchant's unwilling mistress, Umeno. Ichi hires on as the merchant's masseur and buys Umeno's freedom with his employer's own money. This embarrasses Yojimbo who withdraws from a pact with Ichi to stir up trouble between father and son and their gangs. As the two sides fight, Ichi finds the gold and sets up a final set of confrontations.	-	2013-12-08 17:03:50.382005	2013-12-08 17:03:50.382005
+134	174624	Mask of the Avenger	/52bLEnEZjSNYisNJwl3N8ZlPZNi.jpg	1951-06-27	/9NifTAnZf938zVYVvFNoYdT3uHs.jpg	0.0	f	Costume swashbuckler with heroic John Derek battling evil Anthony Quinn.	-	2013-12-08 17:03:50.747847	2013-12-08 17:03:50.747847
+135	54302	Royal Flash	/8OXiFz9BzcKnLRR17YKNy7KdN3T.jpg	1975-10-10	/dfY2CzaFMFmMWeiAlYN3W6lERfp.jpg	6.5	f	Cowardly rogue Harry Flashman's (Malcolm McDowell) schemes to gain entry to the royal circles of 19th-century Europe go nowhere until he meets a pair of devious nobles with their own agenda. At their urging, Flashman agrees to re-create himself as a bogus Prussian nobleman to woo a beautiful duchess. But the half-baked plan quickly comes unraveled, and he's soon on the run from several new enemies who are all calling for the rapscallion's head.	eLDBW7N02JU	2013-12-08 17:03:51.21238	2013-12-08 17:03:51.21238
+136	17021	Adam & Steve	/gLp7W59mqIcRbLU0ZQgzR54h6XE.jpg	2006-03-31	/8RrvWPT7Hlj8eUz3FvNmnlmfErG.jpg	0.0	f	Follows two New York city couples -- one heterosexual and one gay who explore the peaks and the valleys of their respective relationships.	-	2013-12-08 17:06:07.317505	2013-12-08 17:06:07.317505
+137	240244	Steve Lukather - Rockpalast	/b7gAUdeB9GKGSkwon1MPVioR37r.jpg	2010-11-09	/zmaGF3MzZpmDrwPOPxNUi83pFku.jpg	0.0	f	Live performance of Steve Lukather, front man of Toto, at the Leverkusener Jazztage on November 9th, 2010.	-	2013-12-08 17:06:07.698315	2013-12-08 17:06:07.698315
+138	231240	Seasick Steve - Glastonbury	/uXBvlO2mscBKhMUsuXKqI0GSYQV.jpg	2013-06-27	/toG45ietZbLIV1SP4CvIA5mlV0N.jpg	0.0	f	On June 28th, 2013 Seasick Steve performed an one hour set with John Paul Jones and Dan Magnusson at the Glastonbury Festival.	-	2013-12-08 17:06:08.163037	2013-12-08 17:06:08.163037
+139	230090	Steve Harvey's Grand Finale	/zemUWKHSC7RV4Ay8qrLh7cJnNnD.jpg	2012-12-30	/fUWaEWmtOWHu7FsH4JetHpJQfww.jpg	5.5	f	King of Comedy Steve Harvey will perform his final stand-up comedy show on Thursday, August 2 at 11PM EST LIVE on Pay-Per-View. The final show will mark the end of 27 years of stand-up comedy.	-	2013-12-08 17:06:08.529415	2013-12-08 17:06:08.529415
+144	115782	Jobs	/diTIzXJyLTRHWYBMTnrYJHv8Vnc.jpg	2013-08-16	/ioI5pOOr5yWZAAZPEts5oSQwUrT.jpg	6.3	f	The story of Steve Jobs' ascension from college dropout into one of the most revered creative entrepreneurs of the 20th century.	SKZfFpCKJLM	2013-12-08 17:06:47.585109	2013-12-08 17:06:47.585109
+145	51967	Odd Jobs	-	1986-03-01	/m9nTaJq4NqbAvsPlaA2y767j1bj.jpg	0.0	f	Four students who work on different jobs during their vacations in summer are tired of doing the same thing every year. Therefore they decide to open up a moving company together and confront themselves with the former boss of one of them.	-	2013-12-08 17:06:47.916729	2013-12-08 17:06:47.916729
+146	112119	Ghosts with Shit Jobs	-		/gL1JRFE5c2qcK4EXc9H5GNCGO48.jpg	0.0	f	In 2040, a generation of Torontonians have grown up after the economic collapse of the west. The movie consists of episodes of a documentary series popular in mainland China about the bad jobs some white people have -- the plucky and resilient souls unlucky enough to be born into the slums of North America are both amusing and moving to the Chinese audience. Oscar is a digital janitor, and has to manually cover up logos for copyright reasons in the future's answer to Google StreetView maps. Gary and Karen assemble robot baby dolls for the children of the wealthy in Asia. Anton and Toph are spider silk collectors. Serina is human spam and makes a living by mentioning brands and products in casual conversation.	xQmlWuYy_Pk	2013-12-08 17:06:48.257459	2013-12-08 17:06:48.257459
+147	160292	Men Without Jobs	/3Phgz19jvpJCJp4StijopGZMeYu.jpg	2004-06-19	/nVC4C8ozQ4r9uy3t9Uf6Kpai688.jpg	0.0	f	Men Without Jobs is a comedy about Ish and Oz - best friends and roommates whose main goal in life is to avoid work at all costs. Ish is a graffiti artist who dreams of starting his own hip-hop band. Oz is an obnoxious loudmouth, addicted to gambling and cooking shows. When Ish collects several thousand dollars in a lawsuit settlement stemming from a childhood accident, Oz tries to convince him to invest the money in a pyramid scam in order to help him pay off a debt to a sadistic loan shark. The stakes are raised when Ish's girlfriend Veronica gives him an ultimatum to either get a job or get lost. Ultimately, the two eccentric slackers are forced to wake up and realize that sooner or later, everybody has to get a job! Written by Matthewz, Mad	-	2013-12-08 17:06:48.596639	2013-12-08 17:06:48.596639
+148	3293	Pirates of Silicon Valley	/a6RZWdqzH06aMZATBuz3WmnRjuu.jpg	1999-06-20	/22Az4PSFXeH79aa7Da5HCvHIHVZ.jpg	5.8	f	This film is the semi-humorous documentary about the men who made the world of technology what it is today, their struggles during college, the founding of their companies, and the ingenious actions they took to build up the global corporate empires of Apple Computer Inc. and Microsoft Corporation.	ZNQk-s6BMH8	2013-12-08 17:25:47.239914	2013-12-08 17:25:47.239914
+149	61854	Something Ventured	/2Dz0lYPttkAAwuMHzvZomlQ0GKp.jpg	2011-04-01	/hp8TNrav68aNAHeIMhHPCQUJ5Zj.jpg	6.3	f	Apple. Intel. Genentech. Atari. Google. Cisco. Stratospheric successes with high stakes all around. Behind some of the world's most revolutionary companies are a handful of men who (through timing, foresight, a keen ability to size up other people, and a lot of luck) saw opportunity where others did not: these are the original venture capitalists. All were backing and building companies before the term 'venture capital' had been coined: companies that led to the birth of biotechnology and the spectacular growth in microprocessors, personal computers and the web. SOMETHING VENTURED uncovers the ups and downs of the building of some of the greatest companies of the twentieth century, and the hidden dramas behind some of the most famous names in business.	-	2013-12-08 17:25:47.624858	2013-12-08 17:25:47.624858
+150	76203	12 Years a Slave	/eRBVfONVhcVuueJ5ksKvPuCLLvy.jpg	2013-10-18	/onpio7AWndkzH6mptb35cCuV9q1.jpg	8.4	f	In the pre-Civil War United States, Solomon Northup, a free black man from upstate New York, is abducted and sold into slavery. Facing cruelty as well as unexpected kindnesses Solomon struggles not only to stay alive, but to retain his dignity. In the twelfth year of his unforgettable odyssey, Solomon’s chance meeting with a Canadian abolitionist will forever alter his life.	iiw1cYXQw4g	2013-12-08 17:25:47.978965	2013-12-08 17:25:47.978965
+164	11561	Sleeper	/bERR31rs21FQC1Cr0416aeQgcfu.jpg	1973-12-17	/rFOQUImekPlII5DwcBYJ6SQDQxE.jpg	7.7	f	Miles Monroe, a clarinet-playing health food store proprietor, is revived out of cryostasis 200 years into a future world in order to help rebels fight an oppressive government regime.	Qo2Lo28FNpg	2013-12-08 18:02:00.586268	2013-12-08 18:02:00.586268
+151	70925	Oranges and Sunshine	/ijPEVjYwA3dN37w9glAze3uzTF0.jpg	2011-03-31	/xMNwZIzriLvuGREnER9P9xVk3Qj.jpg	7.8	f	Oranges and Sunshine tells the story of Margaret Humphreys, a social worker from Nottingham, who uncovered one of the most significant social scandals in recent times: the forced migration of children from the United Kingdom. Almost singlehandedly, against overwhelming odds and with little regard for her own well-being, Margaret reunited thousands of families, brought authorities to account and worldwide attention to an extraordinary miscarriage of justice. She discovered a secret that the British government had kept hidden for years: one hundred and thirty thousand children in care had been sent abroad to commonwealth countries, mainly Australia. Children as young as four had been told that their parents were dead, and been sent to children's homes on the other side of the world. Many were subjected to appalling abuse. They were promised oranges and sunshine, they got hard labour and life in institutions.	-	2013-12-08 17:25:48.335836	2013-12-08 17:25:48.335836
+152	65632	The 10th Victim	/rJGPGKxSJQk84MAFIHcMveqDxhJ.jpg	1965-12-01	/paVcB4mIPu3D9MypqZCU9uhGe51.jpg	7.0	f	In the near future, big wars are avoided by giving individuals with violent tendencies a chance to kill in the Big Hunt. The Hunt is the most popular form of entertainment in the world and also attracts participants who are looking for fame and fortune. It includes ten rounds for each competitor, five as the hunter and five as the victim.	JBVaKY2EW4g	2013-12-08 17:38:49.141089	2013-12-08 17:38:49.141089
+153	65632	The 10th Victim	/rJGPGKxSJQk84MAFIHcMveqDxhJ.jpg	1965-12-01	/paVcB4mIPu3D9MypqZCU9uhGe51.jpg	7.0	f	In the near future, big wars are avoided by giving individuals with violent tendencies a chance to kill in the Big Hunt. The Hunt is the most popular form of entertainment in the world and also attracts participants who are looking for fame and fortune. It includes ten rounds for each competitor, five as the hunter and five as the victim.	JBVaKY2EW4g	2013-12-08 17:38:49.229434	2013-12-08 17:38:49.229434
+154	66087	Knives of the Avenger	/dYFRbeeJgsTP9KwMrMhV8qhfeGO.jpg	1966-05-30	/aCdGQ4H5QXITOLfG4lwwK7NNSMg.jpg	5.8	f	A mysterious knife-throwing viking warrior protects a young peasant woman and her young son from the clutches of a evil regent bent on claiming the title of king and the woman for himself.	m4VUS0OG4aY	2013-12-08 17:38:49.523157	2013-12-08 17:38:49.523157
+155	66087	Knives of the Avenger	/dYFRbeeJgsTP9KwMrMhV8qhfeGO.jpg	1966-05-30	/aCdGQ4H5QXITOLfG4lwwK7NNSMg.jpg	5.8	f	A mysterious knife-throwing viking warrior protects a young peasant woman and her young son from the clutches of a evil regent bent on claiming the title of king and the woman for himself.	m4VUS0OG4aY	2013-12-08 17:38:49.825272	2013-12-08 17:38:49.825272
+156	10138	Iron Man 2	/jxdSxqAFrdioKgXwgTs5Qfbazjq.jpg	2010-05-07	/zJ2eK7fehqFSQ2w5JlQIF0OJP9q.jpg	6.5	f	Now that his Super Hero secret has been revealed, Tony Stark's life is more intense than ever. Everyone wants in on the Iron Man technology, whether for power or profit... But for Ivan Vanko, it's revenge! Tony must once again suit up and face his most dangerous enemy yet, but not without a few new allies of his own.	FNQowwwwYa0	2013-12-08 17:52:28.304146	2013-12-08 17:52:28.304146
+157	24428	The Avengers	/hbn46fQaRmlpBuUrEiFqv0GDL6Y.jpg	2012-05-04	/cezWGskPY5x7GaglTTRN4Fugfb8.jpg	7.0	f	When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!	eOrNdBpGMv8	2013-12-08 17:52:28.73065	2013-12-08 17:52:28.73065
+158	68721	Iron Man 3	/tNww0oTzn5hf7EgDIqnfpEbEVG4.jpg	2013-05-03	/x6vjph1USM56MncpruT9jQP7xy2.jpg	6.7	f	The brash-but-brilliant industrialist Tony Stark faces an enemy whose reach knows no bounds. When Stark finds his personal world destroyed at his enemy’s hands, he embarks on a harrowing quest to find those responsible. This journey, at every turn, will test his mettle. With his back against the wall, Stark is left to survive by his own devices, relying on his ingenuity and instincts to protect those closest to him. As he fights his way back, Stark discovers the answer to the question that has secretly haunted him: does the man make the suit or does the suit make the man?	YLorLVa95Xo	2013-12-08 17:52:29.152746	2013-12-08 17:52:29.152746
+159	67053	Judas Priest: British Steel 30th Anniversary	/9gaXYU4ZX189ktFctTWjrU2XnGk.jpg	2010-01-01	/fhCE3t6R6SA5vq4AeyPRcozkXz4.jpg	9.0	f	Judas Priest celebrates the 30th Anniversary of one of the most influential albums in heavy metal history with a live performance of British Steel from the Hard Rock Arena in Hollywood Florida. With the complete performance of the original tracks, Rob Halford, Glenn Tipton, KK Downing, Ian Hill, and Scott Travis belt out all the hits, from "Breaking the Law", "Living After Midnight", "Grinder" and more. Don't miss this classic headbanging experience only on HDNet!	-	2013-12-08 17:57:51.28071	2013-12-08 17:57:51.28071
+160	143935	Fight: Live in Phoenix	-	1993-08-05	/oMEuXZ78aWT8N0KndcmpouXibiS.jpg	0.0	f	Live in Phoenix in August 1993.  "Into the Pit"  "Nailed to the Gun"  "Life in Black"  "Immortal Sin"  "War of Words"  "Laid to Rest"  "For All Eternity"  "Little Crazy"  "Contortion"  "Kill It"  "Vicious"  "Reality – A New Beginning"  "Light Comes Out of Black"  All tracks composed by Rob Halford.  Released on the 4-disc "Fight: Into the Pit" set among Halford's series of Metal God reissues in 2008.	-	2013-12-08 17:57:51.609808	2013-12-08 17:57:51.609808
+161	36152	Arch Enemy: Live Apocalypse	/exCvubhTSyBfx2I84ozUsW2PzNX.jpg	2006-08-08	/gn4vTXPWjDFIMT2xxCiHt9BiUNe.jpg	0.0	f	Swedish death metal greats Arch Enemy deliver a powerhouse performance in this concert that was filmed live in England at the London Forum, 17 December 2004. Selections include "Enemy Within," "Silent Wars," "Dead Bury Their Dead," "Instinct," "Savage Messiah," "The Immortal," "Snow Bound," "Ravenous," and more.	-	2013-12-08 17:57:51.914032	2013-12-08 17:57:51.914032
+162	40541	Metallica: Live Shit - Binge & Purge, San Diego	/xfe8KF3K1j7hYGkwc7NgqD00Fap.jpg	1993-11-23	/n36VxAsqqMqzgugEwPqj52fHzo5.jpg	0.0	f	LIVE SHIT: BINGE &amp; PURGE is the first live album by the American heavy metal band Metallica, released as a box set in 1993. It contained audio of concerts in Mexico City (CDs or cassettes, originally), and videos of concerts in San Diego and Seattle (originally on VHS, later DVD). SAN DIEGO: Recorded at the San Diego Sports Arena, San Diego, CA on January 13 and 14, 1992: Intro-MetalliMovie / The Ecstasy of Gold/Enter Sandman / Creeping Death / Harvester of Sorrow / Welcome Home (Sanitarium) / Sad But True / Wherever I May Roam / Bass solo / Through the Never / The Unforgiven / Justice Medley (Eye of the Beholder/Blackened/The Frayed Ends of Sanity/...And Justice for All) / Drum solo and drum battle (with James Hetfield on drum kit) / Guitar solo / The Four Horsemen / For Whom the Bell Tolls / Fade to Black / Whiplash / Master of Puppets / Seek &amp; Destroy / One / Last Caress / Am I Evil? / Battery / Stone Cold Crazy	-	2013-12-08 17:57:52.222472	2013-12-08 17:57:52.222472
+163	19761	Saturn 3	/bPBW0mETVimiCeQepPRgKnmyeb6.jpg	1980-02-15	/isDiEyyXRvjaZZCVuguyfKmtLyE.jpg	4.3	f	On a Saturn space station, Adam and Alex are two scientists seeking new forms of food for the impoverished planet earth. Their idyllic life is interrupted by the arrival of Captain James, a psychopathic maniac from earth who brings with him a 'helper' in the form of a murderous robot who gradually develops a mind of its own.Saturn 3 is an entertaining fusion of sci-fi, horror and suspense culminating in the ultimate battle of man against machine.	NENxIu02bvg	2013-12-08 18:02:00.24589	2013-12-08 18:02:00.24589
+165	54320	Love	/tIp5XMZoyu2YjZhYrz0BKIExGMt.jpg	2011-02-02	/8ipBVqInnO3RjTyRf1aU4dE1SKD.jpg	6.1	f	After losing contact with Earth, Astronaut Lee Miller becomes stranded in orbit alone aboard the International Space Station. As time passes and life support systems dwindle, Lee battles to maintain his sanity - and simply stay alive. His world is a claustrophobic and lonely existence, until he makes a strange discovery aboard the ship.	YiYmAixzpMg 	2013-12-08 18:02:00.939172	2013-12-08 18:02:00.939172
+166	25952	Conquest of Space	/bsgiyrP4MHl9SJAj0w8fe2VRmh.jpg	1955-04-20	/ooFBsPHmf9SQzm4EXHtOuDjAdVP.jpg	2.0	f	A team of American astronauts leave their space station on the first mission to Mars, but the captain's religious beliefs may get in the way.	uUa1I0PJqVk	2013-12-08 18:02:01.27506	2013-12-08 18:02:01.27506
+167	68816	Will Our Heroes Be Able to Find Their Friend Who Has Mysteriously Disappeared in Africa?	/sugHoQwBxL2mWfrZNr2AQWIOedW.jpg	1968-12-19	/8Xfn4XfB8SFFYX8S0wFJdrdicTA.jpg	0.0	f	A rich businessman is fed up with work, family, society, and goes with a friend to Africa, in search of another friend who had vanished there in mysterious circumstances. They will find him alright - as a tribal chief, surrounded with lots of topless, shapely wives. They are going to return to civilisation, but will their friend come with them?	-	2013-12-08 18:41:18.961633	2013-12-08 18:41:18.961633
+168	74827	The Patchwork Girl of Oz	-	1914-09-28	/8Iz2TD6cM7xSxniaU71Yqe2if01.jpg	0.0	f	Ojo and Unc Nunkie are out of food, so they decide to journey to the Emerald City where they will never starve. Along the way, they meet Mewel, a waif and stray (mule) who leads them to Dr. Pipt, who has been stirring the powder of life for nine years. Ojo adds plenty of brains to Margolotte's Patchwork servant before she is brought to life with the powder. When Scraps does come to life, she accidentally knocks the liquid of petrifaction upon Unc Nunkie, Margolotte, and Danx (daughter Jesseva's boyfriend). So all go on separate journeys to find the ingredients to the antidote. (Of course Jesseva has Danx shrunken to take with her, which causes trouble with Jinjur.) Of course, no one ever told Ojo that some of the ingredients were illegal to obtain...	-	2013-12-08 18:41:19.391453	2013-12-08 18:41:19.391453
+169	67072	Vnimanie, Vedmy	/ckvb2YUUMyCD1zQ0ZsuiFl544XO.jpg	1991-11-11	/qPBhyoFxYEmPWAYXmhRJOxAS46Z.jpg	0.0	f	По мотивам повести Михаила Казовского "Пояс Титимити". Участковый иснспектор Павел Храпунцов "отслеживает" в своем микрорайоне секту с мистическим уклоном. В поступающих в милицию сигналах описываются действия некой Клементины, умеющей превращать людей в зверей и растения... Убежденный материалист Храпунцов не сразу понимает сложный мир Клементины и ее друзей.	-	2013-12-08 18:41:19.757521	2013-12-08 18:41:19.757521
+170	75604	Suburban Knights	-	2011-09-20	/5R3dLqyW9YxwYz2vutXF4foPZ7x.jpg	8.0	f	The Nostalgia Critic and his fellow reviewers from the website That Guy with the Glasses dress up as famous fantasy characters and go searching for a magic gauntlet hidden in suburban Illinois.	fFbShBdW56I&hd=1	2013-12-08 18:41:20.105487	2013-12-08 18:41:20.105487
+171	198573	Tina Turner - Simply the Best	-	2002-11-13	/r6UOtOI9l2xpPiVSwUucAfsLnj3.jpg	0.0	f	The longevity of rhythm and blues legend Tina Turner proves that she has a strength and tenacity that can be rare in the pop music world. Enjoying a successful, sometimes pop career spanning several decades, Ms. Turner has managed to overcome the tumultuous nature of her early relationship with Ike Turner. SIMPLY THE BEST is a video collection which includes several classic selections from this her history of fame including "What's Love Got To Do With It," "Private Dancer," "Better Be Good To Me," "Steamy Windows," and many more.	-	2013-12-08 18:53:54.777782	2013-12-08 18:53:54.777782
+172	124253	Zucchero - All the Best	-		/mrAICHvA2ZO1Xrz9PCBZ9CH4X63.jpg	0.0	f	A collection of the best songs from Zucchero.  23 songs and clips.	-	2013-12-08 18:53:55.167517	2013-12-08 18:53:55.167517
+173	67246	The Cranberries - The Best Videos 1992-2002	/nBj6AdPu9SvvWIeaalXs6v9IkCx.jpg	2002-11-26	/8HbdUBMeA69tips1FdNNUFiXWht.jpg	0.0	f	1. Dreams 2. Linger 3. Zombie 4. Ode To My Family 5. I Can´t Be With You 6. Ridiculous Thoughts 7. Salvation 8. Free To Decide 9. When You´re Gone 10. Promises 11. Animal Instinct 12. Just My Imagination 13. You & Me 14. Analyse 15. Time Is Ticking Out 16. This Is The Day 17. Stars	-	2013-12-08 18:53:55.513783	2013-12-08 18:53:55.513783
+174	171102	Tina Turner - All The Best - The Live Collection	-	2005-02-28	/qZQIOqIIa1wyzj08QFUzu3zqRVD.jpg	0.0	f	-	-	2013-12-08 18:53:55.851505	2013-12-08 18:53:55.851505
+175	16162	The Best Man	/8Zp9NXss1z1LPOcpfuUaVb8Wl9X.jpg	1999-10-22	/uVWhzBYv6xX3RDeUhK0hCrVGZzb.jpg	8.8	f	Diggs plays Harper, a writer who's about to explode into the mainstream. Leaving behind his girlfriend Robin (Lathan), he heads to New York City to serve as best man for his friend Lance's wedding (Chestnut). Once there, he reunites with the rest of his college circle: the girlfriend-whipped Murch (Perrineau), the aimless Quentin	GqfvBojU0h4	2013-12-08 18:54:05.865383	2013-12-08 18:54:05.865383
+176	37315	The Best Man	/dD4xKZSmursZ14XTFIpxeTC0SPR.jpg	1964-04-05	/i5UAFgZpiDFqop8N5BWY1BjAQiV.jpg	0.0	f	The other party is in disarray. Five men vie for the party nomination for president. No one has a majority as the first ballot closes and the front-runners begin to decide how badly they want the job.	CbJoI6yToc4	2013-12-08 18:54:06.222397	2013-12-08 18:54:06.222397
+177	27594	The Best Man	/ywUOVda7yRjfuE9MJl47kjTep8f.jpg	2005-07-09	/fqH9H2wLPD2d7cNyw0EHGgLDd38.jpg	5.9	f	Olly (Stuart Townsend) is a struggling young writer suffering from a severe case of writers block. Frustrated by his loss of creativity he loses confidence in other aspects of his life as well and becomes somewhat of a loner. That is until he unexpectedly reunites with his college roommate, James (Steve John Shepherd), who asks him to be the best man at his upcoming wedding. Olly reluctantly accepts, but when he finally meets Sarah (Amy Smart), the bride-to-be, he finds himself in a further quandary. He has unintentionally fallen in love with his friend's fiance.	-	2013-12-08 18:54:06.548883	2013-12-08 18:54:06.548883
+178	170894	The Best Man	-	2006-03-19	/igunsewCjt77fCqA6yEyTq4wq7F.jpg	0.0	f	After painter Michael 'Mike' Sheldrake's failed suicide attempt, house-mate and life-long best friend Peter Tremaine, an antiques shop owner, reminisces their common past, like Mike does in therapy. It started at the beach, when scrubby, scared Mikey became the dependent protégé of forceful Pete, both doted by Pete's dad, a wealthy lawyer. Afterwards Mike moves out to marry Kate. Pete accepts to be best man, but overdoes that, 'arranging' to get stuck in the honeymoon hotel he paid for. Drama from their boarding school childhood intertwines with tragedy for the mates, Kate and vindictive former police detective Miller. Written by KGF Vissers	-	2013-12-08 18:54:06.874519	2013-12-08 18:54:06.874519
+179	16274	Holiday	/fHc6YDTUPoC0rKdAA1AFExs35R2.jpg	1938-06-15	/6C5JZDJrQbvT8ktn17ZX5Lvili2.jpg	8.3	f	Johnny Cose (Cary Grant), a freethinking financier, has finally found the girl of his dreams — Julia Seton (Doris Nolan), the spoiled daughter of a socially prominent millionaire — and she's agreed to marry him. But when Johnny plans a holiday for the two to enjoy life while they are still young, his fiancée has other plans &amp; that is for Johnny to work in her father's bank!	-	2013-12-08 18:54:23.110569	2013-12-08 18:54:23.110569
+180	51074	Holiday	/wzOJqS73L5OI9lk6bbGh1Ox6TOu.jpg	2010-12-08	/gUPkCmQZX7pEBDlKOMpI6sLdiJT.jpg	6.0	f	-	-	2013-12-08 18:54:23.464632	2013-12-08 18:54:23.464632
+181	104219	Holiday	-	1930-07-03	/taw46Nxaq2oG55r43BnizBSKYLo.jpg	0.0	f	A romantic comedy film which tells the story of a young man who is torn between his free-thinking lifestyle and the tradition of his wealthy fiancée's family.	-	2013-12-08 18:54:23.825378	2013-12-08 18:54:23.825378
+182	208788	Holiday	-	1957-07-20	-	0.0	f	Lively holiday in Blackpool, with jazz accompaniment.	-	2013-12-08 18:54:24.149719	2013-12-08 18:54:24.149719
+183	118340	Guardians of the Galaxy	/35657JZSn1MlRjty9AgmqvpyraY.jpg	2014-08-01	/gLYPbbJSNPGj1wJDpef5d59hyVl.jpg	5.0	f	A futuristic team of superheroes protect the galaxy from danger. A jet pilot gets stranded in space, and must unite a diverse team of aliens to form a squad capable of defeating cosmic threats.	-	2013-12-08 18:55:16.051894	2013-12-08 18:55:16.051894
+184	99861	The Avengers: Age of Ultron	/c83SZ42MpwNMsT7YjjMYO6jr90M.jpg	2015-05-01	/wzmIc5VXQe3v2FdP972XolDo3PU.jpg	6.3	f	As the US Government create a force, known as Ultron, The Avengers are told they are not needed any longer. But when Ultron turns against Humanity, it's time for The Avengers to assemble yet again for their most dangerous challenge ever.	Jr5rzSMNmRM	2013-12-08 18:55:16.471607	2013-12-08 18:55:16.471607
+185	100402	Captain America: The Winter Soldier	/hXpWqy7E0Lq6sn79i1j0JRZif9c.jpg	2014-04-04	/enUM2mWUULwTcKkIodQKLrEV7Bq.jpg	5.4	f	After the cataclysmic events in New York with The Avengers, Steve Rogers, aka Captain America is living quietly in Washington, D.C. and trying to adjust to the modern world. But when a S.H.I.E.L.D. colleague comes under attack, Steve becomes embroiled in a web of intrigue that threatens to put the world at risk. Joining forces with the Black Widow, Captain America struggles to expose the ever-widening conspiracy while fighting off professional assassins sent to silence him at every turn. When the full scope of the villainous plot is revealed, Captain America and the Black Widow enlist the help of a new ally, the Falcon. However, they soon find themselves up against an unexpected and formidable enemy—the Winter Soldier.	NLWsK1ZFunA	2013-12-08 18:55:23.053595	2013-12-08 18:55:23.053595
+186	1771	Captain America: The First Avenger	/3qlzyunDrkwWOKEWZRxeIF4HEUC.jpg	2011-07-22	/sBZs1jSybBRBXDwcCR8IOyHLUMc.jpg	6.2	f	Predominantly set during World War II, Steve Rogers is a sickly man from Brooklyn who's transformed into super-soldier Captain America to aid in the war effort. Rogers must stop the Red Skull – Adolf Hitler's ruthless head of weaponry, and the leader of an organization that intends to use a mysterious device of untold powers for world domination.	JerVrbLldXw	2013-12-08 18:55:23.404772	2013-12-08 18:55:23.404772
+187	29916	Vegas	/4Aw4NScjcAiLlIyUiJzNGOR8wuB.jpg	2009-09-25	/8tNlcfB7SO3qi3yq3WLxL0tnkFg.jpg	0.0	f	You don't choose your family. You choose your friends. Vegas is the story of Thomas, Marianne and Terje - three teenagers with nowhere to go.	2782	2013-12-08 18:56:35.739454	2013-12-08 18:56:35.739454
+188	68716	Venus & Vegas	/pBaPvsGs448I0RGhUhi8wptSP4X.jpg	2010-11-01	/wNncYNqZfnmLtcaHscCM28muNqk.jpg	4.0	f	When three Vegas buddies attempt the score of a lifetime, they have to walk a fine line between their girlfriends who want their heads, and the mobsters who want them dead.	-	2013-12-08 18:56:36.109782	2013-12-08 18:56:36.109782
+189	143982	Audrey Lamy - Dernière avant Vegas	/8DWFSbDGn03I1aHj6OQk3CbuzKm.jpg	2012-11-12	/nwYOSJc6bo9HRL6F2GYExYeNmSD.jpg	10.0	f	-	-	2013-12-08 18:56:36.437805	2013-12-08 18:56:36.437805
+191	36915	Heaven's Prisoners	/dHPhogKb6zVohtSBvOMiIxNHBso.jpg	1996-05-17	/slbZeaguko6c9vARoH25oKMxkQM.jpg	5.5	f	Ex-detective Dave Robicheaux has made a new life for himself and his wife Annie running a bait shop in the outskirts of New Orleans. When they save a little girl, the sole survivor of a plane crash, their lives become forever changed. They take the orphan child into their home and prepare to raise her. However, a visit from DEA agent Dautrieve brings out the detective instincts in Robicheaux and he begins to ask about the rest of the passengers. This brings trouble to Robicheaux and he turns to drug lord Bubba Rocque, a childhood friend. But the friendship becomes estranged when an assault on the Robicheaux home leaves one victim...Annie.	hwuRDxzitek	2013-12-08 18:56:55.258929	2013-12-08 18:56:55.258929
+192	166003	The Prisoner's Song	-	1930-02-28	-	0.0	f	An early Fleischer Screen Song, this time the bouncing ball follows Guy Massey's "The Prisoner's Song"	-	2013-12-08 18:56:55.589465	2013-12-08 18:56:55.589465
+193	186235	Prisoners of War / Hatufim	-	2010-03-01	-	0.0	f	TJFF presents the pilot episode of the award-winning Israeli series that inspired the American hit, Homeland. Set in 2008, this first episode focuses on two Israeli soldiers being released after 17 years of captivity in Lebanon. It powerfully explores their initial adjustment to civilian life, as well as the impact of their release on their families who are now trying to prepare for being reunited. Featuring a terrific cast that includes Mili Avital (Noodle) and Yael Abecassis (Live and Become).	-	2013-12-08 18:56:55.955867	2013-12-08 18:56:55.955867
+194	17954	Living & Dying	/5BEGVIkHVcfwcY2IVTu0Fx6rP55.jpg	2007-03-30	/qd1vkVZjPjP7xCLygJGZFtpkBMc.jpg	4.5	f	Four desperate bank robbers are forced to abandon their lucrative heist plans and become the reluctant heroes when two of their hostages turn out to be psychotic killers who won't stop until everyone in the bank has been ruthlessly slaughtered. As the police surround the building and the killers begin methodically executing the hostages.	p1CqaRnXEsY	2013-12-08 18:57:06.361174	2013-12-08 18:57:06.361174
+195	2104	Requiem	-	2001-12-28	/aZblXulCCrJsbatuXJoT2bRxHDu.jpg	6.0	f	Four hardened crooks break out of prison. Hunted down, with nowhere to run, they seek refuge in the only place the police cannot follow, a Cistercian monastery. Cut off from the outside world, a nightmare stand off develops between the fugitives, ready to kill in defence of their dearly purchased freedom, and the monks they' re holding hostage. But in this potentially lethal confrontation, nothing is quite as it seems. The game' s been rigged from the start. Requiem' s a violent and fast paced French film that really delivers.	-	2013-12-08 18:57:06.70239	2013-12-08 18:57:06.70239
+196	80755	The Black Godfather	-	1974-09-03	/bhTLyCD3UEScaawpXYmmmZbr8Gg.jpg	7.0	f	The heroes in The Black Godfather are members of an African-American criminal organization. Like Brando in The Godfather, they're not averse to robbery and murder, but they do draw the line at narcotics. When the Mafia infiltrates the 'hood with dangerous drugs, the Black Godfather (Rod Perry) orders his minions to put an end to this perfidy.	-	2013-12-08 18:57:07.083604	2013-12-08 18:57:07.083604
+197	7267	TBS	/nQlEWm7IdNsQh2ZqCLB9HQZRRcd.jpg	2008-01-31	/qgjEmm5MlQeIPbXvCar4a5GYdBJ.jpg	6.5	f	Johan has been locked up - wrongly in his opinion - for the murder of his father and little sister. His mother is the only one who can prove his innocence, but he hasn't been able to contact her for years. When he is transferred within the psychiatric prison to the long-stay department, it's the last straw. He decides to escape and to go looking for his mother.	wstgZwdTw2g	2013-12-08 18:57:07.413162	2013-12-08 18:57:07.413162
+198	49018	Insidious	/xVNR5eperbCm1DI1JfGhUXd4lqm.jpg	2011-04-01	/nm86sE6aSslLNhAoFxBMzDQT0zY.jpg	6.7	f	Insidious is the terrifying story of a family who shortly after moving discover that dark spirits have possessed their home and that their son has inexplicably fallen into a coma. Trying to escape the haunting and save their son, they move again only to realise that it was not their house that was haunted.	E1YbOMDI59k	2013-12-08 18:57:56.700001	2013-12-08 18:57:56.700001
+199	16175	The Diary of Ellen Rimbauer	/leMCSVZ4QehMfsWii0UlVQoxS6q.jpg	2003-05-13	/1Ipf1Yh1sLbIg4VqXx84cEwDWfJ.jpg	5.3	f	Set at the turn of the century, this is the tale of Ellen Rimbauer who just received this mysterious mansion as a wedding gift from her new husband...	-	2013-12-08 18:58:02.231705	2013-12-08 18:58:02.231705
+200	52923	Hell House	/nZ6m4QwJ61FCoc4vCRgnPmmrDvr.jpg	2008-07-25	/rGWv9T46dTAQwCX2LRlVBmTmgUf.jpg	10.0	f	The Shively house has always been a center of dark happenings throughout its existence every family that has inhabited the house has experienced a miserable and deadly end. Tonight a group of friends discover the awful truth that lay dormant in the house. The demons have possessed the former grounds keeper Adam (William Martin) to help with their escape and Theadora (Kari Wishingrad) the last in the bloodline of the soothsayers is the only one that can help stop the evil before... The demons get out	http://www.youtube.com/watch?v=A8nmFjcHSLk	2013-12-08 18:58:02.580646	2013-12-08 18:58:02.580646
+201	240860	Medium	-	1985-10-03	/2VsW2ZHqDtECJuHwEfKuFrtPvfy.jpg	0.0	f	Story of four people in Sopot in 1933, mysteriously brought together to an old villa to reenact a murder ritual that took place 36 years earlier	-	2013-12-08 18:58:02.925849	2013-12-08 18:58:02.925849
+202	14440	The Tattooist	/ymv1moG7WrsWXF3w2ux5S7WWbwy.jpg	2007-11-28	/bSCT2vvrp3Tmh3Hkton2ljXam5m.jpg	5.5	f	A young artist unknowingly plays a role in releasing a deadly spirit as he attempts to learn tatau, the Samoan tradition of tattooing.	-	2013-12-08 18:58:03.256789	2013-12-08 18:58:03.256789
+209	1576	Resident Evil	/s41Er80jGJf3tNkgYHxUCttjmwv.jpg	2002-03-15	/fttmSgLEOdBNwQepW2lC6t0mbOm.jpg	6.2	f	When a virus leaks from a top-secret facility, turning all resident researchers into ravenous zombies and their lab animals into mutated hounds from hell, the government sends in an elite military task force to contain the outbreak. Alice and Rain are charged with leading the mission. But they only have three hours before the pathogen becomes airborne and infects the world.	Bkc9c7VXmn8	2013-12-08 19:02:59.141247	2013-12-08 19:02:59.141247
+210	173897	Resident Evil 6	-	2014-09-12	/4Aq3xUPDVbTr8AdU1mGcu5PgSc3.jpg	5.6	f	Alice Abernathy (Milla Jovovich) continues her battle against The Umbrella Corporation's hostile AI system The Red Queen (Megan Charpentier) with the help of her friends Jill Valentine (Sienna Guillory), Leon Scott Kennedy (Johann Urb), Ada Wong (Li Bingbing), and her daughter Becky (Aryanna Engineer), while continuing an uneasy alliance with the former head of Umbrella, Albert Wesker (Shawn Roberts). Along the way, they will reconnect with former comrades Chris Redfield (Wentworth Miller), Claire Redfield (Ali Larter), and Kmart (Spencer Locke). Their epic battle will lead them back to where it all began in the dark mansion built by Umbrella founder Lord Ozwell E. Spencer and the deep underground research and development center known as The Hive, where The Red Queen plots total destruction over the human race.	-	2013-12-08 19:02:59.551892	2013-12-08 19:02:59.551892
+211	35791	Resident Evil: Afterlife	/o3P90r3owOlD86e27aC801rk4QI.jpg	2010-09-10	/imZAL1fKrKDFIcFBGLM89DaXzHh.jpg	5.8	f	In a world ravaged by a virus infection, turning its victims into the Undead, Alice continues on her journey to find survivors and lead them to safety. Her deadly battle with the Umbrella Corporation reaches new heights, but Alice gets some unexpected help from an old friend. A new lead that promises a safe haven from the Undead takes them to Los Angeles, but when they arrive the city is overrun by thousands of Undead - and Alice and her comrades are about to step into a deadly trap.	9dc5iiT0f1s	2013-12-08 19:02:59.898419	2013-12-08 19:02:59.898419
+203	55660	Left In Darkness	/fyW2qj6yVXuXILROMd6rsme09mV.jpg	2006-10-19	/8n5AljQkgBf0uhpUCvwzXYn3BFx.jpg	7.3	f	Celia (Monica Keena, Freddy vs. Jason) has had a rough life, with a mother who died in childbirth and a father who disappeared. Unfortunately for Celia, death is not any easier than life. When she is drugged and raped at a frat party, Celia dies from an overdose, and must battle the terrible Soul Eaters who roam the afterlife.	eABWfWuSYpc&hd=1	2013-12-08 19:01:42.588798	2013-12-08 19:01:42.588798
+204	102899	Ant-Man	-	2015-07-31	/6g9BTjVnZsxJqojxSTK9bVPlYw2.jpg	10.0	f	Biochemist Dr. Hank Pym uses his latest discovery, a group of subatomic particles, to create a size-altering formula. Though his first self-test goes awry, he develops an instrument that helps him communicate with and control insects.	-	2013-12-08 19:02:13.626586	2013-12-08 19:02:13.626586
+205	217993	Justice League: War	-	2014-02-03	/hwUWdYJ9WpqnR6NUD5gkDSU4bs8.jpg	0.0	f	The world is under attack by alien species led by Darkseid, Superman must gather a group of superheroes and form the Justice League to defend Earth.	-	2013-12-08 19:02:21.298033	2013-12-08 19:02:21.298033
+206	220848	Wolverine vs. Hulk	-	2013-09-09	/4N7ukMO7Tjup6o2rDxzZDL7V8E9.jpg	7.0	f	Following Hulk's murderous rampage through Manhattan, Dr. Bruce Banner was sentenced to execution, bringing an end to The Hulk . Or did it? When reports of a mysterious creature start creeping in from around the world, Nick Fury starts to get suspicious. Not only is Fury worried about Banner's rage turning him into an unstoppable monster, but his existence is the one secret that can bring down Nick Fury! Turning to the only man he can trust, Fury enlists Wolverine to help, and Wolverine is glad to take down Banner by any means necessary!	-	2013-12-08 19:02:21.762984	2013-12-08 19:02:21.762984
+207	49521	Man of Steel	/jYLh4mdOqkt30i7LTFs3o02UcGF.jpg	2013-06-14	/xWlaTLnD8NJMTT9PGOD9z5re1SL.jpg	6.5	f	A young boy learns that he has extraordinary powers and is not of this earth. As a young man, he journeys to discover where he came from and what he was sent here to do. But the hero in him must emerge if he is to save the world from annihilation and become the symbol of hope for all mankind.	KVu3gS7iJu4	2013-12-08 19:02:27.403176	2013-12-08 19:02:27.403176
+208	69735	Batman: Year One	/hAhMOPPPxzCKsCu5rUMYdwS8Yb5.jpg	2011-10-18	/bI1YVuhBN6Vws1GP9Mf01DyhC2s.jpg	7.2	f	Two men come to Gotham City: Bruce Wayne after years abroad feeding his lifelong obsession for justice and Jim Gordon after being too honest a cop with the wrong people elsewhere. After learning painful lessons about the city's corruption on its streets and police department respectively, this pair learn how to fight back their own way. With that, Gotham's evildoers from top to bottom are terrorized by the mysterious Batman and the equally heroic Gordon is assigned to catch him by comrades who both hate and fear him themselves. In the ensuing manhunt, both find much in common as the seeds of an unexpected friendship are laid with additional friends and rivals helping to start the legend.	8o8O3E9XSgo	2013-12-08 19:02:27.735138	2013-12-08 19:02:27.735138
+235	8414	Interview	/prVAzOh4NvkGJs0EySQJJv6m9Kf.jpg	2007-01-20	/mgUiVhndp2CoMXjB4G40pvfBPsk.jpg	0.0	f	Everyone wants a piece of a celebrity. Pierre is a political reporter, assigned to write a fluff piece on Katya, a blond who acts in slasher movies and a Fox show about single girls in the city. The interview, at a restaurant, goes badly: she's late, he's unprepared and rude. After leaving, he bangs his head in a fender bender and she takes him to her loft to clean the wound.	522	2013-12-08 19:05:52.736187	2013-12-08 19:05:52.736187
+236	36350	Interview	-	2003-01-01	/yDojAYsYGdUspIH169pYOkz8c4E.jpg	6.5	f	No overview found.	-	2013-12-08 19:05:53.078989	2013-12-08 19:05:53.078989
+237	203927	Interview	-	2000-03-31	-	0.0	f	Dogme 95 movie.	-	2013-12-08 19:05:53.433751	2013-12-08 19:05:53.433751
+238	203597	The Prodigal Returns - The Interview	/1DcyKsldAIrQQne8CKSysSTgKkI.jpg	2013-05-30	/ihbfJR9i1imLJpMe5M1LHpuxSCT.jpg	0.0	f		-	2013-12-08 19:05:53.768739	2013-12-08 19:05:53.768739
+212	7737	Resident Evil: Extinction	/mjQoekfYIT1t18j9hf2JSZEi60Y.jpg	2007-09-21	/3sAiP55j0souKMCYlo5wmwWAgaG.jpg	6.0	f	Years after the Racoon City catastrophe, survivors travel across the Nevada desert, hoping to make it to Alaska. Alice joins the caravan and their fight against hordes of zombies and the evil Umbrella Corp.	mfvrgD6d9N0	2013-12-08 19:03:00.229211	2013-12-08 19:03:00.229211
+213	76170	The Wolverine	/hp9JITQqk8LsXamgSzF4QgMBHY1.jpg	2013-07-25	/9wZFonA8gaMgebNMpWJ81xf5eBe.jpg	6.3	f	Wolverine faces his ultimate nemesis - and tests of his physical, emotional, and mortal limits - in a life-changing voyage to modern-day Japan.	u1VCP3O8wG0	2013-12-08 19:03:12.273079	2013-12-08 19:03:12.273079
+214	2080	X-Men Origins: Wolverine	/ldDdIYTRT1Te66rjCBRIzXBYkSO.jpg	2009-04-30	/vbaV7DalSF6Uy4qLyVK7uNdtmFy.jpg	6.2	f	After seeking to live a normal life, Logan sets out to avenge the death of his girlfriend by undergoing the mutant Weapon X program and becoming Wolverine.	Diqtd1gTUEc	2013-12-08 19:03:12.625112	2013-12-08 19:03:12.625112
+215	121133	X-Men: The Legend of Wolverine	-	2003-04-29	/6U351FPsLPH56LLjpB8yXHOYvYZ.jpg	0.0	f	The most popular Super Hero Team in history is ready for action in a spectacular series of thrilling adventures. When a familiar face from Wolverine's former life resurfaces, he must wage a war he never intended. Ultimately, the X-Men must join forces with Magneto in a fight to save all mutants from annihilation.  Discover the truth of Wolverine's secret past, and watch his decisive battle as he is forced to make a choice that will forever affect the fate of the X-Men.	-	2013-12-08 19:03:12.957937	2013-12-08 19:03:12.957937
+216	87421	Riddick	/7DlIoyQ3ecGMklVWyKsneZmVnsi.jpg	2013-09-06	/loRoAKEVmpqeVk4lpeEqHT0gSYD.jpg	6.1	f	Betrayed by his own kind and left for dead on a desolate planet, Riddick fights for survival against alien predators and becomes more powerful and dangerous than ever before. Soon bounty hunters from throughout the galaxy descend on Riddick only to find themselves pawns in his greater scheme for revenge. With his enemies right where he wants them, Riddick unleashes a vicious attack of vengeance before returning to his home planet of Furya to save it from destruction.	zH3O-CeZckE	2013-12-08 19:03:25.764703	2013-12-08 19:03:25.764703
+217	211449	Riddick: Blindsided	/nrbPVanpKTbJ7h1ZKlnNVxEiV7r.jpg	2013-07-25	/3rW47LMVu0CauoflKDsIu3NBgF3.jpg	4.0	f	This motion comic gaps the bridge between 2004's The Chronicles of Riddick, and 2013's Riddick.	-	2013-12-08 19:03:26.089201	2013-12-08 19:03:26.089201
+218	2789	The Chronicles of Riddick	/AoLVfcYPziZZQbAFQuKoceHreXD.jpg	2004-06-11	/tGNj5xxw5td0SBih1UmuqkHZ8ga.jpg	6.3	f	Five years after the events in sci-fi film Pitch Black, escaped convict Riddick finds himself caught in the middle of a galactic war waged by Lord Marshal, the leader of a sect called the Necromongers. Riddick is charged with stopping the Necromonger army, all while rescuing an old friend from a prison planet and evading capture by bounty hunters.	dHva0-ckVMw	2013-12-08 19:03:26.422628	2013-12-08 19:03:26.422628
+219	2787	Pitch Black	/yc0cEEZ9OO6ydyYmCEfY90Q9jII.jpg	2000-02-18	/u6oDHb3z0uZNQHNdJwHJAW1jD4q.jpg	6.6	f	After crash-landing on a seemingly lifeless planet, pilot Carolyn Fry and the remaining passengers -- including murderer Riddick and policeman William J. Johns -- encounter an army of creatures whose only weakness is light. As night approaches and the aliens emerge, the passengers must rely on Riddick's powerful night vision to lead them through the darkness.	RU3eJmbyqzA	2013-12-08 19:03:26.772896	2013-12-08 19:03:26.772896
+231	122241	Meet Mr. Callaghan	/mRWGS15sWmA1tc1dmlt08rDuvJf.jpg	1954-06-01	/k0fmM5GmLAtK9rwYMh1v9fxQ6Pa.jpg	0.0	f	A young woman is framed for the murder of a wealthy man who met his death at the hands of his heirs.	-	2013-12-08 19:05:34.986192	2013-12-08 19:05:34.986192
+232	199595	Meet Mr. Malcolm	-	1954-01-01	/bhWMgl0dCDCHgTwYNZ56znGmYPd.jpg	0.0	f	Celebrated crime writer Colin Knowles (Richard Knowles) finds himself at the centre of a baffling real-life mystery when his estranged wife Louie (Sarah Lawson) asks for his help. Her new boss has gone missing at his grand country home -- and when his body is found, the hunt is on for a devious and twisted murderer. Sinister letters from London refer to a 'double crime'. Who will be the killer's next victim?	w_OmoiMFy8k	2013-12-08 19:05:35.356931	2013-12-08 19:05:35.356931
+233	154707	Meet the In-Laws	-		/cWcQ1sfhCmIaAM90JmpULgYd6dg.jpg	0.0	f	-	-	2013-12-08 19:05:35.794402	2013-12-08 19:05:35.794402
+234	74554	We'll Meet Again	-	2002-01-01	/5H3mnlQVZfQ0mBqwZxRqnbMfJKo.jpg	7.5	f	Based on the novel from award winning, best selling author Mary Higgins Clark. Socialite Molly Lasch is released from prison after serving a six-year sentence for the murder of her husband, Dr. Gary Lasch. Now, with the help of Fran, an investigative reporter, Molly sets out to prove her innocence. Together they uncover a conspiracy of silence at the Lasch Medical Center and a shocking secret that could cost both women their lives.	-	2013-12-08 19:05:36.161193	2013-12-08 19:05:36.161193
+240	164	Breakfast at Tiffany's	/eTxywL8e8btlUw8CCPygnxhND1N.jpg	1961-10-05	/c95lbDwL5WT8PV9DZsdSvRtXKNA.jpg	6.7	f	Fortune hunter Holly Golightly finds herself captivated by aspiring writer Paul Varjak, who's moved into her building on a wealthy woman's dime. As romance blooms between Paul and Holly, Doc Golightly shows up on the scene, revealing Holly's past.	urQVzgEO_w8	2013-12-08 19:07:18.062929	2013-12-08 19:07:18.062929
+241	896	The World of Apu	-	1959-01-01	/nzFNDssKQnkEQkvgEmCJm4fuBNs.jpg	0.0	f	Apu is a jobless ex-student dreaming vaguely of a future as a writer. An old college friend talks him into a visit up-country to a village wedding. This changes his life, for when the bridegroom turns out to be mad, Apu's friend asks him to become the husband! After initial revulsion at the idea, Apu agrees. Apu takes his exquisite bridge, Aparna, back to Calcutta. But Aparna dies in childbirth, Apu leaves Calcutta, crazy with grief, and his son Kajal is left abandoned with his wife's parents. Only after a long period of total indifference to worldly responsibilities, does Apu become capable of returning to the world.	-	2013-12-08 19:07:18.406242	2013-12-08 19:07:18.406242
+242	1414	Lovers of the Arctic Circle	/1aIDlIOJufYjcTH0wAmK4mZ8Gd0.jpg	1998-09-04	/2sNBOBLjiBUq7Qgxlh2lxpaKg0H.jpg	7.9	f	Otto and Ana are kids when they meet each other. Their names are palindromes. They meet by chance, people are related by chance. A story of circular lives, with circular names, and a circular place (Círculo polar) where the day never ends in the midnight sun. There are things that never end, and Love is one of them.	rSd0L-L-GWQ	2013-12-08 19:07:18.873627	2013-12-08 19:07:18.873627
+243	6171	Dreamcatcher	/5jKM6aUt1L9kZUrEoQjtO2jqraV.jpg	2003-03-21	/A85mIkXdJvOwHxIQIEaN147GSLD.jpg	5.2	f	Four boyhood pals perform a heroic act and are changed by the powers they gain in return. Years later, on a hunting trip in the Maine woods, they're overtaken by a vicious blizzard that harbors an ominous presence. Challenged to stop an alien force, the friends must first prevent the slaughter of innocent civilians by a military vigilante ... and then overcome a threat to the bond that unites the four of them.	s-3c_wjXhr0	2013-12-08 19:07:19.195293	2013-12-08 19:07:19.195293
+244	2379	Le témoin	-	1969-01-01	-	0.0	f	No overview found.	-	2013-12-08 19:07:19.582717	2013-12-08 19:07:19.582717
+220	117579	Thomas	-	2008-12-22	/cEc37m4c0WXiGzOU0hvHQP4fjSS.jpg	0.0	f	Thomas, a former doctor, a widower, lives alone in a basement apartment in Helsinki. His routine becomes even more limited when his misanthropic brother dies, reducing Thomas' human contact to practically nil. As with many seniors, he's basically invisible to passersby, though Thomas in particular avoids engaging with those around him. When he runs into his estranged daughter Marie, he tries to create a bridge.	-	2013-12-08 19:04:09.426093	2013-12-08 19:04:09.426093
+221	58440	The Friends of Jesus - Thomas	-	2001-08-06	/46doXo8GGXFptiFraoDbe0r2cyR.jpg	0.0	f	When Jesus is taken off the cross at Golgotha, THOMAS arrives there. Like most of the other disciples, he had worriedly taken refuge with friends in Jerusalem after Jesus's arrest. After Jesus's burial, the disciples decide to leave Jerusalem quickly, but Thomas refuses to leave Jesus' body behind, as he fears that the tomb may be desecrated.	-	2013-12-08 19:04:09.821145	2013-12-08 19:04:09.821145
+222	102569	Thomas l'imposteur	/2KADQ32S9HeRUYvT1YTxTCXyAKQ.jpg	1965-06-01	/ke6f2Dt9xG8Q9tNK1GauBnvxpRN.jpg	0.0	f		-	2013-12-08 19:04:10.190359	2013-12-08 19:04:10.190359
+223	48770	Tom & Thomas	/jV3XSNx9VrjNsoX1GwaTHfrkIrG.jpg	2002-01-01	/haTawMjc2OCOfXa4CK6qK4ctx9b.jpg	10.0	f	A young boy thinks he's got a lookalike around him, but nobody believes him. Then, he meets Thomas and they switch homes.	-	2013-12-08 19:04:10.518193	2013-12-08 19:04:10.518193
+224	179826	Odd Thomas	/jNCMNFDK2zHdkVE0Dyqw4pRFftT.jpg	2013-04-05	/2KwtY5pBCDLM0M4s8ygWasEeYYA.jpg	5.8	f	In a California desert town, a short-order cook with clairvoyant abilities encounters a mysterious man with a link to dark, threatening forces.	ZEnvutQ0UI4	2013-12-08 19:04:20.346158	2013-12-08 19:04:20.346158
+225	214079	Odd Triangle	-	1968-01-01	/AiuNWkdpqismcvVcs4XE0vEMqjv.jpg	0.0	f	Lesbian erotica ensues when Allison, a gorgeous woman disgruntled by her marriage, befriends a sexy suburban housewife named Janet, whose erotic stories ignite hidden passions. The two get it on and soon welcome the involvement of Winnie, a young guide with mature desires.	-	2013-12-08 19:04:20.696375	2013-12-08 19:04:20.696375
+226	11356	The Odd Couple	/8e3XGC1u3xvYb9UGVpu7t2ZbTlR.jpg	1968-05-02	/o31ZGdpEiXBQ3zkfUhG2xkkXkFM.jpg	7.9	f	Felix Ungar has just broken up with his wife. Despondent, he goes to kill himself but is saved by his friend Oscar Madison. With nowhere else to go, Felix is urged by Oscar to move in with him, at least for a while. The only problem is that Felix is neat, tidy, and neurotic, whereas Oscar is slovenly and casual.	A58OtN9h918	2013-12-08 19:04:21.05072	2013-12-08 19:04:21.05072
+227	46691	Joe	/yHegd3GmciixQx3SKVQGRfFUjtA.jpg	1970-07-15	/vJy9nBDoJo6FJtvCSRELKWN4q6N.jpg	7.5	f	Bill, a wealthy businessman, confronts his junkie daughter's drug-dealing boyfriend; in the ensuing argument, Bill kills him. Panic-stricken, he wanders the streets and eventually stops at a bar. There he runs into a drunken factory worker named Joe, who hates hippies, blacks, and anyone who is "different", and would like to kill one himself. The two start talking, and Bill reveals his secret to Joe. Complications ensue.	4d7KhGmQbEE	2013-12-08 19:04:55.867131	2013-12-08 19:04:55.867131
+228	157847	Joe	/c5gV8cuyjh261gAMo9DQmCPOYAM.jpg	2013-08-30	/1cqlumjQ8icldwwUy4CyDLIV6tw.jpg	9.0	f	Mississippi, the wild American south. Joe Ransom is the unlikeliest of role models: He drinks like a fish, regularly blows his entire income on gambling, and has slipped through the fingers of the police on many occasions. Nevertheless, this ex-convict turned lumberjack takes the 15-year-old Gary, a chance acquaintance, under his wing. There’s a lot about Gary – the oldest child of a homeless family travelling the highways under the rule of a drunk, worthless father – that reminds the old dog of his own past. Joe’s paternal feelings for the teenager soon emerge – at last, he too can be a hero.	rNlnmH1kmAM	2013-12-08 19:04:56.198864	2013-12-08 19:04:56.198864
+229	231949	Joe & Joe	-	1996-01-01	/mE0sE5Jdj0d4pVBMCS4p9Ap38yT.jpg	0.0	f	Two small time lawnmowers try to find treasure so they can purchase better equipment, but will something supernatural intervene?	-	2013-12-08 19:04:56.542167	2013-12-08 19:04:56.542167
+230	138126	Joe l'implacabile	-	1967-02-15	/3rmFDRNjLYiyIAE7sJJNheAH9J.jpg	0.0	f	Due to the continuous theft of gold shipments that are destined for the government, Senator charge of the case engages the services of Joe, a curious man who doesn´t use gun: single dynamite.	-	2013-12-08 19:04:56.865576	2013-12-08 19:04:56.865576
+239	297	Meet Joe Black	/mzlg8v1epF9cysjLKjH4XLobMt0.jpg	1998-11-12	/nlxPnkZY3vY1iehJriKMQcT6eua.jpg	6.5	f	When the grim reaper comes to collect the soul of megamogul Bill Parrish, he arrives with a proposition: Host him for a "vacation" among the living in trade for a few more days of existence. Parrish agrees, and using the pseudonym Joe Black, Death begins taking part in Parrish's daily agenda and falls in love with the man's daughter. Yet when Black's holiday is over, so is Parrish's life.	YifJ85wTwkU	2013-12-08 19:06:37.592394	2013-12-08 19:06:37.592394
+245	80969	Mr. Leguignon Lampiste	-	1952-05-08	/gNucN5V0X5wG9hlFZYw1exy3MuP.jpg	0.0	f	Diogène Leguignon is a modest railway worker for whom things seldom tend to go right.  Having been expelled from his home, he and his wife are forced into a rundown house in a less desirable part of town.  Unknown to Leguignon, a band of local children have discovered a stash of treasure and keep it concealed under the floorboards in his house.  When Leguignon attempts to claim ownership of the treasure, he ends up in court and is branded a thief.  When he is released from jail, he persuades his neighbours to use the money gained from the sale of the treasure to build a new housing estate.  But to raise the extra capital to complete the project, Leguignon has to turn to some very unscrupulous bankers...	-	2013-12-08 19:37:04.253658	2013-12-08 19:37:04.253658
+246	58857	13 Assassins	/irlOLDEGVbRipWgBKPioY0z32ON.jpg	2010-09-25	/krZCfcA0okm2Waq0awZgFxQNRug.jpg	7.1	f	Cult director Takeshi Miike delivers a bravado period action film set at the end of Japan's feudal era in which a group of unemployed samurai are enlisted to bring down a sadistic lord and prevent him from ascending to the throne and plunging the country into a war-torn future.	NgPC74-Tde8	2013-12-08 19:47:30.641114	2013-12-08 19:47:30.641114
+247	86987	Jackpot	/yI2t6L1KvQkXMQ6KoqV5UgOPYfJ.jpg	2011-12-02	/x79RKGZIlGj8NnHqEUH0IUTSI4b.jpg	0.0	f	Terrified and bloody, Oscar Svendsen awakes clinched to a shotgun in a strippers joint. Around him 8 dead men, and police aiming at him. To Oscar it's clear that he is innocent. It all started when four chaps won 1,7 million on the pools.	douOFKgjSuM	2013-12-08 19:48:27.120944	2013-12-08 19:48:27.120944
+248	10598	Dirty	/2W59bvX4ZBaafVA0l5S9npJK1vo.jpg	2005-11-10	/wb08X85fcwQf3A3KEN7GbkLUtBh.jpg	6.4	f	Two gangbangers-turned-cops try and cover up a scandal within the LAPD.	-	2013-12-08 19:48:37.627951	2013-12-08 19:48:37.627951
+249	80898	Dreams Awake	-	2011-01-01	/vWVx5oHFjEStaBafbPavpkFQcYw.jpg	0.0	f	While on vacation a disconnected family gets stranded near mystical Mt. Shasta and gets more than they could have ever bargained for. A family drama grows into a spiritual mystery, and finally becomes a mystical adventure. A glimpse into the subtle but intense possibilities of the human spirit, this story delves into that magical lore between reality and illusions, dreams and awake, and life and immortality.	-	2013-12-08 19:49:00.456607	2013-12-08 19:49:00.456607
+\.
+
+
+--
+-- Name: movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('movies_id_seq', 249, true);
+
+
+--
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY projects (id, name, created_at, updated_at) FROM stdin;
+1	Problem set 1	2013-12-08 16:36:09.946465	2013-12-08 16:36:09.946465
+2	Problem set 2	2013-12-08 16:37:26.816712	2013-12-08 16:37:26.816712
+3	Problem set 3	2013-12-08 16:38:49.770971	2013-12-08 16:38:49.770971
+4	Problem set 4	2013-12-08 16:39:01.581726	2013-12-08 16:39:01.581726
+5	Problem set 5	2013-12-08 16:39:14.795277	2013-12-08 16:39:14.795277
+6	Problem set 6	2013-12-08 16:39:30.090091	2013-12-08 16:39:30.090091
+\.
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 6, true);
+
+
+--
+-- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY quotations (id, author_name, category, quote, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('quotations_id_seq', 1, false);
+
+
+--
+-- Data for Name: redactor_assets; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY redactor_assets (id, user_id, data_file_name, data_content_type, data_file_size, assetable_id, assetable_type, type, width, height, created_at, updated_at) FROM stdin;
+1	1	frozen-review-disney-photo.jpg	image/jpeg	100330	1	User	RedactorRails::Picture	630	420	2013-12-08 12:07:34.441074	2013-12-08 12:07:34.441074
+2	1	2gPjLWIyrWlAn2DgKMOKTBnZYyO.jpg	image/jpeg	132250	1	User	RedactorRails::Picture	500	750	2013-12-08 12:58:55.432693	2013-12-08 12:58:55.432693
+3	1	frozen-review-disney-photo.jpg	image/jpeg	100330	1	User	RedactorRails::Picture	630	420	2013-12-08 16:10:13.700903	2013-12-08 16:10:13.700903
+4	1	frozen-review-disney-photo.jpg	image/jpeg	100330	1	User	RedactorRails::Picture	630	420	2013-12-08 16:25:36.551157	2013-12-08 16:25:36.551157
+5	1	the-hunger-games-catching-fire-comic-con-trailer.jpg	image/jpeg	207926	1	User	RedactorRails::Picture	900	600	2013-12-08 17:25:54.09689	2013-12-08 17:25:54.09689
+6	7	1003919_557916280935677_827774252_n.jpg	image/jpeg	62819	7	User	RedactorRails::Picture	600	533	2013-12-08 17:48:59.630548	2013-12-08 17:48:59.630548
+7	7	1471338_601564953237476_943092758_n.jpg	image/jpeg	43149	7	User	RedactorRails::Picture	630	419	2013-12-08 17:55:49.109437	2013-12-08 17:55:49.109437
+8	7	1471338_601564953237476_943092758_n.jpg	image/jpeg	43149	7	User	RedactorRails::Picture	630	419	2013-12-08 17:57:46.14738	2013-12-08 17:57:46.14738
+9	7	hunger-games-444173.jpg	image/jpeg	29932	7	User	RedactorRails::Picture	590	350	2013-12-08 18:10:14.273146	2013-12-08 18:10:14.273146
+10	1	Joe_and_Susan.jpg	image/jpeg	27907	1	User	RedactorRails::Picture	600	407	2013-12-08 19:08:43.728977	2013-12-08 19:08:43.728977
+\.
+
+
+--
+-- Name: redactor_assets_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('redactor_assets_id_seq', 10, true);
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY roles (id, name, title, description, the_role, created_at, updated_at) FROM stdin;
+1	admin	role for admin	this user can do anything	{"system":{"administrator":true}}	2013-12-08 11:54:07.811646	2013-12-08 11:54:07.889026
+\.
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('roles_id_seq', 1, true);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY schema_migrations (version) FROM stdin;
+20130902152224
+20130902152354
+20130910132737
+20131021180031
+20131021183409
+20131021185625
+20131021185659
+20131022210250
+20131022212648
+20131023064443
+20131023184931
+20131024033053
+20131024070442
+20131027161151
+20131101091018
+20131102005420
+20131112163516
+20131112174219
+20131115110838
+20131208115005
+\.
+
+
+--
+-- Data for Name: solutions; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY solutions (id, name, explanation, project_id, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('solutions_id_seq', 1, false);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY users (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at, username, role_id, image) FROM stdin;
+10	b@2.co	$2a$10$prck4WpGWimm80j3jdxwD.r2dudX5Zr2Pt87IphW7afLxs3G2gW6O	\N	\N	\N	1	2013-12-08 18:23:34.538525	2013-12-08 18:23:34.538525	203.159.40.62	203.159.40.62	2013-12-08 18:23:34.507574	2013-12-08 18:23:34.539921	Thekiller	2	\N
+8	b@b.com	$2a$10$gpuUTyPFmBFTXSxr0ciM5u6NAK7.fWg9CqgNmjH1tA65hATr88tHu	\N	\N	\N	2	2013-12-08 18:27:09.885462	2013-12-08 17:59:05.68773	203.159.40.62	203.159.40.62	2013-12-08 17:59:05.659712	2013-12-08 18:27:09.900823	thekiller	2	\N
+1	ice_jr@msn.com	$2a$10$Oo3q2ExHIhPnc3.DCMFViuc60S5RwJzqrdLxq2sBOxDXKbxrI.7T2	\N	\N	\N	9	2013-12-08 19:52:38.119444	2013-12-08 19:37:21.748104	203.159.40.102	203.159.40.102	2013-12-08 11:47:35.374837	2013-12-08 19:52:38.124278	icenaja	1	uploads/60084_10151787017393562_1644224710_n.jpg
+4	ali.imran@ait.asia	$2a$10$O1hwYCyiSmBzgLImjFKteO7a07kebdXYmcf6MLLRdClxeuPCN0C66	\N	\N	\N	1	2013-12-08 16:16:03.130485	2013-12-08 16:16:03.130485	203.159.38.87	203.159.38.87	2013-12-08 16:16:03.078989	2013-12-08 16:16:03.131504	ImranAli	2	\N
+5	luna@lovegood.com	$2a$10$Dd7bp3qbFJF2Pk5maZ6.Kum/LXbub6FLXqkBvEW4HnM/fEK15lx7u	\N	\N	\N	1	2013-12-08 16:18:51.856706	2013-12-08 16:18:51.856706	111.84.163.232	111.84.163.232	2013-12-08 16:18:51.826822	2013-12-08 16:18:51.859894	luna	2	\N
+3	eithaw08@gmail.com	$2a$10$m4eF98wqPtRG/DeBiYJc3OBcR./ARuX3x9EZPBQE8X/kbLGpyLsgC	\N	\N	\N	2	2013-12-08 16:26:10.668342	2013-12-08 16:13:46.577151	192.41.170.144	192.41.170.144	2013-12-08 16:13:46.50022	2013-12-08 16:26:10.671307	Eithaw	2	uploads/flower.jpg
+6	test@gmail.com	$2a$10$iR9f.o64fd2tpak9IJlohOPQ8Hp87ZIPuD8TTGStD.Xjg2AZGc0le	\N	\N	\N	1	2013-12-08 17:14:52.734289	2013-12-08 17:14:52.734289	125.25.142.154	125.25.142.154	2013-12-08 17:14:52.703054	2013-12-08 17:53:43.026129	Jirayu	2	\N
+7	matsuphang@gmail.com	$2a$10$eBSfzQbSj8gBGonGTP1FauIKi8M4kt6SH3YS5NJTtwE8NuGMEmIW6	\N	\N	\N	1	2013-12-08 17:43:16.312382	2013-12-08 17:43:16.312382	110.169.236.205	110.169.236.205	2013-12-08 17:43:16.274471	2013-12-08 18:03:15.726992	real	2	uploads/388958_306296899408235_503700984_n.jpg
+2	missttz@gmail.com	$2a$10$Ey4lEbRWLl2Q14SqmozbvOmz1gJ4sznHHvhmhMvYBIqzqRpWWLIzq	\N	\N	\N	7	2013-12-08 18:13:39.017276	2013-12-08 16:01:02.448998	192.41.170.23	203.159.32.37	2013-12-08 12:14:36.863501	2013-12-08 18:13:39.028087	TTZ	2	uploads/Tulips.jpg
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('users_id_seq', 11, true);
+
+
+--
+-- Name: authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY authentications
+    ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: entries_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY entries
+    ADD CONSTRAINT entries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: like_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY like_entries
+    ADD CONSTRAINT like_entries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: like_movies_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY like_movies
+    ADD CONSTRAINT like_movies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: movies_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY movies
+    ADD CONSTRAINT movies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY quotations
+    ADD CONSTRAINT quotations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: redactor_assets_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY redactor_assets
+    ADD CONSTRAINT redactor_assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solutions_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY solutions
+    ADD CONSTRAINT solutions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_redactor_assetable; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX idx_redactor_assetable ON redactor_assets USING btree (assetable_type, assetable_id);
+
+
+--
+-- Name: idx_redactor_assetable_type; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX idx_redactor_assetable_type ON redactor_assets USING btree (assetable_type, type, assetable_id);
+
+
+--
+-- Name: index_comments_on_entry_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_comments_on_entry_id ON comments USING btree (entry_id);
+
+
+--
+-- Name: index_comments_on_user_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
+
+
+--
+-- Name: index_entries_on_user_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_entries_on_user_id ON entries USING btree (user_id);
+
+
+--
+-- Name: index_like_entries_on_entry_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_like_entries_on_entry_id ON like_entries USING btree (entry_id);
+
+
+--
+-- Name: index_like_entries_on_user_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_like_entries_on_user_id ON like_entries USING btree (user_id);
+
+
+--
+-- Name: index_like_movies_on_movie_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_like_movies_on_movie_id ON like_movies USING btree (movie_id);
+
+
+--
+-- Name: index_like_movies_on_user_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_like_movies_on_user_id ON like_movies USING btree (user_id);
+
+
+--
+-- Name: index_solutions_on_project_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_solutions_on_project_id ON solutions USING btree (project_id);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_production"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: authorizations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE authorizations (
+    id integer NOT NULL,
+    provider character varying(255),
+    uid character varying(255),
+    user_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.authorizations OWNER TO web07;
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE authorizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.authorizations_id_seq OWNER TO web07;
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE authorizations_id_seq OWNED BY authorizations.id;
+
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.projects OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.projects_id_seq OWNER TO web07;
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
+-- Name: quotations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE quotations (
+    id integer NOT NULL,
+    author_name character varying(255),
+    category character varying(255),
+    quote text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.quotations OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE quotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quotations_id_seq OWNER TO web07;
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE quotations_id_seq OWNED BY quotations.id;
+
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE roles (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
+    description text NOT NULL,
+    the_role text NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.roles OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.roles_id_seq OWNER TO web07;
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO web07;
+
+--
+-- Name: solutions; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE solutions (
+    id integer NOT NULL,
+    name character varying(255),
+    explanation text,
+    project_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.solutions OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE solutions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.solutions_id_seq OWNER TO web07;
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE solutions_id_seq OWNED BY solutions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying(255),
+    password_hash character varying(255),
+    password_salt character varying(255),
+    role_id integer DEFAULT 2,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.users OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: web07
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO web07;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: web07
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY authorizations ALTER COLUMN id SET DEFAULT nextval('authorizations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY quotations ALTER COLUMN id SET DEFAULT nextval('quotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY solutions ALTER COLUMN id SET DEFAULT nextval('solutions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: web07
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: authorizations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY authorizations (id, provider, uid, user_id, created_at, updated_at) FROM stdin;
+1	facebook	100000982534125	4	2013-10-02 13:58:56.500541	2013-10-02 13:58:56.500541
+2	facebook	100000243947081	5	2013-10-02 14:17:47.53441	2013-10-02 14:17:47.53441
+3	facebook	1502861863	6	2013-10-02 14:17:52.590211	2013-10-02 14:17:52.590211
+\.
+
+
+--
+-- Name: authorizations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('authorizations_id_seq', 3, true);
+
+
+--
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY projects (id, name, created_at, updated_at) FROM stdin;
+1	Problem set 1	2013-09-09 11:38:13.809971	2013-09-09 11:38:13.809971
+3	Problem set 2	2013-09-16 18:18:57.040213	2013-09-16 18:18:57.040213
+5	Problem set 3	2013-09-23 12:57:52.484687	2013-09-23 12:57:52.484687
+7	Problem set 4	2013-10-02 14:55:48.980209	2013-10-02 14:55:48.980209
+\.
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 7, true);
+
+
+--
+-- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY quotations (id, author_name, category, quote, created_at, updated_at) FROM stdin;
+1	Ted Turner	Politics	I feel like those Jewish people in Germany in 1942.	2013-09-16 18:24:07.777723	2013-09-16 18:24:07.777723
+2	Unknown	Philosophy	If a man speaks in the forest and there is no woman there to hear him, is he still wrong?	2013-09-16 18:24:47.2321	2013-09-16 18:24:47.2321
+3	\N	new category 123	TestingFROMFILE	2013-09-16 18:29:43.429866	2013-09-16 18:29:43.429866
+4	Unknown		Men are like a \fne wine. They all start out like grapes, and it's our job to stomp on them and\r\nkeep them in the dark where they will mature into something you'd want to have dinner with.	2013-09-16 20:08:44.026489	2013-09-16 20:08:44.026489
+5	Anne Slater	Logical	\\A woman needs four animals in her life. A mink in the closet. A jaguar in the garage. A tiger\r\nin bed. And an ass to pay for it all.	2013-09-16 20:09:38.397896	2013-09-16 20:09:38.397896
+6	Gene Fowler	Editors	An editor should have a pimp for a brother, so he'd have someone to look up to.	2013-09-16 20:10:45.572694	2013-09-16 20:10:45.572694
+7	Edward R. Murrow	Technology	The newest computer can merely compound, at speed, the oldest problem in the relations between\r\nhuman beings, and in the end the communicator will be confronted with the old problem, of what\r\nto say and how to say it.	2013-09-16 20:11:32.473971	2013-09-16 20:11:32.473971
+8	Frank Leahy		Egotism is the anesthetic that dulls the pain of stupidity.	2013-09-16 20:12:17.017611	2013-09-16 20:12:17.017611
+9	Edward Young		Some for renown, on scraps of learning dote, And think they grow immortal as they quote.	2013-09-16 20:13:05.758064	2013-09-16 20:13:05.758064
+\.
+
+
+--
+-- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('quotations_id_seq', 9, true);
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY roles (id, name, title, description, the_role, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('roles_id_seq', 1, false);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY schema_migrations (version) FROM stdin;
+20130902152354
+20130902152224
+20130910132737
+20130928131742
+20130928144516
+20130929121530
+\.
+
+
+--
+-- Data for Name: solutions; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY solutions (id, name, explanation, project_id, created_at, updated_at) FROM stdin;
+1	Solution 1	We created rails application called Projects07. We have two tables inside the database, projects and solutions. (Projects name:string) (Solutions name:string explanation:string project:references) We generate Projects using Rails Scaffold command & Solutions model using Rails generate model command. We configure this relation of Projects has many solutions and solutions belong to project, inside the model folder of the rails application. 	1	2013-09-09 11:38:59.273595	2013-09-09 11:38:59.273595
+2	Solution 2	We create the method viewSource inside the project model to fetch the links from Yahoo home page and output the treanding now links to our trendingNow.html page. We will add the line "projects/trendingNow" inside the routes.rb to link our page. 	1	2013-09-09 11:39:26.04628	2013-09-09 11:39:26.04628
+3	Solution 3	 In the file project.rb we create the method divide. We check whether y is zero and then we open the production.long and write "About to divide by zero". Inside the divide method, we try Project.divide(1,0) and like we test in rails console, it gives out the ZeroDivisionError in ProjectsController.	1	2013-09-09 11:39:53.408178	2013-09-09 11:39:53.408178
+\.
+
+
+--
+-- Name: solutions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('solutions_id_seq', 3, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: web07
+--
+
+COPY users (id, email, password_hash, password_salt, role_id, created_at, updated_at) FROM stdin;
+3	mahdi2@gmail.com	$2a$10$1x9fDFto1qY/aWu2Qv1No.ncuAUtjdW78xBPPGO9TE888waDVAyA.	$2a$10$1x9fDFto1qY/aWu2Qv1No.	1	2013-10-02 13:56:15.773873	2013-10-02 13:56:15.773873
+4	sadeghi24m@gmail.com	\N	\N	2	2013-10-02 13:58:56.477141	2013-10-02 13:58:56.477141
+5	violet.zun@gmail.com	\N	\N	2	2013-10-02 14:17:47.475591	2013-10-02 14:17:47.475591
+6	adamlang79@msn.com	\N	\N	2	2013-10-02 14:17:52.587353	2013-10-02 14:17:52.587353
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: web07
+--
+
+SELECT pg_catalog.setval('users_id_seq', 6, true);
+
+
+--
+-- Name: authorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY authorizations
+    ADD CONSTRAINT authorizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY quotations
+    ADD CONSTRAINT quotations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solutions_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY solutions
+    ADD CONSTRAINT solutions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: web07; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_solutions_on_project_id; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE INDEX index_solutions_on_project_id ON solutions USING btree (project_id);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: web07; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Project07_test"
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect postgres
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: postgres; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE postgres IS 'default administrative connection database';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect template1
+
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: template1; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE template1 IS 'default template for new databases';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- PostgreSQL database cluster dump complete
+--
+

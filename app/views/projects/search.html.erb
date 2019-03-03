@@ -1,0 +1,7 @@
+<h3>Quotes containing your search word!</h3> 
+
+ <%= $search_condition %>
+<ul> <% for quotation in $quotationslist %> 
+	<li>Author Name : <%= h quotation.author_name %>  Quote : <%= h quotation.quote %></li> 
+	<% end %>
+	 </ul> 

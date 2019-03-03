@@ -1,0 +1,122 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project07</title>
+
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+
+  <%= stylesheet_link_tag "tokeninputStyle",  media: "all", "data-turbolinks-track" => true  %>
+  <%= stylesheet_link_tag "timeline",  media: "all", "data-turbolinks-track" => true  %>
+  
+
+
+
+
+  <%= csrf_meta_tags %>
+
+
+ 
+</head>
+<body style="background-color:#f4f4f4;">
+
+
+
+<div style="background-color:#222222; padding-top:20px; padding-bottom:20px; ">
+  <div id="userNav">
+    <%= link_to "Home",  '/home'  ,:class => "leftNav" ,method: :get, style: 'color:white;'%>
+    <%= link_to "Movie",  '/movies' ,:class => "leftNav",method: :get, style: 'color:white;'%>
+    <%= link_to "Review",  '/review' ,:class => "leftNav",method: :get, style: 'color:white;'%>
+    <%= link_to "People",  '/list_of_users' ,:class => "leftNav",method: :get, style: 'color:white;' %>
+
+
+
+    <% if current_user %>
+      <span style="color:#71767a; float:right; margin-top:-5px; ">
+        <div id='cssmenu'>
+          <ul>
+            <% if !current_user.username.blank? %>
+              <li class='has-sub last'>
+                <% if !current_user.image.blank? %>
+                  <%= link_to image_tag(asset_path(current_user.image),:size => "20x20")+" "+current_user.username+" "+(fa_icon "caret-down"), profile_path(:user_id => current_user.id ),  :method => :post ,style: 'color:white;'%>
+                <% else %>
+                  <%= link_to image_tag(asset_path('default.png'),:size => "20x20")+" "+current_user.username+" "+(fa_icon "caret-down"), profile_path(:user_id => current_user.id  ),  :method => :post ,style: 'color:white;'%>
+                <% end %>
+            <% else %>
+              <li class='has-sub last'>
+                <% if !current_user.image.blank? %>
+                  <%= link_to image_tag(asset_path(current_user.image),:size => "20x20")+" "+current_user.email+" "+(fa_icon "caret-down"), profile_path(:user_id => current_user.id ),  :method => :post ,style: 'color:white;'%>
+                <% else %>
+                  <%= link_to image_tag(asset_path('default.png'),:size => "20x20")+" "+current_user.email+" "+(fa_icon "caret-down"), profile_path(:user_id => current_user.id  ),  :method => :post ,style: 'color:white;'%>
+                <% end %>
+            <% end %>
+
+              <ul>
+                <li><%= link_to "View profile", profile_path(:user_id => current_user.id ),  :method => :post %></li>
+                <li><%= link_to "Write Review", new_entry_path,  :method => :get %></li>
+                <li><%= link_to "Recommended Movie", recommend_path,  :method => :get %></li>
+                <li class='last'><%= link_to "Log out", destroy_user_session_path ,:class => "rightNav",:method => :delete%></li>
+              </ul>
+           </li>
+          </ul>
+        </div>
+      </span>
+
+    <% else %>
+      <%= link_to "Sign up", new_user_registration_path ,:class => "rightNav", style: 'color:white;'%> 
+      <%= link_to "Sign in", new_user_session_path  ,:class => "rightNav", style: 'color:white;'%> Login with Facebook (not work with proxy)
+       <!--<%=  link_to 'Login with Facebook', '/auth/facebook/',:class => "rightNav", style: 'color:white;' %>-->
+
+  <% end %>
+<div id="notification">
+     
+  </div>
+</div>
+
+
+</div>
+
+    <div >
+      <%= yield :role_main %>
+      <%= yield  %>
+
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<% if flash[:notice] %>
+    <p class="notice"><%= notice %></p>
+<% end %>
+<% if flash[:alert] %>
+    <p class="alert"><%= alert %></p>
+<% end %>
+<% if flash[:error] %>
+    <div id="error">
+      <%= flash[:error] %>
+    </div>
+<% end %>
+
+<%if (current_user)%>
+	<%currentID =current_user.id %>
+<%else%>
+	<%currentID ="" %>
+<%end%>
+
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+	var myCurrentID = "<%= currentID %>"
+	console.log(myCurrentID);
+</script>

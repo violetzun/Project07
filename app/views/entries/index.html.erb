@@ -1,0 +1,198 @@
+<div class="body">
+
+<div class="headBlack">
+  <div class="contentBlack" style="width:1000px;">
+<%= @array %>
+    <!-- ========================================= -->
+    <!-- =========== for popula movie ============ -->
+    <!-- ========================================= -->
+    <p class="headTextWhite" style="text-align:center; margin:20px;"> Popular Movie </p>
+
+    <table style="margin-left:auto; margin-right:auto">
+      <tr>
+        <%i=0%>
+        <% @popularLists.each do |item|  %>
+          <td>   
+            <div class="zitem">
+              <% @MoviePage=Movie.find_by_my_id(item.id.to_s) %>
+              <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+              <% @youtubeLink='http://www.youtube.com/watch?v='+@MoviePage.trailer%>
+              <%= link_to image_tag(item.poster_path_fullPath,:size => "160x240", :crop => :fill), @moviePath , :class => "PosterImg", method: :get%>
+              <div class="caption"> 
+                <table align="left"> 
+                  <tr>
+                    <td><%= link_to ((fa_icon "youtube-play") + " trailer"), @youtubeLink , :class => "youtubeLink"%></td>
+                    <!--only login user can like / add-->
+                    <% if current_user %>
+
+                      <% if Entry.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                         <!--edit-->
+                        <% @editEntry = Entry.find( :all, :conditions => ['user_id= ? and movie_id=?',current_user.id,@MoviePage.id])%>
+                        <td><%= link_to ((fa_icon "edit") + " edit"),edit_entry_path(@editEntry[0]), method: :get %></td>
+
+                        <% else %>
+                        <!--add-->
+                        <td><%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>item.title},method: :get %></td>
+                      <%end%>
+
+
+                        <!--like-->
+                        <td><% if LikeMovie.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                              <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:red;", :remote=> true%>
+
+                          <% else %>
+
+                              <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id} , method: :get,:class => "likebutton" , :remote=> true%>
+                          <%end%>   </td>
+                    <%end%>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <p class='grayText'><%=item.dateShow%></p>
+          </td>
+          <%i=i+1%>
+          <% if i==5 %>
+            <% break end%>
+        <%end%>
+      <tr>
+    </table>
+
+    <!-- ========================================= -->
+    <!-- =========== for now playing ============= -->
+    <!-- ========================================= -->
+
+
+    <p class="headTextWhite" style="text-align:center; margin:20px;"> Now Playing </p>
+    <table style="margin-left:auto; margin-right:auto; margin-bottom:25px">
+      <%i=0%>
+      <tr>
+        <% @nowPlayingsLists.each do |item|  %>    
+          <td>   
+            <div class="zitemSmall">
+              <% @MoviePage=Movie.find_by_my_id(item.id.to_s) %>
+              <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+              <% @youtubeLink='http://www.youtube.com/watch?v='+@MoviePage.trailer%>
+              <%= link_to image_tag(item.poster_path_fullPath,:alt => item.title), @moviePath , {:class => "PosterImgSmall"}%>
+              <div class="caption"> 
+                <p>
+                  <b><%= link_to ((fa_icon "info")+" info"), @moviePath ,{:title => item.title,:style=>"margin-top:3px;"}%></b>
+                  <b><%= link_to ((fa_icon "youtube-play") + " trailer"), @youtubeLink , :class => "youtubeLink"%></b>
+
+                  <!--only login user can like / add-->
+                  <% if current_user %>
+                    <% if Entry.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                      <!--edit-->
+                      <% @editEntry = Entry.find( :all, :conditions => ['user_id= ? and movie_id=?',current_user.id,@MoviePage.id])%>
+                      <b><%= link_to ((fa_icon "edit") + " edit"),edit_entry_path(@editEntry[0]), method: :get %></b>
+                    <%else%>
+                      <!--add-->
+                      <b><%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>item.title} , method: :get%></b>
+                    <%end%>
+
+                    <!--like-->
+                    <b><% if LikeMovie.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                          <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:red;", :remote=> true%>
+
+                      <% else %>
+
+                          <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id} , method: :get,:class => "likebutton" , :remote=> true%>
+                      <%end%></b>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </td>
+          
+          <%i=i+1%>
+          <% if i%10==9 %>
+            </tr>
+            <% break %>
+          <%end%>
+        <%end%>
+    </table>
+
+  </div>
+</div>
+
+
+
+
+<div class="contentWhite">
+      <p class="headTextBlack"> Welcome to our VIMovie Website. </p>
+
+     </div>
+
+  <div class="headBlack">
+    <div class="contentBlack" style="color:white;">
+      <p> Email us if you have any suggestions --- vimovie_wae@gmail.com </p>
+    </div>
+  </div>
+
+<!--<h1>Listing entries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Topic</th>
+      <th>Content</th>
+      <th>User</th>
+      <th>movie_id</th>
+      <th>report abuse</th>
+      <th>created_at</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @entries.each do |entry| %>
+      <tr>
+        <td><%= entry.topic %></td>
+        <td><%= entry.content %></td>
+        <td><%= entry.user.email %></td>
+        <td><%= entry.movie.id %></td>
+        <td><%= entry.report_abuse %></td>
+        <td><%= entry.created_at %></td>
+        <td><%= link_to 'Show', entry ,method: :get%></td>
+        <td><%= link_to 'Edit', edit_entry_path(entry),method: :get %></td>
+        <td><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'report', {:action=>'index' ,:report=>'1',:entry_id=>entry.id}  , data: {confirm: 'Are you sure?'} %></td>
+
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+<%= link_to 'New Entry', new_entry_path, method: :get %>-->
+</div>
+
+
+</div>
+
+<script>
+    $( '.likebutton').click(function() {
+
+
+         if ($(this).hasClass('likebutton'))
+        {
+            $( this ).css( 'color', 'red' );
+            $(this).addClass('dislikebutton').removeClass('likebutton');
+        }
+        else if ($(this).hasClass('dislikebutton')){
+             $( this ).css( 'color', '#fff' );
+             $(this).addClass('likebutton').removeClass('dislikebutton');
+         }
+
+    });
+    $( '.dislikebutton').click(function() {
+        $( this ).css( 'color', '#fff' );
+
+    });
+</script>
+

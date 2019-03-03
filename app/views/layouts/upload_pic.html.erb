@@ -1,0 +1,8 @@
+<div class="contentWhite">
+<h1>File Upload</h1>
+
+<%= form_tag({action: :uploadFile}, multipart: true) do %>
+  <%= file_field_tag 'picture' %>
+  <%= submit_tag "Change Picture" %>
+<% end %>
+ </div>

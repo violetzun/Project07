@@ -1,0 +1,311 @@
+<div class="contentWhite">
+  <!-- ===========================================-->
+  <!-- *******************header*****************-->
+  <!-- ===========================================-->
+   <div class="movieName">
+    <% @fullPosterPath = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500" + @entry.movie.poster_path%>
+    <% @MoviePage=Movie.find_by_id(@entry.movie.id.to_s) %>
+    <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+    <%= link_to image_tag(@fullPosterPath,:alt => @entry.movie.title), @moviePath , {:class => "PosterIcon"}%>
+
+    <%if(!@entry.movie.release_date.blank?)%>
+      <% @movieYear = Date.parse(@entry.movie.release_date)%>
+      <% @movieTitle = @entry.movie.title + " ("+@movieYear.year.to_s+")" %>
+    <%else%>
+      <% @movieTitle = @entry.movie.title %>
+    <%end%>
+
+
+    <p><%= link_to @movieTitle, @moviePath %></p>
+    
+    <%@limit = ((@entry.movie.vote_average.to_i)/2).floor-1;%>
+    <% for counter in 0..@limit %>
+      <i class="fa fa-star"></i> 
+    <%end%>
+
+  </div>
+
+  <!-- ===========================================-->
+  <!-- *******************content*****************-->
+  <!-- ===========================================-->
+  <div class="showreviewBody">
+    <div class= "showReviewContent">
+      <p> Reviewed by <%= link_to @entry.user.username,'reviews' %> <%= @entry.created_at %> </p>
+
+      <%= @entry.content.html_safe %>
+    </div>
+
+    </br>
+    <hr size="3" style="background-color:#c8c7c7; color:#c8c7c7;  margin: 0px auto;  "/>
+    </br>
+
+    <!-- *******************Footer*****************-->
+    <div class="showReviewFooter">
+      <p>
+       <% @LikeNum=LikeEntry.count(:conditions => ["entry_id = ?",@entry.id]) %>
+        <% if LikeEntry.where("user_id=? and entry_id=?",current_user.id,@entry.id).exists?%>
+
+            <%= link_to ((fa_icon "heart")), {:action=>'index',:controller=>'entries', :entryLike=>@entry.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:#F5859D;", :remote=> true%>
+            <a id="myAnchor" style="color:#F5859D;" ><%=@LikeNum.to_s%></a>
+        <% else %>
+
+            <%= link_to ((fa_icon "heart")), {:action=>'index',:controller=>'entries', :entryLike=>@entry.id} , method: :get,:class => "likebutton" ,:style=>"color:#7097b0;", :remote=> true%>
+            <a id="myAnchor" style="color:#7097b0;" ><%=@LikeNum.to_s%></a>
+
+
+        <%end%>
+        <% @commentNum=Comment.count(:conditions => ["entry_id = ?",@entry.id]) %>
+        <%= link_to ((fa_icon "comment") +" "+ @commentNum.to_s+" Comments" ), '#' ,:class=>"commentButton"%>
+      </p>
+    </div>
+  </div>
+
+  <!-- ===========================================-->
+  <!-- *******************Comment*****************-->
+  <!-- ===========================================-->
+  <div class="comment">
+    <div class="commentBox">
+      <!-- replace with profile picture-->
+      <table style="display:inline; float:left;">
+        <tr><td><% if current_user.image? %>
+              <%= link_to image_tag(asset_path(current_user.image),:size => "20x20"), profile_path(:user_id=>current_user.id)%>
+          <% else %>
+              <%= link_to image_tag(asset_path("default.png"),:size => "20x20"), profile_path(:user_id=>current_user.id)%>
+          <% end%></td></tr>
+        <tr><td style="text-align:center"><%= current_user.username %></td></tr>
+      </table>
+
+      <%= form_tag  entries_newComment_path do %>
+        <fieldset> 
+          <%= text_area_tag :comment, params[:comment] , :placeholder=>"Add your comment.." ,:class=>"myCommentBox"%> 
+          <%= hidden_field_tag :blogID, params[:blogID] = @entry.id%>
+        </fieldset>
+
+        <%= submit_tag "Comment", :name => nil , :class=>"myButton" ,:style=>"margin-left: 80px;"%>
+      <% end %>
+    </div>
+
+    <!-- for show comment -->
+    <div class="allComment">
+      <% @comments.each_with_index do |comment,index| %>
+        <%if(index%2==0)%>
+        <div class="bubble-list">
+          <div class="bubble clearfix">
+
+            <!-- replace with profile picture-->
+            <table style="display:inline; float:left;">
+              <tr><td><% if comment.user.image? %>
+                    <%= link_to image_tag(asset_path(comment.user.image),:size => "20x20"), profile_path(:user_id=>comment.user.id)%>
+                <% else %>
+                    <%= link_to image_tag(asset_path("default.png"),:size => "20x20"), profile_path(:user_id=>comment.user.id)%>
+                <% end%></td></tr>
+              <tr><td style="text-align:center"><%= comment.user.username %></td></tr>
+            </table>
+        
+            <div class="bubble-content">
+              <p><%=EmoticonFontify.emoticon_fontify(comment.comment)%></p>
+              <div class="point"></div>
+            </div>
+          </div>
+        </div>
+
+        <%else%>
+        <div class="bubble-list2" style="text-align:right" >
+          <div class="bubble clearfix2" >
+            <!-- replace with profile picture-->
+            <table style="display:inline; float:right;">
+
+              <tr><td>
+                <% if comment.user.image? %>
+                    <%= link_to image_tag(asset_path(comment.user.image),:size => "20x20"), profile_path(:user_id=>comment.user.id)%>
+                    <% else %>
+                    <%= link_to image_tag(asset_path("default.png"),:size => "20x20"), profile_path(:user_id=>comment.user.id)%>
+                        <% end%>
+                    </td></tr>
+              <tr><td style="text-align:center"><%= comment.user.username %></td></tr>
+            </table>
+        
+            <div class="bubble-content2">
+              <p><%=EmoticonFontify.emoticon_fontify(comment.comment)%></p>
+              <div class="point2"></div>
+            </div>
+          </div>
+        </div>
+
+        <%end%>
+      <%end%>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+ 
+
+
+<!--<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @entry.topic %>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= EmoticonFontify.emoticon_fontify(@entry.content.html_safe) %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @entry.user.email %>
+</p>
+
+<p>
+  <strong>Movie_id:</strong>
+  <%= @entry.movie.id %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @entry.created_at %>
+</p>
+
+<%= link_to 'Edit', edit_entry_path(@entry) %> |
+<%= link_to 'Back', '/home' %>
+
+
+<h1>comment</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>comment</th>
+      <th>User</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @comments.each do |comment| %>
+      <tr>
+        <td><%= EmoticonFontify.emoticon_fontify(comment.comment) %></td>
+        <td><%= comment.user.email %></td>
+        
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+<%= form_tag  entries_newComment_path do %>
+	<fieldset> 
+		<legend>Enter details</legend> 
+	  	<%= text_field_tag :comment, params[:comment] %> 
+	  	<%= hidden_field_tag :blogID, params[:blogID] = @entry.id%>
+	</fieldset>
+
+	<%= submit_tag "add", :name => nil%>
+<% end %>-->
+<% if current_user.id == @entry.user_id %>
+<%= link_to 'Edit', edit_entry_path(@entry) ,method: :get%> |
+
+
+<% end %>
+<%= link_to 'Back', '/review' ,method: :get%> |
+
+</div>
+
+<div class="headBlack">
+  <div class="contentBlack" style="color:white;">
+    <p> Other Reviews of <%= link_to @entry.user.username,profile_path(:user_id=>@entry.user.id) %> </p>
+    <p> Other Reviews of <%= link_to @movieTitle, @moviePath %> </p>
+  </div>
+</div>
+
+
+<script>
+
+    $( '.likebutton').click(function() {
+
+
+        if ($(this).hasClass('likebutton'))
+        {
+
+            $( this ).css( 'color', '#F5859D' );
+            $(this).addClass('dislikebutton').removeClass('likebutton');
+            //var like = addLike();
+            //var like = document.getElementById('myAnchor');
+            var like=parseInt($('#myAnchor').text())+1;
+            $( '#myAnchor' ).css( 'color', '#F5859D' );
+
+            document.getElementById('myAnchor').innerHTML=like;
+            $(this).css('cursor','default')
+            //$(this).text(newLike);
+        }
+        else if ($(this).hasClass('dislikebutton')){
+            if ($('#myAnchor').text()=='-1')
+            {
+                document.getElementById('myAnchor').innerHTML=0;
+                $( this ).css( 'color', '#7097b0' );
+                $(this).addClass('likebutton').removeClass('dislikebutton');
+                $( '#myAnchor' ).css( 'color', '#7097b0' );
+
+            }
+            else
+            {
+                var like = parseInt($('#myAnchor').text())-1;
+                document.getElementById('myAnchor').innerHTML=like;
+                $( this ).css( 'color', '#7097b0' );
+                $(this).addClass('likebutton').removeClass('dislikebutton');
+                $( '#myAnchor' ).css( 'color', '#7097b0' );
+
+            }
+
+        }
+
+    });
+    $( '.dislikebutton').click(function() {
+
+
+        if ($(this).hasClass('likebutton'))
+        {
+            $( this ).css( 'color', '#F5859D' );
+            $(this).addClass('dislikebutton').removeClass('likebutton');
+
+            var like = parseInt($('#myAnchor').text())+1;
+            document.getElementById('myAnchor').innerHTML=like;
+            $( '#myAnchor' ).css( 'color', '#F5859D' );
+
+        }
+        else if ($(this).hasClass('dislikebutton')){
+
+            if ($('#myAnchor').text()=='-1')
+        {
+            $( this ).css( 'color', '#7097b0' );
+            $(this).addClass('likebutton').removeClass('dislikebutton');
+
+            document.getElementById('myAnchor').innerHTML=0;
+            $( '#myAnchor' ).css( 'color', '#7097b0' );
+        }
+        else
+        {
+            $( this ).css( 'color', '#7097b0' );
+            $(this).addClass('likebutton').removeClass('dislikebutton');
+
+            var like = parseInt($('#myAnchor').text())-1;
+            document.getElementById('myAnchor').innerHTML=like;
+            $( '#myAnchor' ).css( 'color', '#7097b0' );
+
+
+        }
+        }
+        $(this).css('cursor','default')
+
+    });
+</script>
+

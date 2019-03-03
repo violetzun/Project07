@@ -1,0 +1,180 @@
+<%= stylesheet_link_tag "colorbox", media: "all", "data-turbolinks-track" => true %>
+
+<div class="headBlack">
+  <div class="contentBlack" style="width:1000px;">
+
+  <!-- ========================================= --> 
+  <!-- =========== for profile ================= --> 
+  <!-- ========================================= -->
+
+    <span class="profile-pic" align="left">
+
+    <table class="ProfileTable">
+      <tr>
+        <td>
+          <div class="Profile">
+            <div id="column1-wrap">
+              <div id="column1">
+                <!-- =================User check======================== -->
+                <% if current_user.email == @user.email %>
+                  <% if @user.image? %>
+                      <!-- =================facebook check======================== -->
+                      <% if Authentication.where(user_id: @user.id).exists? %>
+                        <%= image_tag(asset_path(@user.image),:size => "64x64") %>
+                      <% else %> 
+                        <%= link_to image_tag(asset_path(@user.image),:size => "64x64"), render_pic_path %>
+                      <% end %>
+                  <%else %>
+                      <%= link_to image_tag(asset_path('default.png'),:size => "64x64"), render_pic_path %>
+                  <%end%>
+                <% else %>
+                  <% if @user.image? %>
+                    <%= image_tag(asset_path(@user.image),:size => "64x64") %>
+                  <% else %>
+                    <%= image_tag(asset_path('default.png'),:size => "64x64") %>
+                  <% end %>
+                <%end%>
+              </div>
+            </div>
+          </div>
+          <div id="column2">
+            <p>
+              <p style="font-size:18px;"><%=@user.username %>  </p>
+              <p style="color:#bbbbbb; font-size:13px; margin-top:-10px;"><%=@user.email %></p>
+              <% if current_user.email == @user.email %>
+                <%= link_to ((fa_icon "edit") + " edit"),edit_user_registration_path %>
+              <%end%>
+            </p>
+          </div>
+          <div id="clear"></div>
+          </div>
+          <% if current_user.email == @user.email %>
+            <p style="color:#71767a; font-size:13px;"> Click Image Change Your Profile Picture</p>
+          <%end%>
+        </td>
+
+        <td style="width:70px">
+         
+        </td>
+        <td style="width:70px">
+          
+        </td>
+
+      </tr>
+    </table>
+    
+    <!--<table >
+      <tr>
+
+    <td>              <!-- =================User check======================== 
+
+      <% if current_user.email == @user.email %>
+        <% if @user.image? %>
+            <!-- =================facebook check======================== 
+            <% if Authentication.where(user_id: @user.id).exists? %>
+              <%= image_tag(asset_path(@user.image),:size => "64x64") %>
+            <% else %>
+              <p style="color:#71767a;"> Click Image Change Your Profile Picture</p> <%= link_to image_tag(asset_path(@user.image),:size => "64x64"), render_pic_path %>
+            <% end %>
+        <%else %>
+            <p style="color:#71767a;"> Click Image Change Your Profile Picture</p> <%= link_to image_tag(asset_path('default.png'),:size => "64x64"), render_pic_path %>
+        <%end%>
+        <%= link_to ((fa_icon "edit") + " edit"),edit_user_registration_path %>
+
+      <% else %>
+        <% if @user.image? %>
+          <%= image_tag(asset_path(@user.image),:size => "64x64") %>
+        <% else %>
+          <%= image_tag(asset_path('default.png'),:size => "64x64") %>
+        <% end %>
+      <%end%>
+
+    </td>
+          <td>
+            <span style="color:white;">
+              Name: <%=current_user.username %>
+              Email: <%=current_user.email %>
+            </span>
+          </td>
+          </tr>
+          </table>
+
+
+
+   </span>-->
+
+  </div>
+</div>
+
+<body >
+  <ul class='timeline' style="margin-top:20px;">
+    <% @nowDate="1"%>
+    <% @entries.each do |entry| %>
+      <% @date = entry.created_at.strftime('%b %Y') %>
+      <% if(@nowDate!=@date) %>
+        <li class="year"><%=@date%></li>
+        <% @nowDate=@date %>
+      <%end%>
+      <% puts @date%>
+    
+      <li class='event offset-first'>
+        <div class="inner">
+          <%= image_tag("http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500/"+entry.movie.poster_path,:size => "30x30", :crop => :fill ,:class=>"timelinePoster")%>
+
+          <% @MoviePage=Movie.find_by_id(entry.movie.id.to_s) %>
+          <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+
+          <p class="timeLineMovieName"><%= link_to entry.movie.title, @moviePath , method: :get%></p>
+
+          <p class="timeLineDate"><%= entry.created_at.strftime('%b %d, %Y at %I:%M %p')%></p>
+          <%= link_to content_tag(:div, EmoticonFontify.emoticon_fontify((entry.content).gsub(/(<)(.*?)(>)/, "")) ), entry , :class=>"reviewContent2", method: :get %>
+
+          <!-- Content Image-->
+          <%  puts "----find Image------" %>
+          <%  puts findImage(entry.content) %>
+          <%  @image = findImage(entry.content) %>
+          <% puts "-------------------------"%>
+      
+          <% if @image!= "0" %>
+            <div class="reviewImage">
+              <%= image_tag(@image) %>
+            </div> 
+          <%end%>
+        </div>
+      </li>
+    <%end%>
+  
+   
+  </ul>
+
+<!--<div class="container" >
+
+  <p class="headTextBlack"> Recent entries </p>
+
+  <div id="timelineContainer" >
+
+    <br class="clear">
+    <% @entries.each do |entry| %>
+        <div class="timelineMajor" >
+
+    <div class="accordion">
+
+      <h2 style="font-family:arial;color:black;font-size:10px;" class="acc_trigger">
+        <a href="#"><span><em> Reviewed on <%= entry.created_at.strftime('%b %d, %Y at %I:%M %p') %></em></span></a>
+      </h2>
+      <div style="padding-left:50px;" class="acc_container">
+        <div class="block"><p style="text-align: left; color:black;"> <%=link_to entry.topic,entry %></p>
+        </div>
+        <div class="block"><p style="color:black;"> <%= image_tag("http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500/"+entry.movie.poster_path,:size => "100x100", :crop => :fill)%> </p>
+        </div>
+      </div>
+
+    </div> <!-- /.timelineMinor  </div><!-- /.timelineMajor 
+    <% end %>
+
+    <br class="clear">
+  </div><!-- /#timelineContainer 
+</div><!-- /.container 
+  </body>
+  -->
+

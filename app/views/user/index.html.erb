@@ -1,0 +1,22 @@
+<div style="background-color:#222222; ">
+  <div class="subNav2" >
+      <p class="MovieTitle">Popular User<p>
+  </div>
+</div>
+<div class="contentWhite">
+  <% @user_list.each do |user| %>
+  <div style="margin-bottom:30px">
+    <% if user.image? %>
+      <%= link_to image_tag(asset_path(user.image),:size => "60x60"), profile_path(:user_id=>user.id)  ,:class=>"userNameText" ,:style=>"color:#0095e8;" %>
+    <% else %>
+      <%= link_to image_tag(asset_path("default.png"),:size => "60x60"),  profile_path(:user_id=>user.id) ,:class=>"userNameText" ,:style=>"color:#0095e8;"%>
+    <% end %>
+    
+    <%= link_to user.username,  profile_path(:user_id=>user.id) ,:class=>"userNameText" ,:style=>"color:#0095e8; margin-left:20px;"%>
+    <p style="color:#7d7d7d; margin-left:85px; margin-top:-15px;:10px"><%= user.email %></p>
+  </div>
+    
+  <%end%>
+
+</div>
+

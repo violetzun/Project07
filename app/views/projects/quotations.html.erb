@@ -1,0 +1,69 @@
+
+
+
+<li><a href ="/PS2:pureSQL">SQL file</a></li>
+
+<%= form_tag({action: :quotations, controller: :projects}, multipart: true) do %> 
+<%= file_field_tag 'file' %> <%= submit_tag('Upload') %> 
+<% end %>
+
+
+
+<%= form_tag :controller => 'projects', :action => 'quotations', :method => 'get' do %> 
+<%= text_field_tag :search, params[:search], placeholder: 'Enter search word ...', :id => 'search_field'%> 
+<%# <%= link_to "Search" , :action=>:quotations, :search =>:search %> 
+<%= submit_tag "Search", :name => nil %> 
+ <%end%>
+
+
+<h3>Search Results</h3>
+  <ul> <% for quotation in $quotationslist %> 
+      <li>Quote : <%= quotation.quote %> Author : <%= quotation.author_name %>
+     <%= link_to "Kill", :action => :quotations, :k => "kill", :quote_id => quotation.id %> </li>
+    <% end %>
+</ul>
+
+
+<h3>Quotations</h3> 
+<ul> <% for quotation in @quotations %> 
+	<li><%= h quotation.author_name %>: <%= h quotation.quote %></li> 
+	<% end %>
+	 </ul> 
+	 <br/> 
+	 <% if params[:sort_by] == "date" %> 
+	 <%= link_to "Sort by category", :action => :quotations, :sort_by => :category %> 
+	 <% else %> 
+	 <%= link_to "Sort by date", :action => :quotations, :sort_by => :date %> 
+	 <% end %> 
+	 <hr/> 
+	 <h3>New quotation</h3>
+	  <%= form_for @quotation,:url => { :action => :quotations } do |form| %> 
+	  
+      <% @quotation.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      
+	  		  <fieldset> 
+	  		  	<legend>Enter details</legend> 
+	  		  	<div class="form_row"> 
+	  		  		<%= form.label :author_name %>
+	  		  		 <%= form.text_field :author_name, :size => 20, :maxlength => 40 %>
+	  		  	 </div> 
+	  		  	 <div class="form_row"> 
+	  		  	 	<%= form.label :category %>
+	  		  	 	
+	  		  	 	 <%= form.select :category, @list%> 
+	  		  	 	 <%= form.label 'New category' %>
+	  		  	 	 <%= form.text_field :category, :size => 20, :maxlength => 40 %>
+	  		  	 	</div> 
+	  		  	 	<div class="form_row"> 
+	  		  	 	<%= form.label :quote %> 
+	  		  	 	<%= form.text_area :quote, :rows => 2, :cols => 40, :maxlength => 500 %> 
+	  		  		</div>
+	  		  	 </fieldset>
+	  		  		  <p>
+	  		  	  <div class="form_row"> 
+	  		  	<%= form.submit 'Create'%>
+	  		  	    </div>
+	  		  	   </p> 
+	  	   <% end %>

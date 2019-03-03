@@ -1,0 +1,79 @@
+<body >
+<h1  style="background-color : brown; color:white; padding:5px">Web7 WAE Projects</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr>
+ 	<td><%= project.name %></td>
+        <% if project.name == "Problem set 1" %>
+            <td><%= link_to 'Trending Now', projects_trendingNow_path %></td>
+            <td><%= link_to 'Division Error', projects_error_path %></td>
+            <td><%= link_to 'Show', project %></td>
+
+        <% elsif project.name == "Problem set 2" %>
+
+            <!-- <td><%= link_to 'Edit', edit_project_path(project) %></td>
+        <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+            <td><%= link_to 'Quotations', projects_quotations_path %></td>
+            <td><a href ="/PS2:pureSQL">SQL file</a></td>
+
+        <% elsif project.name == "Problem set 3" %>
+            <!-- <td><%= link_to 'Documentation', projects_documentation_path %></td></td>-->
+            <td><%= link_to 'Dump', asset_path("pgdump.txt") %></td>
+            <td><%= link_to 'Documentation', asset_path("Ps3.pdf") %></td>
+            <td><%= link_to 'Issue Tracker', "http://www.vgl-ait.org/redmine/projects/web13_07" %></td>
+
+        <% elsif project.name == "Problem set 4" %>
+            <td><%= link_to 'Documentation', asset_path("ProblemSet4.pdf") %></td>
+<% elsif project.name == "Problem set 5" %>
+            <td><%= link_to 'Documentation', asset_path("ps5.pdf") %></td>
+<% elsif project.name == "Problem set 6" %>
+            <td><%= link_to 'Documentation', asset_path("Ps6.pdf") %></td>
+        <% end %>
+<% if current_user %>
+<% if current_user.role_id == 1 %>
+         <td><%= link_to 'Edit', edit_project_path(project) %></td>
+        <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %>
+<% end %>
+
+        <% end %>
+
+        <!-- <td><%= link_to 'Edit', edit_project_path(project) %></td>
+        <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+<% if cookies[:webcookie] %>
+<%= link_to 'Erase my personalization', :m => "clear"  %>
+<% end %>
+<%= link_to 'New Project', new_project_path %>
+  
+
+
+</body>
+
+
+<footer style="background-color : brown; display:block; width:100%; margin-top:30px;"  >
+	<a href="http://validator.w3.org/check?uri=192.41.170.195:3000/projects"  onMouseOver="this.style.backgroundColor='brown'"> <img src="http://cis.ait.asia/assets/valid_xhtml-ec7ae22f460364cbdf81702d07a52238.png" alt="Valid XHTML 1.0 Transitional" height="15" width="80" style="padding-left:90%"/>
+    </a>
+
+</footer>
+
+<%= link_to 'VIMovie', '/home' %>
+<% if (current_user.blank?) %>
+ <!-- <%= link_to 'Login with Facebook', '/auth/facebook/' %>-->
+<% end %>

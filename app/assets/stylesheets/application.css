@@ -1,0 +1,944 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ *= require the_role/bootstrap_sass
+ *= require the_role
+ *= require jquery.ui.all
+ *= require bootstrap
+ *= require font-awesome
+ *= require magnific-popup
+ *= require redactor-rails
+ *= require emoticon_fontify/emoticons
+
+
+
+ 
+ */
+#newEntryButton
+{
+    float:right;
+    color: white;
+    margin-right: 40px;
+    padding: 10px;
+    background-color: #333333;
+}
+#newEntryButton:hover
+{
+    float:right;
+    color: white;
+    text-decoration:none;
+    background-color: #181818; 
+    color :orange;
+}
+
+
+#userNav
+{
+    width:940px ;margin-right:auto;margin-left:auto;
+    /*real width=900 + left&right margin from subNavItem*/
+}
+.leftNav
+{
+	padding:20px;
+	margin-right:20px;
+    color:white;
+}
+.leftNav:hover
+{
+	background-color:#333333; 
+	text-decoration:none; 
+}
+
+.subNav
+{
+    background-color:#222222; 
+    padding-top:45px; 
+    padding-bottom:30px;
+    width:944px; margin-right:auto; margin-left:auto;
+    /*real width=900 + left&right margin from subNavItem */
+}
+
+.subNavItemSelect
+{
+    color: white; 
+    margin-right:20px;
+    margin-left:20px;
+    padding: 3px;
+    padding-right: 6px;
+    padding-left: 6px;
+    font-size: 30px; text-decoration:bold;
+}
+.subNavItemSelect:hover
+{
+    background-color:#333333; 
+    text-decoration:none; 
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+.subNavItem
+{
+    color:#71767a; 
+    font-size: 30px;
+    text-decoration:none; 
+    margin-right:20px;
+    margin-left:20px;
+    padding: 3px;
+    padding-right: 6px;
+    padding-left: 6px;
+}
+.subNavItem:hover
+{
+    color:#71767a;
+    background-color:#333333; 
+    text-decoration:none; 
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.rightNav
+{
+	text-decoration:none; 
+	padding:20px;
+	margin-right:20px;
+	/*float: right;*/
+}
+.rightNav:hover
+{
+	background-color:#333333; 
+	text-decoration:none; 
+}
+
+.headBlack
+{
+	background-color:#333333; 
+}
+.contentBlack
+{
+	padding-left:80px;
+	padding-right:80px;
+	padding-top:40px;
+	padding-bottom:40px;
+    width:900px;margin-right:auto;margin-left:auto;
+}
+
+.contentWhite
+{
+	padding-top:30px;
+	padding-bottom:30px;
+    width:900px;margin-right:auto;margin-left:auto;
+
+}
+.headTextWhite
+{
+	color:white;
+	font-size: 30px;
+	text-decoration:bold;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.headTextBlack
+{
+	color:#222222;
+	font-size: 30px;
+	text-decoration:bold;
+}
+
+.grayText
+{
+	color : #9d9d9f;
+	text-align:center;
+	
+}
+/*===============================================*/
+/*--------------two column display--------===----*/
+/*===============================================*/
+
+#two-column {
+    /* overflow to handle inner floating block */
+    overflow: hidden;
+
+}
+
+.myColumn {
+    width: 50%;
+    float: left;
+}
+
+
+/*===============================================*/
+/*------------------for button-------------------*/
+/*===============================================*/
+    .myButton {
+        
+        -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+        box-shadow:inset 0px 1px 0px 0px #ffffff;
+        
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
+        background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+        background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+        background:-o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+        background:-ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+        background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9',GradientType=0);
+        
+        background-color:#f9f9f9;
+        
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+        border-radius:6px;
+        
+        border:1px solid #dcdcdc;
+        
+        display:inline-block;
+        color:#666666;
+        font-family:arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        
+        text-shadow:0px 1px 0px #ffffff;
+        
+    }
+    .myButton:hover {
+        
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+        background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+        background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+        background:-o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+        background:-ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+        background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9',GradientType=0);
+        
+        background-color:#e9e9e9;
+    }
+    .myButton:active {
+        position:relative;
+        top:1px;
+    }
+/*--------------------------------------------------------*/
+
+/*=================================================*/
+/*------------------for paginate-------------------*/
+/*=================================================*/
+    .apple_pagination {
+  background: #f1f1f1;
+  border: 1px solid #e5e5e5;
+  background: #f1f1f1;
+  text-align: center;
+  padding: 1em;
+  cursor: default; 
+    margin-bottom:30px;}
+  .apple_pagination a, .apple_pagination span {
+    padding: 0.2em 0.3em; }
+  .apple_pagination .disabled {
+    color: #aaaaaa; }
+  .apple_pagination .current {
+    font-style: normal;
+    font-weight: bold;
+    background-color: #bebebe;
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    line-height: 1.5;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px; }
+  .apple_pagination a {
+    text-decoration: none;
+    color: black; }
+    .apple_pagination a:hover, .apple_pagination a:focus {
+      text-decoration: underline; }
+/*--------------------------------------------------------*/
+
+/*===================================================*/
+/*------------------for big poster-------------------*/
+/*===================================================*/
+.zitem {
+    width:160px;
+    height:240px;   
+    border:4px solid #222;  
+    margin:5px 5px 5px 0;
+    
+    /* required to hide the image after resized */
+    overflow:hidden;
+    
+    /* for child absolute position */
+    position:relative;
+    
+    /* display div in line */
+    float:left;
+}
+
+.zitem .caption {
+    width:170px;
+    height:40px;
+    background:#000;
+    color:#fff;
+        
+    /* fix it at the bottom */
+    position:absolute;
+    bottom:-1px; /* fix IE issue */
+    left:0;
+
+    /* hide it by default */
+    display:none;
+
+    /* opacity setting */
+    filter:alpha(opacity=80);    /* ie  */
+    -moz-opacity:0.8;    /* old mozilla browser like netscape  */
+    -khtml-opacity: 0.8;    /* for really really old safari */  
+    opacity: 0.8;    /* css standard, currently it works in most modern browsers like firefox,  */
+
+}
+
+.zitem .caption a {
+    text-decoration:none;
+    color:#fff;
+    font-size:12px; 
+    
+    /* add spacing and make the whole row clickable*/
+    padding:5px;
+    display:block;
+    text-align: right;
+    margin: 2px;
+}
+
+.PosterImg {
+    border:0;
+
+    /* allow javascript moves the img position*/
+    position:absolute;
+}
+
+.PosterImg img{
+    height: 240px;
+}
+/*--------------------------------------------------------*/
+
+/*====================================================*/
+/*------------------for review item-------------------*/
+/*====================================================*/
+
+.reviewBody{
+    position:relative;
+}
+.reviewItem {
+    opacity: 0;
+    margin-right:20px;
+    margin-bottom:20px;
+    background-color: #fbfafa;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0px 1px 2px 0.1px #dcdcdc ;
+    color :#333333;
+    width:270px;
+    /*height:400px; */
+
+
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+
+
+
+
+.movieName {
+    color : white;
+    background-color:#454545;
+    height:65px;
+
+    box-shadow: 0px 1px 2px 0.1px #c3c3c3 ;
+
+}
+.movieName p{
+    color : white;
+    padding-top:5px;
+    margin-bottom: 2px
+}
+.movieName p a{
+    color : white;
+}
+.movieName p a:hover{
+    text-decoration: none;
+    color :orange;
+}
+
+.PosterIcon img{
+    height:63px;
+    box-sizing:border-box;
+    border: 1px solid #1f1f1f;
+    float: left; 
+    margin-right:5px;
+}
+.reviewContent div
+{
+    margin:10px;
+    max-height:155px;
+    overflow:hidden;
+    color :#333333;
+    text-overflow:ellipsis;
+}
+.reviewContent:hover
+{
+    text-decoration: none;
+    color :#333333;
+}
+
+
+.reviewImage img
+{
+    max-height:200px;
+    max-width:240px; /*real width=285*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.reviewFooter
+{
+    margin: 10px;
+    text-align: right;
+}
+
+.reviewFooter a
+{
+    margin-left: 5px;
+}
+
+.reviewFooter p a
+{
+    color:#444242;
+}
+
+
+.reviewFooter p a:hover
+{
+    text-decoration: none;
+    color: #e7761a;
+}
+
+
+/*===================================================*/
+/*------------------for show Review-------------------*/
+/*===================================================*/
+.showreviewBody
+{
+    background-color: #fbfafa;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0px 1px 2px 0.1px #dcdcdc ;
+    color :#333333;
+
+    -webkit-border-radius: 0px 0px 7px;
+    -moz-border-radius: 0px 0px 7px 7px;
+    border-radius: 0px 0px 7px 7px;
+}
+.showReviewContent p a , .showreviewBody p a ,.contentBlack p a:hover
+{
+    text-decoration: none;
+}
+
+.showReviewContent
+{
+    padding:30px;
+}
+.showReviewFooter
+{
+    padding: 10px 30px 10px  30px;
+    text-align: right;
+}
+.showReviewFooter a
+{
+    margin-left: 10px;
+}
+
+/*===================================================*/
+/*-----------------for comment box-------------------*/
+/*===================================================*/
+
+.commentBox
+{
+    padding:10px;
+    border: 1px solid #d1d1d1;
+     -webkit-border-radius:  7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    margin-top: 10px;
+}
+
+.commentBox img 
+{
+    float:left;
+    width:50px;
+    height:50px;
+    border:3px solid #ffffff;
+    border-radius:40px;
+    margin-top: 20px;
+}
+
+.myCommentBox
+{
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 750px;
+    height: 100px;
+    resize:none;
+}
+/*===================================================*/
+/*------------for comment show (left)-----------------*/
+/*===================================================*/
+
+
+.bubble img 
+{
+    float:left;
+    width:50px;
+    height:50px;
+    border:3px solid #ffffff;
+    border-radius:40px
+}
+.bubble-content 
+{
+   position:relative;
+   float:left;
+   margin-left:12px;
+   max-width:400px;
+   padding:10px 20px;
+
+   border-radius:10px;
+   background-color:#FFFFFF;
+   box-shadow:1px 1px 5px rgba(0,0,0,.2);
+}
+.bubble 
+{
+     margin-top:20px;
+ }
+.point 
+{
+    border-top:10px solid transparent;
+    border-bottom:10px solid transparent;
+    border-right: 12px solid white;
+ 
+    position:absolute;
+    left:-11px;
+    top:10px;
+}
+
+   .clearfix:after {
+      visibility:hidden;
+      display:block;
+      font-size:0;
+      content: ".";
+      clear:both;
+      height:0;
+      line-height:
+      }
+.clearfix {
+      display: inline-block;
+      }
+* html .clearfix {
+         height: 1%;
+         }
+
+
+/*===================================================*/
+/*------------for comment show (right)-----------------*/
+/*===================================================*/
+
+.comment
+{
+    /*display:none;*/
+}
+
+.bubble1 img 
+{
+    float:right;
+    width:50px;
+    height:50px;
+    border:3px solid #ffffff;
+    border-radius:40px;
+}
+.bubble-content2
+{
+   position:relative;
+   float:right;
+   margin-right:12px;
+   max-width:400px;
+   padding:10px 20px;
+
+   border-radius:10px;
+   background-color:#FFFFFF;
+   box-shadow:1px 1px 5px rgba(0,0,0,.2);
+}
+.bubble2 
+{
+     margin-top:20px;
+ }
+.point2 
+{
+    border-top:10px solid transparent;
+    border-bottom:10px solid transparent;
+    border-left: 12px solid white;
+ 
+    position:absolute;
+    right:-11px;
+    top:10px;
+}
+
+   .clearfix2:after {
+      visibility:hidden;
+      display:block;
+      font-size:0;
+      content: ".";
+      clear:both;
+      height:0;
+      line-height:
+      }
+.clearfix2 {
+      display: inline-block;
+      }
+* html .clearfix2 {
+         height: 1%;
+         }
+
+/*===================================================*/
+/*----------for smallProfilePic in review------------*/
+/*===================================================*/
+.smallProfilePic
+{
+    display: inline;
+    float: left;
+}
+.smallProfilePic img
+{
+    border-radius:2px;
+}
+
+/*===================================================*/
+/*-----------------for notification------------------*/
+/*===================================================*/
+
+#notification
+{
+    display: none;
+    width: 300px;
+    max-height:100px;
+    padding: 20px;
+    right:0px; 
+    bottom:0px; 
+    position: fixed;
+    background-color: #CCEAEE;
+    z-index: 100;
+    opacity: 0.8;
+    border: 1px solid #d1d1d1;
+    border-radius:5px 5px 0px 0px;
+    box-shadow: 0px 1px 2px 0.1px #dcdcdc ;
+    text-decoration: none;
+}
+#notification a
+{
+    color : #222222;
+    text-decoration: none;
+}
+
+
+
+/*===================================================*/
+/*------------------for Movie Show ------------------*/
+/*===================================================*/
+.subNav2
+{
+    background-color:#222222; 
+    padding-top:45px; 
+    padding-bottom:5px;
+    width:944px; margin-right:auto; margin-left:auto;
+    /*real width=900 + left&right margin from subNavItem */
+}
+.MovieTitle
+{
+    color: white; 
+    margin-right:20px;
+    margin-left:15px;
+    padding: 3px;
+    padding-right: 6px;
+    padding-left: 6px;
+    padding-bottom:0px;
+    font-size: 35px; text-decoration:bold;
+}
+
+.MovieTitle i
+{
+    color: white; 
+    font-size: 18px; text-decoration:bold;
+}
+.headBlack2
+{
+    background-color:#474747; 
+}
+.contentBlack2
+{
+    color:white;
+    padding-top:25px;
+    padding-bottom:40px;
+    width:900px;margin-right:auto;margin-left:auto;
+}
+.MovieShowBG
+{
+    background-color:#515151; 
+}
+.PosterShow img
+{
+    width:300px;
+}
+
+.PosterSearchResult img
+{
+  width:200px;
+}
+.PosterSearch
+{
+    width:100px;
+}
+
+#two-column {
+    /* overflow to handle inner floating block */
+    overflow: hidden;
+}
+
+.myleftColumn {
+    width: 30%;
+    float: left;
+}
+.myrightColumn {
+    width: 70%;
+    float: left;
+}
+.myrightColumnitem{
+    padding: 20px;
+}
+
+hr.hr2 {
+    color: #3a3a3a;
+    background-color: #3a3a3a;
+    height: 1px;
+    border: 0px;
+}
+.movieShowButton
+{
+    float:right;
+}
+
+.movieShowButton a{
+    margin-left: 20px;
+    color: white;
+}
+
+/*===================================================*/
+/*----------------for search old movie---------------*/
+/*===================================================*/
+
+.searchBox
+{
+    padding:10px;
+    border: 1px solid #d1d1d1;
+     -webkit-border-radius:  7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    width:550px;
+}
+
+#searchTextField
+{
+    margin-top: 11px;
+    width:400px;
+}
+
+/*===================================================*/
+/*--------------------drop down Nav------------------*/
+/*===================================================*/
+
+#cssmenu ul {
+  /*background: #333333;*/
+  height: 35px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-right: 60px;
+  min-width: 125px;
+  max-width: 400px;
+}
+#cssmenu li {
+  float: left;
+  padding: 0px;
+}
+#cssmenu li a {
+  min-width: 100px;
+  background: #333333  bottom right no-repeat;
+  color: white;
+  display: block;
+  font-weight: normal;
+  line-height: 35px;
+  margin: 0px;
+  padding: 0px 25px;
+  text-align: center;
+  text-decoration: none;
+}
+#cssmenu > ul > li > a {
+  color: #cccccc;
+}
+#cssmenu ul ul a {
+  color: #cccccc;
+}
+#cssmenu li > a:hover,
+#cssmenu ul li:hover > a {
+  background: #2580a2  bottom center no-repeat;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+#cssmenu li ul {
+  background: #3d3d3d;
+  display: none;
+  height: auto;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  position: absolute;
+  width: 225px;
+  z-index: 200;
+  /*top:1em;
+    /*left:0;*/
+
+}
+#cssmenu li:hover ul {
+  display: block;
+}
+#cssmenu li li {
+  background:#3d3d3d   bottom left no-repeat;
+  display: block;
+  float: none;
+  margin: 0px;
+  padding: 0px;
+  width: 225px;
+}
+#cssmenu li:hover li a {
+  background: none;
+}
+#cssmenu li ul a {
+  display: block;
+  height: 35px;
+  /*font-size: 12px;*/
+  font-style: normal;
+  margin: 0px;
+  padding: 0px 10px 0px 15px;
+  text-align: left;
+}
+#cssmenu li ul a:hover,
+#cssmenu li ul li:hover > a {
+  background: #2580a2  center left no-repeat;
+  border: 0px;
+  color: #ffffff;
+  text-decoration: none;
+}
+#cssmenu p {
+  clear: left;
+}
+
+
+/*===================================================*/
+/*----------------Recommended system-----------------*/
+/*===================================================*/
+.recommendItem
+{
+    margin-right:20px;
+    margin-bottom:20px;
+    background-color: #fbfafa;
+    border: 0px 1px 1px 1px solid #b7b6b6;
+    box-shadow: 0px 2px 2px 0.3px #b7b6b6 ;
+    color :#333333;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    padding: 20px;
+}
+
+/*=================================================*/
+/*------------------for Profile Page---------------*/
+/*=================================================*/
+.ProfileTable{
+  color:white;
+  width: 750px;
+}
+.ProfileTable tr td{
+  width: 300px;
+  padding: 10px;
+}
+.Profile{
+  background-color: #3e3e3e;
+      border: 0px 1px 1px 1px solid #7e7f80;
+    box-shadow: 0px 2px 2px 0.3px #1a1a1a ;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.Profile img{
+  width:200px;
+}
+
+#column1-wrap{
+    float: left;
+    width: 100%;
+}
+#column1{
+    /*background-color: cyan;*/
+    margin-right: 10px;
+    background-color: #3e3e3e;
+    border: 0px 1px 1px 1px solid #7e7f80;
+    box-shadow: 0px 2px 2px 0.3px #1a1a1a ;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+#column2{
+    /*background-color: lime;*/
+    float: left;
+    width: 200px;
+    margin-left: -245px;
+    margin-top: 20px;
+}
+#clear{
+    clear: both;
+}
+
+
+
+
+
+.userNameText
+{
+  font-size:25px; 
+  color:#0095e8;
+}
+
+.userNameText:hover
+{
+  color:#017fc5;
+  text-decoration: none;
+}

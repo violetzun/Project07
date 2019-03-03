@@ -1,0 +1,279 @@
+7. load the data from your text file into the database
+Project07_development=# \copy my_stocks from '/home/parallels/Desktop/stock'
+
+Project07_development=# select * from my_stocks;
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ IBM    |       20 | 1991-09-06
+ ibm    |       25 | 2013-01-01
+ ice    |       10 | 2000-09-02
+ Omg    |        2 | 2000-04-08
+ Lala   |        4 | 2012-09-09
+(5 rows)
+============================================================================
+
+8. 
+8.1  
+Project07_development=# CREATE TABLE stock_prices AS SELECT symbol, CURRENT_DATE as quote_date, 31.415 as price from my_stocks;
+SELECT 5
+Project07_development=# SELECT * from stock_prices ;
+ symbol | quote_date | price  
+--------+------------+--------
+ IBM    | 2013-09-12 | 31.415
+ ibm    | 2013-09-12 | 31.415
+ ice    | 2013-09-12 | 31.415
+ Omg    | 2013-09-12 | 31.415
+ Lala   | 2013-09-12 | 31.415
+(5 rows)
+
+8.2
+Project07_development=# INSERT into newly_acquired_stocks select * from my_stocks LIMIT 3;
+INSERT 0 3
+Project07_development=# SELECT * from newly_acquired_stocks ;
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ IBM    |       20 | 1991-09-06
+ ibm    |       25 | 2013-01-01
+ ice    |       10 | 2000-09-02
+(3 rows)
+============================================================================
+
+9. 
+
+Project07_development=# SELECT my_stocks.symbol , n_shares as number_of_shares, price as price_per_share from my_stocks join stock_prices on my_stocks.symbol=stock_prices.symbol;
+ symbol | number_of_shares | price_per_share 
+--------+------------------+-----------------
+ IBM    |               20 |          31.415
+ ibm    |               25 |          31.415
+ ice    |               10 |          31.415
+ Omg    |                2 |          31.415
+ Lala   |                4 |          31.415
+(5 rows)
+============================================================================
+
+10.
+- Project07_development=# INSERT INTO my_stocks VALUES ('newStock','6','11/11/2011');
+INSERT 0 1
+Project07_development=# select * from my_stocks;
+  symbol  | n_shares | date_acquired 
+----------+----------+---------------
+ IBM      |       20 | 1991-09-06
+ ibm      |       25 | 2013-01-01
+ ice      |       10 | 2000-09-02
+ Omg      |        2 | 2000-04-08
+ Lala     |        4 | 2012-09-09
+ newStock |        6 | 2011-11-11
+(6 rows)
+
+- Project07_development=# SELECT my_stocks.symbol , n_shares as number_of_shares, price as price_per_share from my_stocks left outer join stock_prices on my_stocks.symbol=stock_prices.symbol;
+  symbol  | number_of_shares | price_per_share 
+----------+------------------+-----------------
+ IBM      |               20 |          31.415
+ ibm      |               25 |          31.415
+ ice      |               10 |          31.415
+ Omg      |                2 |          31.415
+ Lala     |                4 |          31.415
+ newStock |                6 |                
+(6 rows)
+
+============================================================================
+
+
+11.
+11.1
+-------------------------------------------------------
+##### Function for compute Stock value #####
+-------------------------------------------------------
+CREATE OR REPLACE FUNCTION computeValue(inSymbol VARCHAR(20)) RETURNS integer AS $$
+DECLARE StockValue integer := 0;
+	V_CHAR VARCHAR(1);
+	V_LEN integer := LENGTH($1);
+BEGIN 
+	FOR i IN 1..V_LEN LOOP
+		V_CHAR := SUBSTR($1,i,1);
+		StockValue := StockValue + ASCII(V_CHAR);
+	END LOOP;
+	RETURN StockValue;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------------------------------------------
+
+#####then use this command to update stock price#####
+----------------------------------------------------------
+UPDATE stock_prices SET price = computeValue(symbol);
+----------------------------------------------------------
+
+result : 
+ symbol | quote_date | price 
+--------+------------+-------
+ IBM    | 2013-09-12 |   216
+ ibm    | 2013-09-12 |   312
+ ice    | 2013-09-12 |   305
+ Omg    | 2013-09-12 |   291
+ Lala   | 2013-09-12 |   378
+(5 rows)
+
+
+11.2
+-------------------------------------------------------
+#####Function for compute portfolio value#####
+----------------------------------------------------------
+CREATE OR REPLACE FUNCTION portfolio_value() RETURNS integer AS $$
+DECLARE PortValue integer;
+BEGIN 
+	UPDATE stock_prices SET price = computeValue(symbol);
+	SELECT SUM(t.n*t.p) INTO PortValue 
+	From (SELECT my_stocks.symbol , n_shares as n, price as p 
+	from my_stocks join stock_prices on my_stocks.symbol=stock_prices.symbol) AS t;
+	RETURN PortValue;
+END;
+$$ LANGUAGE plpgsql;
+----------------------------------------------------------
+test by this command : select portfolio_value();
+
+result :
+ portfolio_value 
+-----------------
+           17264
+(1 row)
+
+============================================================================
+
+12. 
+
+- average price of your holdings:  *** this is has BUG from null value price
+---------------------------------------------------------------
+select AVG(t.AVG)
+FROM (SELECT AVG(price) AS avg 
+		from my_stocks left outer join stock_prices on my_stocks.symbol=stock_prices.symbol 
+		group by my_stocks.symbol) AS t;
+---------------------------------------------------------------
+result :         
+         avg          
+----------------------
+ 300.4000000000000000
+
+
+
+-double your holdings in all the stocks whose price is higher than average
+---------------------------------------------------------------
+INSERT INTO my_stocks (symbol,n_shares,date_acquired)
+SELECT t1.sym , t1.holding , CURRENT_DATE 
+FROM (	SELECT my_stocks.symbol as sym , SUM(n_shares) as holding , avg(price) as price_per_share
+			from my_stocks join stock_prices on my_stocks.symbol=stock_prices.symbol
+			group by my_stocks.symbol) AS t1,
+	 (select AVG(t.AVG) as avgPrice
+		FROM (SELECT AVG(price) AS avg 
+				from my_stocks left outer join stock_prices on my_stocks.symbol=stock_prices.symbol 
+				group by my_stocks.symbol) AS t) AS t2
+WHERE t1.price_per_share >= t2.avgPrice;
+
+
+result : before run this command 
+ sym  | holding |   price_per_share    |       avgprice       
+------+---------+----------------------+----------------------
+ Omg  |       2 | 291.0000000000000000 | 300.4000000000000000
+ IBM  |      20 | 216.0000000000000000 | 300.4000000000000000
+ Lala |      16 | 378.0000000000000000 | 300.4000000000000000
+ ibm  |     100 | 312.0000000000000000 | 300.4000000000000000
+ ice  |      30 | 305.0000000000000000 | 300.4000000000000000
+(5 rows)
+
+
+: after run this command
+ sym  | holding |   price_per_share    |       avgprice       
+------+---------+----------------------+----------------------
+ Omg  |       2 | 291.0000000000000000 | 300.4000000000000000
+ IBM  |      20 | 216.0000000000000000 | 300.4000000000000000
+ Lala |      32 | 378.0000000000000000 | 300.4000000000000000
+ ibm  |     200 | 312.0000000000000000 | 300.4000000000000000
+ ice  |      60 | 305.0000000000000000 | 300.4000000000000000
+(5 rows)
+
+
+  symbol  | n_shares | date_acquired 
+----------+----------+---------------
+ IBM      |       20 | 1991-09-06
+ ibm      |       25 | 2013-01-01
+ ice      |       10 | 2000-09-02
+ Omg      |        2 | 2000-04-08
+ Lala     |        4 | 2012-09-09
+ newStock |        6 | 2011-11-11
+ ice      |        5 | 2010-10-10
+ Lala     |        4 | 2013-09-12
+ ibm      |       25 | 2013-09-12
+ ice      |       15 | 2013-09-12
+ Lala     |        8 | 2013-09-12
+ ibm      |       50 | 2013-09-12
+ Lala     |       16 | 2013-09-12   //this row add by last command
+ ibm      |      100 | 2013-09-12	//this row add by last command
+ ice      |       30 | 2013-09-12	//this row add by last command
+(15 rows)
+
+
+
+- Report of symbols and total shares held:
+---------------------------------------------------------------
+SELECT my_stocks.symbol , SUM(n_shares) as holding , AVG(Price) as Price_per_share 
+from my_stocks join stock_prices on my_stocks.symbol=stock_prices.symbol
+group by my_stocks.symbol;
+
+result:
+ symbol | holding |   price_per_share    
+--------+---------+----------------------
+ Omg    |       2 | 291.0000000000000000
+ IBM    |      20 | 216.0000000000000000
+ Lala   |      32 | 378.0000000000000000
+ ibm    |     200 | 312.0000000000000000
+ ice    |      60 | 305.0000000000000000
+(5 rows)
+
+
+-Report of symbols, total shares held, and total value held per symbol restricted to
+symbols in which you have at least two blocks of shares
+---------------------------------------------------------------
+select my_stocks.symbol,sum(my_stocks.n_shares) as total_shares_held , sum(n_shares*price) as total_value_held
+from my_stocks, stock_prices
+where my_stocks.symbol = stock_prices.symbol 
+group by my_stocks.symbol
+having sum(my_stocks.n_shares)>=2;
+
+result:
+ symbol | total_shares_held | total_value_held 
+--------+-------------------+------------------
+ Omg    |                 2 |              582
+ IBM    |                20 |             4320
+ Lala   |                32 |            12096
+ ibm    |               200 |            62400
+ ice    |                60 |            18300
+(5 rows)
+
+---------------------------------------------------------------
+
+
+============================================================================
+13.
+Encapsulate Queries with a View
+---------------------------------------------------------------
+create view stocks_i_like as
+select my_stocks.symbol,sum(my_stocks.n_shares) as total_shares_held , sum(n_shares*price) as total_value_held
+from my_stocks, stock_prices
+where my_stocks.symbol = stock_prices.symbol 
+group by my_stocks.symbol
+having sum(my_stocks.n_shares)>=2;
+
+CREATE VIEW
+result : 
+Project07_development=# select * from stocks_i_like;
+ symbol | total_shares_held | total_value_held 
+--------+-------------------+------------------
+ Omg    |                 2 |              582
+ IBM    |                20 |             4320
+ Lala   |                32 |            12096
+ ibm    |               200 |            62400
+ ice    |                60 |            18300
+(5 rows)
+
+
+

@@ -1,0 +1,169 @@
+
+
+
+<div style="background-color:#222222; ">
+  <div class="subNav" >
+    <%if params[:sort]=="date"%>
+      <%= link_to "All", {:action => 'index' ,:sort=>"all"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+      <%= link_to "Release Date", {:action => 'index',:sort=>"date"},:class => "subNavItemSelect",:style=>"color:white;",method: :get%>
+      <%= link_to "Popular",{:action => 'index' ,:sort=>"popular"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+    <%elsif params[:sort]=="popular"%>
+      <%= link_to "All", {:action => 'index' ,:sort=>"all"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+      <%= link_to "Release Date", {:action => 'index',:sort=>"date"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+      <%= link_to "Popular",{:action => 'index' ,:sort=>"popular"},:class => "subNavItemSelect",:style=>"color:white;",method: :get%>
+    <%else%>
+      <%= link_to "All", {:action => 'index' ,:sort=>"all"},:class => "subNavItemSelect",:style=>"color:white;",method: :get%>
+      <%= link_to "Release Date", {:action => 'index',:sort=>"date"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+      <%= link_to "Popular",{:action => 'index' ,:sort=>"popular"},:class => "subNavItem",:style=>"color:#71767a;",method: :get%>
+    <%end%>
+
+ <i class="fa fa-search" style="float:right; font-size:25px; color:#71767a; margin:3px"></i>
+    <div style="float:right;">
+      <%=  form_tag '/movies' do %>
+        <%= text_field_tag :topic, params[:topic] ,:style=>"width:100px;" %> 
+      <% end %>
+    </div>
+
+
+  </div>
+  
+
+  
+</div>
+
+<div class="contentWhite">
+      <table style="margin-left:auto; margin-right:auto; margin-bottom:25px">
+          <%i=0%>
+
+        <div id="likes"></div>
+          <% @movies.each do |movie|  %>
+          <%if i%9==0%>
+            <tr>
+          <%end%>
+            <td>   
+              <div class="zitemSmall">
+                <% @fullPosterPath = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500" + movie.poster_path%>
+                <% @youtubeLink = 'http://www.youtube.com/watch?v=' + movie.trailer%>
+                <%= link_to image_tag(@fullPosterPath,:alt => movie.title), movie , {:class => "PosterImgSmall"}%>
+                <div class="caption">
+
+
+                  <p>
+                    <b><%= link_to ((fa_icon "info")+" info"), movie ,{:title => movie.title,:style=>"margin-top:3px;", method: :get}%></b>
+                    <b><%= link_to ((fa_icon "youtube-play") + " trailer"), @youtubeLink , :class => "youtubeLink"%></b>
+
+                    <!--only login user can like / add-->
+                    <% if current_user %>
+                      <% if Entry.where("user_id =? and movie_id=?",current_user.id,movie.id).exists? %>
+                        <!--edit-->
+                        <% @editEntry = Entry.find( :all, :conditions => ['user_id= ? and movie_id=?',current_user.id,movie.id])%>
+                        <b><%= link_to ((fa_icon "edit") + " edit"),edit_entry_path(@editEntry[0]) %></b>
+                      <%else%>
+                        <!--add-->
+                        <b><%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>movie.title},method: :get %></b>
+                      <%end%>
+
+                      <!--like-->
+                      <b><% if LikeMovie.where("user_id =? and movie_id=?",current_user.id,movie.id).exists? %>
+                            <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>movie.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:red;", :remote=> true%>
+
+                      <% else %>
+
+                                   <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>movie.id} , method: :get,:class => "likebutton" , :remote=> true%>
+                         <%end%>   </b>
+
+                    <%end%>
+                  </p>
+              </div>
+              </div>
+            </td>
+            <% if i%9==8 %>
+              </tr>
+            <%end%>
+            <%i=i+1%>
+          <%end%>
+
+      </table>
+      <%= link_to "Cannot find your movie?", searchMovie_path,:id => "SearchOldMovieButton",method: :get%>
+</div>
+
+<div class="apple_pagination">
+<%= will_paginate @movies %>
+</div>
+
+
+
+
+
+
+
+<!--<div class="contentWhite">
+<h1>Listing movies</h1>
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>My</th>
+      <th>Title</th>
+      <th>Backdrop path</th>
+      <th>Release date</th>
+      <th>Poster path</th>
+      <th>Vote average</th>
+      <th>Adult</th>
+      <th>Overview</th>
+      <th>Trailer</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+
+
+        <td><%= movie.my_id %></td>
+        <td><%= movie.title %></td>
+        <td><%= movie.backdrop_path %></td>
+        <td><%= movie.release_date %></td>
+        <td><%= movie.poster_path %></td>
+        <td><%= movie.vote_average %></td>
+        <td><%= movie.adult %></td>
+        <td><%= movie.overview %></td>
+        <td><%= movie.trailer %></td>
+        <td><%= link_to 'Show', movie %></td>
+        <td><%= link_to 'Edit', edit_movie_path(movie)%></td>
+        <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<%= link_to 'New Movie', new_movie_path %>-->
+
+
+<br>
+<script>
+    $( '.likebutton').click(function() {
+
+
+         if ($(this).hasClass('likebutton'))
+        {
+            $( this ).css( 'color', 'red' );
+            $(this).addClass('dislikebutton').removeClass('likebutton');
+        }
+        else if ($(this).hasClass('dislikebutton')){
+             $( this ).css( 'color', '#fff' );
+             $(this).addClass('likebutton').removeClass('dislikebutton');
+         }
+
+    });
+    $( '.dislikebutton').click(function() {
+        $( this ).css( 'color', '#fff' );
+
+    });
+</script>
+

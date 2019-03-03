@@ -1,0 +1,34 @@
+<div style="background-color:#222222; ">
+	<div class="subNav2" >
+    	<p class="MovieTitle">Recommedation Movie<p>
+	</div>
+</div>
+<div class="contentWhite">
+	<% @recommendList.each do |item|  %>
+	<div class="recommendItem" >
+		<div id="two-column">
+			<div class="myleftColumn">
+
+		 		<% @movie=Movie.find_by_my_id(item.id.to_s) %>
+          		<% @fullPosterPath = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500" + @movie.poster_path%>
+          		<%= link_to image_tag(@fullPosterPath,:alt => item.title), "/movies/"+@movie.id.to_s,{:class => "PosterSearchResult",method: :get} %> 
+        		</div>
+        	<div class="myrightColumn">
+        		<div class="myrightColumnitem">
+        			<%if(!@movie.release_date.blank?)%>
+          				<% @movieYear = Date.parse(@movie.release_date)%>
+          				<% @movieTitle = @movie.title + " ("+@movieYear.year.to_s+")" %>
+        			<%else%>
+          				<% @movieTitle = @movie.title %>
+        			<%end%>
+
+        			<p style="font-size:25px; color:#0095e8;"><%=@movieTitle%></p>
+					<pstyle="font-size:15px;"><%=@movie.overview%></p>
+					<%= link_to ((fa_icon "chevron-circle-right") + " View more"), "/movies/"+@movie.id.to_s , {:style=>"margin-right:10px;", method: :get}%>
+          <%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>item.title} , method: :get%>
+				</div>
+        	</div>
+    	</div>
+	</div>
+	<%end%>
+</div>

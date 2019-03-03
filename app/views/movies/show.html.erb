@@ -1,0 +1,272 @@
+<div style="background-color:#222222; ">
+  <div class="subNav2" >
+        <%if(!@movie.release_date.blank?)%>
+          <% @movieYear = Date.parse(@movie.release_date)%>
+          <% @movieTitle = @movie.title + " ("+@movieYear.year.to_s+")" %>
+        <%else%>
+          <% @movieTitle = @movie.title %>
+        <%end%>
+
+      <p class="MovieTitle">
+        <%= @movieTitle %>    
+        <%@limit = ((@movie.vote_average.to_i)/2).floor-1;%>
+        <% for counter in 0..@limit %>
+           <i class="fa fa-star"></i> 
+        <%end%>
+      <p>
+  </div>
+</div>
+
+<div class="headBlack2">
+  <div class="contentBlack2">
+    <div class ="MovieShowBG"> 
+      <div id="two-column">
+        <div class="myleftColumn">
+          <%puts "-------------------"%>
+          <%=puts @movie.title%>
+          <% @fullPosterPath = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500" + @movie.poster_path%>
+          <% @youtubeLink = 'http://www.youtube.com/watch?v=' + @movie.trailer%>
+          <%= link_to image_tag(@fullPosterPath,:alt => @movie.title), @movie.id.to_s,{:class => "PosterShow",method: :get} %> 
+        </div>
+
+        <div class="myrightColumn">
+          <div class="myrightColumnitem">
+            <p>
+              <strong>Release date :</strong>
+              <%= @movie.release_date %> 
+            </p>
+            <p>
+              <strong>Vote average :</strong>
+              <%= @movie.vote_average %>
+            </p>
+            <p>
+              <strong>Adult :</strong>
+              <%= @movie.adult %>
+            </p>
+
+            <p style="margin-top:30px;">
+              <strong>Overview</strong>
+              <p><%= @movie.overview %></p>
+            </p>
+            <hr class="hr2">
+
+
+             <!--only login user can like / add-->
+            <p class="movieShowButton">
+              <%= link_to ((fa_icon "youtube-play") + " trailer"), @youtubeLink , :class => "youtubeLink",:style=>"color:white;"%>
+              <% if current_user %>
+                  <% if Entry.where("user_id =? and movie_id=?",current_user.id,@movie.id).exists? %>
+                    <!--edit-->
+                    <% @editEntry = Entry.find( :all, :conditions => ['user_id= ? and movie_id=?',current_user.id,@movie.id])%>
+                   <%= link_to ((fa_icon "edit") + " edit"),edit_entry_path(@editEntry[0]),:style=>"color:white;" , method: :get %>
+                  <%else%>
+                    <!--add-->
+                      <%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>@movie.title},:style=>"color:white;",method: :get %>
+                    <%end%>
+
+                    <!--like-->
+                    <% if LikeMovie.where("user_id =? and movie_id=?",current_user.id,@movie.id).exists? %>
+                      <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@movie.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:red;", :remote=> true%>
+                    <% else %>
+                      <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@movie.id} , method: :get,:class => "likebutton" ,:style=>"color:white;", :remote=> true%>
+                    <%end%>  
+              <%end%>
+            </p>
+
+
+          </div>
+
+        
+
+
+
+        </div>
+
+</div>
+    </div>
+    <p class="headTextWhite" style="text-align:right; margin-top:20px; font-size:23px;"> You might also like this </p>
+
+    <table style="margin-left:auto;  margin-top:0px;">
+      <tr>
+        <%i=0%>
+        <% @relatedMoviesLists.each do |item|  %>
+            <td>   
+            <div class="zitemSmall">
+              <% @MoviePage=Movie.find_by_my_id(item.id.to_s) %>
+              <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+              <% @youtubeLink='http://www.youtube.com/watch?v='+@MoviePage.trailer%>
+              <%= link_to image_tag(item.poster_path_fullPath,:alt => item.title), @moviePath , {:class => "PosterImgSmall"}%>
+              <div class="caption"> 
+                <p>
+                  <b><%= link_to ((fa_icon "info")+" info"), @moviePath ,{:title => item.title,:style=>"margin-top:3px;"}%></b>
+                  <b><%= link_to ((fa_icon "youtube-play") + " trailer"), @youtubeLink , :class => "youtubeLink"%></b>
+
+                  <!--only login user can like / add-->
+                  <% if current_user %>
+                    <% if Entry.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                      <!--edit-->
+                      <% @editEntry = Entry.find( :all, :conditions => ['user_id= ? and movie_id=?',current_user.id,@MoviePage.id])%>
+                      <b><%= link_to ((fa_icon "edit") + " edit"),edit_entry_path(@editEntry[0]), method: :get %></b>
+                    <%else%>
+                      <!--add-->
+                      <b><%= link_to ((fa_icon "plus") + " add"), {:action=>'new',:controller=>'entries',:q=>item.title} , method: :get%></b>
+                    <%end%>
+
+                    <!--like-->
+                    <b><% if LikeMovie.where("user_id =? and movie_id=?",current_user.id,@MoviePage.id).exists? %>
+                          <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:red;", :remote=> true%>
+
+                      <% else %>
+
+                          <%= link_to ((fa_icon "heart") + " like"), {:action=>'index',:controller=>'movies', :movieLike=>@MoviePage.id} , method: :get,:class => "likebutton" , :remote=> true%>
+                      <%end%></b>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </td>
+          
+          <%i=i+1%>
+          <% if i%10==9 %>
+            </tr>
+            <% break %>
+          <%end%>
+        <%end%>
+        </table>
+
+  </div>
+</div>
+
+
+
+
+<% if current_user %>
+<div class="contentWhite">
+  <p style="font-size: 35px;">All Review</p>
+  <div class="reviewBody">
+    <p>
+      
+      <% @entryList.each do |entry| %>
+
+
+      <div class="reviewItem">
+      <!-- header -->
+      <div class="movieName">
+        <% @fullPosterPath = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500" + entry.movie.poster_path%>
+
+        <% @MoviePage=Movie.find_by_id(entry.movie.id.to_s) %>
+        <% @moviePath = '/movies/'+@MoviePage.id.to_s%>
+        <%= link_to image_tag(@fullPosterPath,:alt => entry.movie.title), @moviePath , {:class => "PosterIcon", method: :get}%>
+
+        <%if(!entry.movie.release_date.blank?)%>
+          <% @movieYear = Date.parse(entry.movie.release_date)%>
+          <% @movieTitle = @movie.title + " ("+@movieYear.year.to_s+")" %>
+        <%else%>
+          <% @movieTitle = @movie.title %>
+        <%end%>
+
+        
+
+        <p><%= link_to @movieTitle, @moviePath , method: :get%></p>
+
+        <%@limit = ((entry.movie.vote_average.to_i)/2).floor-1;%>
+        <% for counter in 0..@limit %>
+           <i class="fa fa-star"></i> 
+        <%end%>
+        
+      </div>
+
+ 
+      <!-- Content Text -->
+      <%= link_to content_tag(:div, EmoticonFontify.emoticon_fontify((entry.content).gsub(/(<)(.*?)(>)/, "")) ), entry , :class=>"reviewContent" %>
+
+
+     
+      <!-- Content Image-->
+      <%  puts "----find Image------" %>
+      <%  puts findImage(entry.content) %>
+      <%  @image = findImage(entry.content) %>
+      <% puts "-------------------------"%>
+      
+      <% if @image!= "0" %>
+        <div class="reviewImage">
+          <%= image_tag(@image) %>
+        </div> 
+      <%end%>
+      
+      <hr size="3" style="background-color:#c8c7c7; color:#c8c7c7;  margin: 0px auto;  "/>
+
+      <!-- Content Footer -->
+      <div class="reviewFooter">
+        <p>
+          <% @user = User.find(entry.user_id) %>
+
+          <!--Pic-->
+          <% if @user.image? %>
+            <%= link_to image_tag(asset_path(@user.image),:size => "25x25"), profile_path(:user_id => entry.user_id ),  :method => :post ,:class=>"smallProfilePic" %>
+          <% end %>
+
+          <!--username-->
+          <span style="float:left; margin-left:2px">
+            <%= link_to entry.user.username , profile_path(:user_id => entry.user_id ),  :method => :post%>
+          </span>
+
+          <!--like number-->
+          <% @LikeNum=LikeEntry.count(:conditions => ["entry_id = ?",entry.id]) %>
+          <%if !current_user %>
+            <%= link_to ((fa_icon "heart") + " "+ @LikeNum.to_s), {:action=>'index',:controller=>'entries', :entryLike=>entry.id} , method: :get,:class => "likebutton" , :remote=> true%>
+
+          <% elsif LikeEntry.where("user_id=? and entry_id=?",current_user.id,entry.id).exists?%>
+            <%= link_to ((fa_icon "heart") + " "+ @LikeNum.to_s), {:action=>'index',:controller=>'entries', :entryLike=>entry.id, :dislike=>"dislike"} , method: :get,:class => "dislikebutton" ,:style=>"color:#F5859D;", :remote=> true%>
+          <% else %>
+
+            <%= link_to ((fa_icon "heart") + " "+ @LikeNum.to_s), {:action=>'index',:controller=>'entries', :entryLike=>entry.id} , method: :get,:class => "likebutton" , :remote=> true%>
+          <%end%>
+
+          <!--comment number-->
+          <% @commentNum=Comment.count(:conditions => ["entry_id = ?",entry.id]) %>
+          <%= link_to ((fa_icon "comment") +" "+ @commentNum.to_s), entry , method: :get%>
+
+
+        </p>
+        
+
+        
+
+      </div>
+    </div>
+
+      <% end %>
+    </p>
+  </div>
+
+
+<%end%>
+
+
+<!--<%= link_to 'Edit', edit_movie_path(@movie) %> |
+<%= link_to 'Back', movies_path %>-->
+
+</div>
+
+
+<script>
+    $( '.likebutton').click(function() {
+
+
+         if ($(this).hasClass('likebutton'))
+        {
+            $( this ).css( 'color', 'red' );
+            $(this).addClass('dislikebutton').removeClass('likebutton');
+        }
+        else if ($(this).hasClass('dislikebutton')){
+             $( this ).css( 'color', 'white' );
+             $(this).addClass('likebutton').removeClass('dislikebutton');
+         }
+
+    });
+    $( '.dislikebutton').click(function() {
+        $( this ).css( 'color', 'white' );
+
+    });
+</script>

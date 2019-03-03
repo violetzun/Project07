@@ -1,0 +1,11 @@
+<html>
+
+<h1>Yahoo trending Now<h>
+
+<% @trendingList.each_with_index do |trend,index| %>
+<p><a href = "<%= @trendLink[index][1] %>"><%= index+1 %>. <%= trend[1] %><a></p>
+
+<% end %>
+
+
+</html>
